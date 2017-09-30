@@ -1,5 +1,3 @@
-// TODO: 9/24/2017 get the X-Axis working
-
 package com.keyboardape.newwestminsteranalyticsapp;
 
 import android.app.Activity;
