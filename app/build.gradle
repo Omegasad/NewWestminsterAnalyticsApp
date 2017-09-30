@@ -20,7 +20,7 @@ android {
 }
 
 repositories {
-    maven { url "https://jitpack.io"} // Add the MPAndroidChart API
+    maven { url "https://jitpack.io" } // Add the MPAndroidChart API
 }
 
 dependencies {
@@ -28,7 +28,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    // Add the MPAndroidChart API
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2' // Add the MPAndroidChart API
 }
