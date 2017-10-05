@@ -13,8 +13,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
-    protected void onChartClick(View v) {
+    public void onClickChart(View v) {
         Intent i = new Intent(this, ChartActivity.class);
+        startActivity(i);
+    }
+
+    public void onClickMaps(View v) {
+        Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
     }
 }
