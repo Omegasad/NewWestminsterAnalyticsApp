@@ -1,26 +1,27 @@
 package com.keyboardape.newwestminsteranalyticsapp;
 
-import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
+import com.keyboardape.newwestminsteranalyticsapp.maps.GetWeightedCoordinatesTask;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    private static final String JSON_URL = "http://opendata.newwestcity.ca/downloads/building-attributes/BUILDING_ATTRIBUTES.json";
+    private static final float  DEFAULT_ZOOM_LEVEL     = 12;
+    private static final int    DEFAULT_HEATMAP_RADIUS = 32;
 
     private GoogleMap mMap;
     private Geocoder  mCoder;
@@ -36,96 +37,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * Initialize map and heatmap components.
+     * @param googleMap GoogleMap to initialize
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        mMap   = googleMap;
         mCoder = new Geocoder(this);
 
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(getLatLngFromAddress("New Westminster Canada")));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM_LEVEL));
         addHeatMap();
     }
 
+    /**
+     * Retrieves WeightedLatLng (weighted coordinates) and builds a heatmap based on the weights.
+     */
     private void addHeatMap() {
-        List<LatLng> list = null;
-        try {
-            list = getList();
-        } catch (Exception e) {
-            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
-        }
+        new GetWeightedCoordinatesTask(this, JSON_URL,
+            new GetWeightedCoordinatesTask.OnComplete() {
+                @Override
+                public void doTask(List<WeightedLatLng> weightedCoordinates) {
+                    if (weightedCoordinates != null) {
+                        HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                            .weightedData(weightedCoordinates)
+                            .radius(DEFAULT_HEATMAP_RADIUS)
+                            .build();
 
-        HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
-                .data(list)
-                .build();
-
-        TileOverlay mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+                        mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+                    }
+                }
+            }
+        ).execute();
     }
 
-    private ArrayList<LatLng> getList() {
-        ArrayList<LatLng> list = new ArrayList<LatLng>();
-
-        list.add(getLatLngFromAddress("37 AGNES ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("251 PHILLIPS ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("219 PHILLIPS ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("200 PHILLIPS ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("110 PHILLIPS ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("333 PHILLIPS ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("820 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("800 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("811 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("821 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("833 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("777 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("650 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("776 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("774 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("773 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("772 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("771 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("770 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("779 THIRTEENTH ST New Westminster Canada"));
-        list.add(getLatLngFromAddress("820 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("800 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("811 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("821 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("833 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("777 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("650 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("776 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("774 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("773 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("772 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("771 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("770 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("779 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("620 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("600 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("611 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("621 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("633 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("677 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("650 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("676 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("674 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("673 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("672 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("671 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("670 WELLS GRAY PL New Westminster Canada"));
-        list.add(getLatLngFromAddress("679 WELLS GRAY PL New Westminster Canada"));
-
-        return list;
-    }
-
+    /**
+     * Returns a LatLng (latitude and longitude) given an address.
+     * @param address to be geocoded into LatLng
+     * @return LatLng
+     */
     private LatLng getLatLngFromAddress(String address) {
         try {
             List<Address> addr = mCoder.getFromLocationName(address, 1);
