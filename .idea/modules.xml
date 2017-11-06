@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NewWestminsterAnalyticsApp.iml" filepath="$PROJECT_DIR$/NewWestminsterAnalyticsApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Project.iml" filepath="$PROJECT_DIR$/Project.iml" />
+      <module fileurl="file://C:\Users\fatba\Documents\Android\NewWestminsterAnalyticsApp\Project.iml" filepath="C:\Users\fatba\Documents\Android\NewWestminsterAnalyticsApp\Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
