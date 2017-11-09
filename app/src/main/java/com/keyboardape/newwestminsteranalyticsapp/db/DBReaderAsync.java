@@ -26,7 +26,7 @@ public abstract class DBReaderAsync extends AsyncTask<Void, Void, Void> {
         super.onPreExecute();
     }
 
-    /**3
+    /**
      * Work done in background thread.
      * @param aVoid not used
      * @return null

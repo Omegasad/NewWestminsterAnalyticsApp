@@ -14,13 +14,22 @@ import org.json.JSONObject;
  */
 public class DownloadSkytrainStationsAsync extends JsonDownloaderAsync {
 
+    /**
+     * Constructor.
+     * @param db to download into
+     * @param callbacks functions
+     */
     public DownloadSkytrainStationsAsync(SQLiteDatabase db, Callbacks callbacks) {
         super(DataSet.SKYTRAIN_STATIONS, db, callbacks);
     }
 
+    /**
+     * Converts JSONObject into ContentValues while discarding unwanted data.
+     * @param o JSONObject to be converted
+     * @return ContentValues
+     */
     @Override
     protected ContentValues convertToContentValuesOrNull(JSONObject o) {
-
         try {
             JSONObject geoJson = o.getJSONObject("json_geometry");
             JSONArray coordinates = geoJson.getJSONArray("coordinates").getJSONArray(0);

@@ -14,13 +14,22 @@ import org.json.JSONObject;
  */
 public class DownloadPopulationDensityAsync extends JsonDownloaderAsync {
 
+    /**
+     * Constructor.
+     * @param db to download into
+     * @param callbacks functions
+     */
     public DownloadPopulationDensityAsync(SQLiteDatabase db, Callbacks callbacks) {
         super(DataSet.POPULATION_DENSITY, db, callbacks);
     }
 
+    /**
+     * Converts JSONObject into ContentValues while discarding unwanted data.
+     * @param o JSONObject to be converted
+     * @return ContentValues
+     */
     @Override
     protected ContentValues convertToContentValuesOrNull(JSONObject o) {
-
         try {
             JSONObject geoJson = o.getJSONObject("json_geometry");
             JSONArray coordinates = geoJson.getJSONArray("coordinates").getJSONArray(0);

@@ -59,6 +59,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 addTableToTracker(db, DataSet.POPULATION_DENSITY.TABLE_NAME);
                 addTableToTracker(db, DataSet.SKYTRAIN_STATIONS.TABLE_NAME);
                 addTableToTracker(db, DataSet.BUS_STOPS.TABLE_NAME);
+                addTableToTracker(db, DataSet.BUSINESS_LICENSES.TABLE_NAME);
+                addTableToTracker(db, DataSet.MAJOR_SHOPPINGS.TABLE_NAME);
             }
         } catch (Exception e) {}
     }

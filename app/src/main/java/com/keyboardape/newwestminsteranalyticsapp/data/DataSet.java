@@ -78,6 +78,19 @@ public enum DataSet {
         "longitude      REAL    NOT NULL," +
         "latitude       REAL    NOT NULL")
 
+    ,MAJOR_SHOPPINGS(
+        // tableName
+        "major_shoppings",
+        // dataURL
+        "http://opendata.newwestcity.ca/downloads/major-shopping/MAJOR_SHOPPING.json",
+        // csvColumnNames
+        "id,latitude,longitude,buildingName",
+        // csvColumnNamesWithAttributes
+        "id             INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "longitude      REAL    NOT NULL," +
+        "latitude       REAL    NOT NULL," +
+        "buildingName   TEXT    NOT NULL")
+
     ;
 
     public final String TABLE_NAME;

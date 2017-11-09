@@ -14,13 +14,22 @@ import org.json.JSONObject;
  */
 public class DownloadBusStopsAsync extends JsonDownloaderAsync {
 
+    /**
+     * Constructor.
+     * @param db to download into
+     * @param callbacks functions
+     */
     public DownloadBusStopsAsync(SQLiteDatabase db, Callbacks callbacks) {
         super(DataSet.BUS_STOPS, db, callbacks);
     }
 
+    /**
+     * Converts JSONObject into ContentValues while discarding unwanted data.
+     * @param o JSONObject to be converted
+     * @return ContentValues
+     */
     @Override
     protected ContentValues convertToContentValuesOrNull(JSONObject o) {
-
         try {
             if (o.getString("STATUS").equals("ACTIVE")) {
                 JSONArray coordinate = o.getJSONObject("json_geometry").getJSONArray("coordinates");

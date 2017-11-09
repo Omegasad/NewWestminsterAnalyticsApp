@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">NewWestminsterAnalyticsApp</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">Heatmaps</string>
+    <string name="title_activity_map_layers">Heatmap Layers</string>
+    <string name="title_activity_charts">Charts</string>
 
-    <string name="toast_msg_loading_data">Loading data</string>
-    <string name="toast_msg_load_data_failed">Failed to load data</string>
-    <string name="toast_msg_load_data_success">Successfully loaded data</string>
+    <string name="menu_map">View Heatmaps</string>
+    <string name="menu_map_layers">Heatmap Layers</string>
+    <string name="menu_charts">Charts</string>
 
     <string name="progress_title">Downloading Datasets</string>
     <string name="progress_description">You must download the following data sets! Do not let your phone sleep while it downloads!</string>

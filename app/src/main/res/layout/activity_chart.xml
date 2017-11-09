@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.keyboardape.newwestminsteranalyticsapp.MainActivity">
 
+    <fragment
+        android:name="com.keyboardape.newwestminsteranalyticsapp.ToolbarFragment"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.github.mikephil.charting.charts.BarChart
         android:layout_width="match_parent"
         android:layout_height="400dp"

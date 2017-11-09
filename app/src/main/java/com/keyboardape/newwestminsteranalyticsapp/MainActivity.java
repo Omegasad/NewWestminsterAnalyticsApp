@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.db.DBConsts;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadBusStopsAsync;
+import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadBusinessLicensesAsync;
+import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadMajorShoppingsAsync;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadSkytrainStationsAsync;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.JsonDownloaderAsync;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadPopulationDensityAsync;
@@ -34,11 +36,6 @@ public class MainActivity extends AppCompatActivity
     private Map<DataSet, LinearLayout> mDataLabels;
     private Map<DataSet, ProgressBar> mProgressBars;
     private Button mBtnViewmaps;
-//    private ProgressBar mProgPopulationDensity;
-//    private ProgressBar mProgSkytrainStations;
-//    private ProgressBar mProgBusStops;
-//    private ProgressBar mProgBusinessLicense;
-//    private ProgressBar mProgMajorShoppings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +48,29 @@ public class MainActivity extends AppCompatActivity
         mDataSets.add(DataSet.POPULATION_DENSITY);
         mDataSets.add(DataSet.SKYTRAIN_STATIONS);
         mDataSets.add(DataSet.BUS_STOPS);
+        mDataSets.add(DataSet.BUSINESS_LICENSES);
+        mDataSets.add(DataSet.MAJOR_SHOPPINGS);
 
         mDownloadTasks = new HashMap<>();
         mDownloadTasks.put(DataSet.POPULATION_DENSITY, new DownloadPopulationDensityAsync(mDB, this));
         mDownloadTasks.put(DataSet.SKYTRAIN_STATIONS, new DownloadSkytrainStationsAsync(mDB, this));
         mDownloadTasks.put(DataSet.BUS_STOPS, new DownloadBusStopsAsync(mDB, this));
+        mDownloadTasks.put(DataSet.BUSINESS_LICENSES, new DownloadBusinessLicensesAsync(this, mDB, this));
+        mDownloadTasks.put(DataSet.MAJOR_SHOPPINGS, new DownloadMajorShoppingsAsync(mDB, this));
 
         mProgressBars = new HashMap<>();
         mProgressBars.put(DataSet.POPULATION_DENSITY, (ProgressBar) findViewById(R.id.progressPopulationDensity));
         mProgressBars.put(DataSet.SKYTRAIN_STATIONS, (ProgressBar) findViewById(R.id.progressSkytrainStations));
         mProgressBars.put(DataSet.BUS_STOPS, (ProgressBar) findViewById(R.id.progressBusStops));
+        mProgressBars.put(DataSet.BUSINESS_LICENSES, (ProgressBar) findViewById(R.id.progressBusinessLicenses));
+        mProgressBars.put(DataSet.MAJOR_SHOPPINGS, (ProgressBar) findViewById(R.id.progressMajorShoppings));
 
         mDataLabels = new HashMap<>();
         mDataLabels.put(DataSet.POPULATION_DENSITY, (LinearLayout) findViewById(R.id.labelPopulationDensity));
         mDataLabels.put(DataSet.SKYTRAIN_STATIONS, (LinearLayout) findViewById(R.id.labelSkytrainStations));
         mDataLabels.put(DataSet.BUS_STOPS, (LinearLayout) findViewById(R.id.labelBusStops));
+        mDataLabels.put(DataSet.BUSINESS_LICENSES, (LinearLayout) findViewById(R.id.labelBusinessLicenses));
+        mDataLabels.put(DataSet.MAJOR_SHOPPINGS, (LinearLayout) findViewById(R.id.labelMajorShoppings));
 
         mBtnViewmaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewmaps.setEnabled(false);

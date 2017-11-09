@@ -5,6 +5,8 @@ package com.keyboardape.newwestminsteranalyticsapp;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -13,7 +15,7 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
 
-public class ChartActivity extends Activity {
+public class ChartActivity extends AppCompatActivity {
 
     BarChart barChart;
     float barWidth;
@@ -24,6 +26,11 @@ public class ChartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
+
+        // Setup toolbar and title
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.title_activity_charts));
 
         // Declarations
         barChart = (BarChart) findViewById(R.id.bargraph);
