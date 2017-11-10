@@ -3,17 +3,27 @@
 package com.keyboardape.newwestminsteranalyticsapp;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.keyboardape.newwestminsteranalyticsapp.db.DBHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChartActivity extends AppCompatActivity {
 
@@ -21,6 +31,10 @@ public class ChartActivity extends AppCompatActivity {
     float barWidth;
     float barSpace;
     float groupSpace;
+    private SQLiteDatabase db;
+    private Cursor cursor;
+    Map<String,Float> graphCount = new HashMap<String,Float>();
+    private String a[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +46,48 @@ public class ChartActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_activity_charts));
 
+
+        readDb();
+        printChart();
+    }
+
+    private void readDb()
+    {
+        // Get the SQL Statement
+        SQLiteOpenHelper helper = new DBHelper(this);
+        try {
+            db = helper.getReadableDatabase();
+            cursor= db.rawQuery("select * from business_licenses", null);
+            int count = cursor.getCount();
+            a = new String[count];
+            if (cursor.moveToFirst()) {
+                int ndx = 0;
+                do {
+                    a[ndx] = cursor.getString(8);
+                    Float freq = graphCount.get(a[ndx]);
+                    graphCount.put(a[ndx], (freq == null) ? 1 : freq +1);
+                    ndx++;
+                } while (cursor.moveToNext());
+
+                //Using toast for debugging purposes
+                Toast t = Toast.makeText(this, "Cursor count " + ndx , Toast.LENGTH_LONG);
+                t.show();
+            }
+
+        } catch (SQLiteException sqlex) {
+            String msg = "[MainActivity / getContinents] DB unavailable";
+            msg += "\n\n" + sqlex.toString();
+
+            Toast t = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+            t.show();
+        }
+    }
+
+    private void printChart()
+    {
         // Declarations
         barChart = (BarChart) findViewById(R.id.bargraph);
-        barWidth = 0.3f;
+        barWidth = 0.4f;
         barSpace = 0f;
         groupSpace = 0.4f;
 
@@ -47,16 +100,20 @@ public class ChartActivity extends AppCompatActivity {
 
         // To store y-Axis of the data
         ArrayList<BarEntry> dummyEntries = new ArrayList<>();
-        dummyEntries.add(new BarEntry(1,40f)); //Entries must be floats
-        dummyEntries.add(new BarEntry(2,44f)); //Entries must be floats
-        dummyEntries.add(new BarEntry(3,30f)); //Entries must be floats
-        dummyEntries.add(new BarEntry(4,36f)); //Entries must be floats
+        int i = 1;
+        for (Float value : graphCount.values()) {
+            dummyEntries.add(new BarEntry(i++,value)); //Entries must be floats
+            barChart.notifyDataSetChanged();
+            barChart.invalidate();
+            System.out.println(i + " " + value);
+        }
 
         ArrayList<BarEntry> dummyEntries2 = new ArrayList<>();
         dummyEntries2.add(new BarEntry(1,26f));
         dummyEntries2.add(new BarEntry(2,58f));
         dummyEntries2.add(new BarEntry(3,13f));
         dummyEntries2.add(new BarEntry(4,48f));
+        dummyEntries2.add(new BarEntry(5,48f));
 
         // Is needed so the data can be outputted
         BarDataSet dummySet1 = new BarDataSet(dummyEntries,"Dummy Entries 1");
@@ -74,13 +131,23 @@ public class ChartActivity extends AppCompatActivity {
         barChart.getXAxis().setAxisMinimum(0); // Shows the mininum of the chart
 
         // Shows the maximum amount of the width and height, 4 because there are 4 entries
-        barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * 4);
+        // Sets X-Axis settings
+        barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * i);
+        barChart.getXAxis().setDrawGridLines(false);
         barChart.groupBars(0, groupSpace, barSpace); // Helps splits the bars
         barChart.invalidate(); // don't know what this does
+
 
         barChart.getData().setHighlightEnabled(false); // Prevents tapping on the bars
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
         barChart.setScaleEnabled(true);
+        barChart.setFitBars(true);
+        barChart.setDoubleTapToZoomEnabled(true);
+
+        // Y-Axis settings
+        barChart.getAxisLeft().setAxisMinimum(0); // Starts at 0
+        barChart.getAxisRight().setAxisMinimum(0); // Starts at 0
+
     }
 }

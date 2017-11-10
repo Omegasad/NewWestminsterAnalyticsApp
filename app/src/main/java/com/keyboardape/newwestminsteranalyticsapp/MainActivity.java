@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private Map<DataSet, JsonDownloaderAsync> mDownloadTasks;
     private Map<DataSet, LinearLayout> mDataLabels;
     private Map<DataSet, ProgressBar> mProgressBars;
-    private Button mBtnViewmaps;
+    private Button mBtnViewmaps,mBtnCharts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity
         mBtnViewmaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewmaps.setEnabled(false);
 
+        mBtnCharts = (Button) findViewById(R.id.btnViewCharts);
+        mBtnCharts.setEnabled(false);
+
         removeUneccessaryDownloadTasks(mDataSets);
         downloadDataSetOrEnableButtons();
     }
@@ -87,6 +90,11 @@ public class MainActivity extends AppCompatActivity
 
     public void onClickViewMaps(View v) {
         Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
+    public void onClickViewCharts(View v) {
+        Intent i = new Intent(this, ChartActivity.class);
         startActivity(i);
     }
 
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity
             mProgressBars.get(ds).setVisibility(View.VISIBLE);
         } else {
             mBtnViewmaps.setEnabled(true);
+            mBtnCharts.setEnabled(true);
         }
     }
 
