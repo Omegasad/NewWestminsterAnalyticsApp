@@ -9,11 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -35,6 +38,9 @@ public class ChartActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private Cursor cursor;
     Map<String,Float> graphCount = new HashMap<String,Float>();
+    //Sorted list
+    List<Map.Entry<String, Float>> list;
+
     private String a[];
 
     @Override
@@ -46,10 +52,22 @@ public class ChartActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_activity_charts));
-
-
         readDb();
         printChart();
+
+        String[] items = new String[10];
+        int i = 0;
+        for (Map.Entry<String, Float> entry:list) {
+            if (i < 10) {
+                items[i] = (i+1) + ". "+ entry.getKey();
+                i++;
+            }
+        }
+        ListView list_topten = (ListView) findViewById(R.id.topTen);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_expandable_list_item_1, items
+        );
+        list_topten.setAdapter(arrayAdapter);
     }
 
     private void readDb()
@@ -65,14 +83,11 @@ public class ChartActivity extends AppCompatActivity {
                 int ndx = 0;
                 do {
                     a[ndx] = cursor.getString(8);
+                    //Ugly hash code to count most popular businesses
                     Float freq = graphCount.get(a[ndx]);
                     graphCount.put(a[ndx], (freq == null) ? 1 : freq +1);
                     ndx++;
                 } while (cursor.moveToNext());
-
-                //Using toast for debugging purposes
-                Toast t = Toast.makeText(this, "Cursor count " + ndx , Toast.LENGTH_LONG);
-                t.show();
             }
 
         } catch (SQLiteException sqlex) {
@@ -111,7 +126,7 @@ public class ChartActivity extends AppCompatActivity {
 
         // Really ugly sort code to sort the hashmap to values
         Set<Map.Entry<String, Float>> set = graphCount.entrySet();
-        List<Map.Entry<String, Float>> list = new ArrayList<Map.Entry<String, Float>>(set);
+        list = new ArrayList<Map.Entry<String, Float>>(set);
         Collections.sort( list, new Comparator<Map.Entry<String, Float>>()
             {
                 public int compare( Map.Entry<String, Float> o1, Map.Entry<String, Float> o2 )
@@ -157,7 +172,6 @@ public class ChartActivity extends AppCompatActivity {
 
     private void testLegend(BarChart barChart) {
         Legend l = barChart.getLegend();
-        //Hides the legend for now
         l.setEnabled(false);
     }
 }
