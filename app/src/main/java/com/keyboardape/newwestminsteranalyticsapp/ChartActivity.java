@@ -22,8 +22,12 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.keyboardape.newwestminsteranalyticsapp.db.DBHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ChartActivity extends AppCompatActivity {
 
@@ -100,12 +104,29 @@ public class ChartActivity extends AppCompatActivity {
 
         // To store y-Axis of the data
         ArrayList<BarEntry> dummyEntries = new ArrayList<>();
+
+        // Really ugly sort code
+        Set<Map.Entry<String, Float>> set = graphCount.entrySet();
+        List<Map.Entry<String, Float>> list = new ArrayList<Map.Entry<String, Float>>(set);
+        Collections.sort( list, new Comparator<Map.Entry<String, Float>>()
+        {
+            public int compare( Map.Entry<String, Float> o1, Map.Entry<String, Float> o2 )
+            {
+                return (o2.getValue()).compareTo( o1.getValue() );
+            }
+        } );
+
         int i = 1;
-        for (Float value : graphCount.values()) {
-            dummyEntries.add(new BarEntry(i++,value)); //Entries must be floats
-            barChart.notifyDataSetChanged();
-            barChart.invalidate();
-            System.out.println(i + " " + value);
+        int topTen = 0;
+
+        for (Map.Entry<String, Float> entry:list) {
+            if (entry.getValue() > 1 && topTen < 10) {
+                dummyEntries.add(new BarEntry(i++, entry.getValue())); //Entries must be floats
+                barChart.notifyDataSetChanged();
+                barChart.invalidate();
+                System.out.println(i + " " + entry.getValue());
+                topTen++;
+            }
         }
 
         ArrayList<BarEntry> dummyEntries2 = new ArrayList<>();

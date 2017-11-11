@@ -17,4 +17,5 @@
     <string name="download_major_shoppings">Major Shoppings</string>
 
     <string name="btn_view_maps">View Heatmaps</string>
+    <string name="btn_view_charts">View Charts</string>
 </resources>
