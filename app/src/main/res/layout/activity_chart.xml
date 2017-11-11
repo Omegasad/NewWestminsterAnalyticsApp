@@ -13,9 +13,10 @@
         android:layout_height="wrap_content" />
 
     <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bargraph"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:id="@+id/bargraph">
-    </com.github.mikephil.charting.charts.BarChart>
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"></com.github.mikephil.charting.charts.BarChart>
 
 </RelativeLayout>
