@@ -1,6 +1,4 @@
-package com.keyboardape.newwestminsteranalyticsapp.data;
-
-import com.keyboardape.newwestminsteranalyticsapp.db.DBConsts;
+package com.keyboardape.newwestminsteranalyticsapp.db;
 
 /**
  * Data Set that maps to the actual SQL tables.
@@ -98,6 +96,7 @@ public enum DataSet {
     public final String SQL_CREATE_TABLE;
     public final String SQL_DELETE_TABLE;
     public final String DATA_URL;
+
     DataSet(String tableName, String dataURL, String csvColumnNames, String csvColumnNamesWithAttributes) {
         TABLE_NAME = tableName;
         DATA_URL = dataURL;
@@ -105,12 +104,14 @@ public enum DataSet {
         SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + tableName + "(" + csvColumnNamesWithAttributes + ");";
         SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + tableName + ";";
     }
+
     public String getSQLToUpdateTracker() {
         return "UPDATE " + DataSet.TRACKER.TABLE_NAME + " " +
             "SET isNeedUpdate = " + DBConsts.FALSE + ", " +
             "    lastUpdated = " + System.currentTimeMillis() + " " +
             "WHERE tablename = '" + TABLE_NAME + "';";
     }
+
     @Override
     public String toString() {
         return TABLE_NAME;

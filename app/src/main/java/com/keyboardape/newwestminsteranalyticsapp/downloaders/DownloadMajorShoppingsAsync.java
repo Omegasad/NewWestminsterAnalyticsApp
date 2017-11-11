@@ -4,9 +4,8 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**

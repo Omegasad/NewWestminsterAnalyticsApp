@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.keyboardape.newwestminsteranalyticsapp.data.GetPopulationDensityAsync;
+import com.keyboardape.newwestminsteranalyticsapp.dbreaders.GetPopulationDensityAsync;
 import com.keyboardape.newwestminsteranalyticsapp.db.DBHelper;
 
 import java.util.List;

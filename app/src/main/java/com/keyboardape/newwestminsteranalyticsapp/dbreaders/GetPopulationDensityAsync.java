@@ -1,11 +1,12 @@
-package com.keyboardape.newwestminsteranalyticsapp.data;
+package com.keyboardape.newwestminsteranalyticsapp.dbreaders;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.keyboardape.newwestminsteranalyticsapp.db.DBReaderAsync;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.dbreaders.DBReaderAsync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class GetPopulationDensityAsync extends DBReaderAsync {
      * Reads from the cursor.
      * @param cursor of a readable SQLiteDatabase
      */
+    @Override
     protected void readFromCursor(Cursor cursor) {
         try {
             if (cursor.moveToFirst()) {

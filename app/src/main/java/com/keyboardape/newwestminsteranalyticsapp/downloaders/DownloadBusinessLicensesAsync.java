@@ -8,7 +8,7 @@ import android.location.Geocoder;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
 
 import org.json.JSONObject;
 
@@ -72,7 +72,7 @@ public class DownloadBusinessLicensesAsync extends JsonDownloaderAsync {
         return null;
     }
 
-    /*
+    /**
      * Parses a string to int, or returns 0.
      * @param integer to be parsed
      * @return int value of string or 0
@@ -84,7 +84,7 @@ public class DownloadBusinessLicensesAsync extends JsonDownloaderAsync {
         return 0;
     }
 
-    /*
+    /**
      * Returns a LatLng (latitude and longitude) given an address.
      * @param address to be geocoded into LatLng
      * @return LatLng

@@ -164,7 +164,7 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
             mInputStreamReader = new InputStreamReader(mInputStream);
             return true;
         } catch (Exception e) {
-            Log.e(DownloadPopulationDensityAsync.class.getSimpleName(), e.getMessage());
+            Log.e(JsonStreamParserAsync.class.getSimpleName(), e.getMessage());
         }
         return false;
     }

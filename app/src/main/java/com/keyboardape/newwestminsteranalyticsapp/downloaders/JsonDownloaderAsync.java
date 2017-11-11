@@ -3,8 +3,7 @@ package com.keyboardape.newwestminsteranalyticsapp.downloaders;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
-import com.keyboardape.newwestminsteranalyticsapp.downloaders.JsonStreamParserAsync;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
 
 import org.json.JSONObject;
 
@@ -58,6 +57,7 @@ public abstract class JsonDownloaderAsync extends JsonStreamParserAsync {
      * Called if stream can not be loaded.
      * RUNS ON MAIN/UI THREAD.
      */
+    @Override
     protected void onParseFailed() {
         mCallbacks.onDownloadFailed(mDataSet);
     }
@@ -66,6 +66,7 @@ public abstract class JsonDownloaderAsync extends JsonStreamParserAsync {
      * Called if stream has been parsed and processed successfully.
      * RUNS ON MAIN/UI THREAD.
      */
+    @Override
     protected void onParseSuccess() {
         mDB.execSQL(mDataSet.getSQLToUpdateTracker());
         mCallbacks.onDownloadSuccess(mDataSet);
@@ -76,6 +77,7 @@ public abstract class JsonDownloaderAsync extends JsonStreamParserAsync {
      * RUNS ON BACKGROUND THREAD.
      * @param o JSONObject to be processed
      */
+    @Override
     protected void processJsonObject(JSONObject o) {
         ContentValues c = convertToContentValuesOrNull(o);
         if (c != null) {

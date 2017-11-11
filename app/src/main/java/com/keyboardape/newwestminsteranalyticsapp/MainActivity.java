@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.db.DBConsts;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadBusStopsAsync;
 import com.keyboardape.newwestminsteranalyticsapp.downloaders.DownloadBusinessLicensesAsync;

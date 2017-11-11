@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
-
 /**
  * Database helper. Used whenever reading and writing to database.
  */
@@ -65,6 +63,11 @@ public class DBHelper extends SQLiteOpenHelper {
         } catch (Exception e) {}
     }
 
+    /**
+     * Adds a table to be tracked by the tracking table.
+     * @param db Writable SQLiteDatabase
+     * @param tableName to be tracked
+     */
     private void addTableToTracker(SQLiteDatabase db, String tableName) {
         ContentValues c = new ContentValues();
         c.put("tableName", tableName);

@@ -1,10 +1,10 @@
-package com.keyboardape.newwestminsteranalyticsapp.db;
+package com.keyboardape.newwestminsteranalyticsapp.dbreaders;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import com.keyboardape.newwestminsteranalyticsapp.data.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.db.DataSet;
 
 public abstract class DBReaderAsync extends AsyncTask<Void, Void, Void> {
 
