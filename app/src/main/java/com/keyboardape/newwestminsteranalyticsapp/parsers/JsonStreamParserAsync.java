@@ -1,4 +1,4 @@
-package com.keyboardape.newwestminsteranalyticsapp.downloaders;
+package com.keyboardape.newwestminsteranalyticsapp.parsers;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -14,49 +14,30 @@ import java.net.URL;
  * Parses a file containing one or more JSON objects.
  * Parses and processes one JSON object at a time.
  */
-public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> {
+public class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> {
 
-    /** URL containing JSON string. */
-    private String mJsonUrl;
-
-    /** Tracks whether the stream has been parsed. */
-    private boolean mIsStreamParsed;
+    private Callbacks         mCallbacks;
+    private String            mJsonUrl;
+    private boolean           mIsStreamParsed;
 
     // globalized to ease cleanUpInputStreamReader() method
     private HttpURLConnection mConnection;
-    private InputStream mInputStream;
+    private InputStream       mInputStream;
     private InputStreamReader mInputStreamReader;
 
     /**
      * Constructor.
+     * @param callbacks functions
      * @param jsonUrl containing JSON string
      */
-    public JsonStreamParserAsync(String jsonUrl) {
+    public JsonStreamParserAsync(Callbacks callbacks, String jsonUrl) {
+        mCallbacks = callbacks;
         mJsonUrl = jsonUrl;
         mIsStreamParsed = false;
         mConnection = null;
         mInputStream = null;
         mInputStreamReader = null;
     }
-
-    /**
-     * Called every time a JSON object is parsed from URL.
-     * RUNS ON BACKGROUND THREAD.
-     * @param o JSONObject to be processed
-     */
-    abstract protected void processJsonObject(JSONObject o);
-
-    /**
-     * Called if stream can not be loaded.
-     * RUNS ON MAIN/UI THREAD.
-     */
-    abstract protected void onParseFailed();
-
-    /**
-     * Called if stream has been parsed and processed successfully.
-     * RUNS ON MAIN/UI THREAD.
-     */
-    abstract protected void onParseSuccess();
 
     /**
      * Called on main thread before parsing JSON URL.
@@ -76,7 +57,7 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
         if (loadInputStreamReader()) {
             JSONObject jsonObject;
             while ((jsonObject = getNextJsonObjectOrNull()) != null) {
-                processJsonObject(jsonObject);
+                mCallbacks.onNewJsonObjectFromStream(jsonObject);
             }
             mIsStreamParsed = true;
         }
@@ -91,14 +72,10 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (mIsStreamParsed) {
-            onParseSuccess();
-        } else {
-            onParseFailed();
-        }
+        mCallbacks.onJsonStreamParseComplete(mIsStreamParsed);
     }
 
-    /*
+    /**
      * Parses and returns the next JSON object.
      * @return JSONObject or null
      */
@@ -145,12 +122,12 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
         if (str.length() > 0) {
             try {
                 return new JSONObject(str.toString());
-            } catch (Exception e) {}
+            } catch (Exception e) {} // Return null, duh...
         }
         return null;
     }
 
-    /*
+    /**
      * Load InputStreamReader for parsing.
      * @return true if successful
      */
@@ -169,7 +146,7 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
         return false;
     }
 
-    /*
+    /**
      * Releases all resources used to load InputStreamReader.
      */
     private void cleanUpInputStreamReader() {
@@ -183,6 +160,31 @@ public abstract class JsonStreamParserAsync extends AsyncTask<Void, Void, Void> 
             if (mConnection != null) {
                 mConnection.disconnect();
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.e(JsonStreamParserAsync.class.getSimpleName(), e.getMessage());
+        }
+    }
+
+    /* ********************************************************************************************
+     *                                   CALLBACK INTERFACE                                       *
+     ******************************************************************************************** */
+
+    /**
+     * Callback functions.
+     */
+    public interface Callbacks {
+
+        /**
+         * Called every time a JSON object is parsed from URL.
+         * RUNS ON BACKGROUND THREAD.
+         * @param o JSONObject to be processed
+         */
+        void onNewJsonObjectFromStream(JSONObject o);
+
+        /**
+         * Called when Json Stream finishes parsing, success or fail.
+         * @param isSuccessful true if successfully parsed
+         */
+        void onJsonStreamParseComplete(boolean isSuccessful);
     }
 }

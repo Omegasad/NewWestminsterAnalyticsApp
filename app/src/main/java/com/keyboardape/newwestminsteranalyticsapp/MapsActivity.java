@@ -1,6 +1,5 @@
 package com.keyboardape.newwestminsteranalyticsapp;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -16,19 +15,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.keyboardape.newwestminsteranalyticsapp.dbreaders.GetPopulationDensityAsync;
-import com.keyboardape.newwestminsteranalyticsapp.db.DBHelper;
+import com.keyboardape.newwestminsteranalyticsapp.datautilities.DataManager;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataType;
+import com.keyboardape.newwestminsteranalyticsapp.maps.MapLayer;
+import com.keyboardape.newwestminsteranalyticsapp.maps.PopulationDensityLayer;
 
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GetPopulationDensityAsync.Callbacks {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, MapLayer.OnMapLayerDataReadyCallback {
 
     private static final LatLngBounds BOUNDARY = new LatLngBounds(
             new LatLng(49.162589, -122.957891), new LatLng(49.239221, -122.887576));
     private static final float DEFAULT_ZOOM_LEVEL = 13f;
     private static final int DEFAULT_HEATMAP_RADIUS = 32;
 
-    private SQLiteDatabase mDB;
     private GoogleMap mMap;
     private Geocoder  mCoder;
 
@@ -47,14 +47,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Set Readable SQLiteDatabase
-        mDB = new DBHelper(this).getReadableDatabase();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mDB.close();
+        // Initialize data manager if not already initialized
+        DataManager.Initialize(this);
     }
 
     /**
@@ -65,24 +59,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mCoder = new Geocoder(this);
+
         // Center camera on New Westminster
         LatLng l = getLatLngFromAddress("NEW WESTMINSTER BC CANADA");
         mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, DEFAULT_ZOOM_LEVEL));
-        // Load Population Density data
-        new GetPopulationDensityAsync(mDB, this).execute();
+
+        new PopulationDensityLayer().getMapDataAsync(this);
     }
 
     /**
-     * Load data onto map once it's downloaded.
+     * Called when data is read from the database, success or fail.
+     * @param dataType type of data set
+     * @param dataOrNull data object or null
      */
     @Override
-    public void onReadPopulationDensityComplete(List<WeightedLatLng> dataOrNull) {
+    @SuppressWarnings("unchecked")
+    public void onMapLayerDataReady(DataType dataType, List<WeightedLatLng> dataOrNull) {
         if (dataOrNull != null) {
             HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                .weightedData(dataOrNull)
-                .radius(DEFAULT_HEATMAP_RADIUS)
-                .build();
+                    .weightedData(dataOrNull)
+                    .radius(DEFAULT_HEATMAP_RADIUS)
+                    .build();
             mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
         }
     }
