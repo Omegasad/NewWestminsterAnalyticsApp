@@ -18,4 +18,6 @@
 
     <string name="btn_view_maps">View Heatmaps</string>
     <string name="btn_view_charts">View Charts</string>
+
+    <string name="top_ten_title">Most Popular Businesses in 2017</string>
 </resources>

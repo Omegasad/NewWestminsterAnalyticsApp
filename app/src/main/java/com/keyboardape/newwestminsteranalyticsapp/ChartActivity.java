@@ -37,9 +37,9 @@ public class ChartActivity extends AppCompatActivity {
     float barWidth;
     private SQLiteDatabase db;
     private Cursor cursor;
-    Map<String,Float> graphCount = new HashMap<String,Float>();
+    private Map<String,Float> graphCount = new HashMap<String,Float>();
     //Sorted list
-    List<Map.Entry<String, Float>> list;
+    private List<Map.Entry<String, Float>> list;
 
     private String a[];
 
