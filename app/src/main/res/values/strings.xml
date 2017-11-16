@@ -1,20 +1,22 @@
 <resources>
     <string name="app_name">NewWestminsterAnalyticsApp</string>
     <string name="title_activity_maps">Heatmaps</string>
-    <string name="title_activity_map_layers">Heatmap Layers</string>
     <string name="title_activity_charts">Charts</string>
 
     <string name="menu_map">View Heatmaps</string>
-    <string name="menu_map_layers">Heatmap Layers</string>
     <string name="menu_charts">Charts</string>
 
     <string name="progress_title">Downloading Datasets</string>
-    <string name="progress_description">You must download the following data sets! Do not let your phone sleep while it downloads!</string>
-    <string name="download_population_density">Population Density</string>
+    <string name="progress_description">You must download the following data sets!</string>
+    <string name="download_building_attributes">Building Attributes</string>
     <string name="download_skytrain_stations">Skytrain Stations</string>
     <string name="download_bus_stops">Bus Stops</string>
     <string name="download_business_licenses">Business Licenses</string>
     <string name="download_major_shoppings">Major Shoppings</string>
+    <string name="download_building_age">Building Age</string>
+
+    <string name="layer_population_density">Population Density</string>
+    <string name="layer_building_age">Building Age</string>
 
     <string name="btn_view_maps">View Heatmaps</string>
 </resources>

@@ -35,11 +35,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MapsActivity"
+        <activity
+            android:name=".MapsActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".ChartActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".MapLayersActivity"
+        <activity
+            android:name=".ChartActivity"
             android:launchMode="singleTask" />
     </application>
 

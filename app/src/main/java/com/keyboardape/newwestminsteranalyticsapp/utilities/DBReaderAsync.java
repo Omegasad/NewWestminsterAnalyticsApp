@@ -1,4 +1,4 @@
-package com.keyboardape.newwestminsteranalyticsapp.datautilities;
+package com.keyboardape.newwestminsteranalyticsapp.utilities;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

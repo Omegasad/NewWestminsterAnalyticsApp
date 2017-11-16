@@ -1,16 +1,21 @@
-package com.keyboardape.newwestminsteranalyticsapp.datautilities;
+package com.keyboardape.newwestminsteranalyticsapp.utilities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAgeData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BusStopsData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BusinessLicensesData;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.Data;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.DataType;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.MajorShoppingsData;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.PopulationDensityData;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetTracker;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.MajorShoppingData;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.SkytrainStationsData;
+//import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerTracker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,26 +25,23 @@ import java.util.Map;
  */
 public final class DataManager extends SQLiteOpenHelper {
 
-    private final static String                         DB_NAME;
-    private final static int                            DB_VERSION;
+    private final static String DB_NAME = "datasets.sqlite";
+    private final static int    DB_VERSION = 1;
 
-    private static DataManager                          DataManagerInstance;
-    private static Map<DataType, Data>                  DataSetsInstance;
-    private static Map<DataType, Class<? extends Data>> DataSetClasses;
+    private static DataManager                                DataManagerInstance;
+    private static Map<DataSetType, DataSet>                  DataSetsInstance;
+    private static Map<DataSetType, Class<? extends DataSet>> DataSetClasses;
 
     static {
-        DB_NAME             = "datasets.sqlite";
-        DB_VERSION          = 2;
-
         DataManagerInstance = null;
-        DataSetsInstance    = new HashMap<>();
-
+        DataSetsInstance = new HashMap<>();
         DataSetClasses = new HashMap<>();
-        DataSetClasses.put(DataType.POPULATION_DENSITY, PopulationDensityData.class);
-        DataSetClasses.put(DataType.BUSINESS_LICENSES, BusinessLicensesData.class);
-        DataSetClasses.put(DataType.BUS_STOPS, BusStopsData.class);
-        DataSetClasses.put(DataType.MAJOR_SHOPPINGS, MajorShoppingsData.class);
-        DataSetClasses.put(DataType.SKYTRAIN_STATIONS, SkytrainStationsData.class);
+        DataSetClasses.put(DataSetType.BUILDING_ATTRIBUTES, BuildingAttributesData.class);
+        DataSetClasses.put(DataSetType.BUSINESS_LICENSES,   BusinessLicensesData.class);
+        DataSetClasses.put(DataSetType.BUS_STOPS,           BusStopsData.class);
+        DataSetClasses.put(DataSetType.MAJOR_SHOPPING,      MajorShoppingData.class);
+        DataSetClasses.put(DataSetType.SKYTRAIN_STATIONS,   SkytrainStationsData.class);
+        DataSetClasses.put(DataSetType.BUILDING_AGE,        BuildingAgeData.class);
     }
 
     /* ********************************************************************************************
@@ -54,9 +56,9 @@ public final class DataManager extends SQLiteOpenHelper {
         if (DataManagerInstance == null) {
             DataManagerInstance = new DataManager(context.getApplicationContext());
 
-            // Business Licenses needs GeoCoder which needs a Context
-            Data businessLicenses = new BusinessLicensesData(context.getApplicationContext());
-            DataSetsInstance.put(DataType.BUSINESS_LICENSES, businessLicenses);
+            // Business Licenses needs GeoCoder which needs a Context to initialize
+            DataSet businessLicenses = new BusinessLicensesData(context.getApplicationContext());
+            DataSetsInstance.put(DataSetType.BUSINESS_LICENSES, businessLicenses);
         }
     }
 
@@ -69,22 +71,21 @@ public final class DataManager extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns the specified Data instance.
-     * @param dataType to get
-     * @return Data or null
+     * Returns the specified DataSet instance. Will create one if non-existent.
+     * @param dataSetType to get
+     * @return DataSet
      */
-    public static synchronized Data GetDataSetOrNull(DataType dataType) {
-        Data data;
-        if ((data = DataSetsInstance.get(dataType)) == null) {
+    public static synchronized DataSet GetDataSet(DataSetType dataSetType) {
+        DataSet dataSet;
+        if ((dataSet = DataSetsInstance.get(dataSetType)) == null) {
             try {
-                data = DataSetClasses.get(dataType).newInstance();
-                DataSetsInstance.put(dataType, data);
-                return data;
+                dataSet = DataSetClasses.get(dataSetType).newInstance();
+                DataSetsInstance.put(dataSetType, dataSet);
             } catch (Exception e) {
-                return null;
+                Log.e(DataManager.class.getSimpleName(), e.getMessage());
             }
         }
-        return data;
+        return dataSet;
     }
 
     /* ********************************************************************************************
@@ -92,7 +93,7 @@ public final class DataManager extends SQLiteOpenHelper {
      ******************************************************************************************** */
 
     /**
-     * Private Constructor; SINGLETON.
+     * Prevent outside initialization; Singleton.
      * @param context of the caller.
      */
     private DataManager(Context context) {
@@ -121,7 +122,7 @@ public final class DataManager extends SQLiteOpenHelper {
 
     /**
      * Updates database based on oldVersion and newVersion.
-     * @param db to UpdateStats
+     * @param db to SetRequireUpdate
      * @param oldVersion of db
      * @param newVersion of db
      */
@@ -133,16 +134,10 @@ public final class DataManager extends SQLiteOpenHelper {
                         "tableName       TEXT    PRIMARY KEY UNIQUE NOT NULL," +
                         "isRequireUpdate INTEGER NOT NULL," +
                         "lastUpdated     INTEGER NOT NULL);";
-                String createLayerOptions =
-                        "CREATE TABLE IF NOT EXISTS " + LayerOptionsTracker.TABLE_NAME + "(" +
-                        "tableName       TEXT    PRIMARY KEY UNIQUE NOT NULL," +
-                        "isAdditive      INTEGER NOT NULL," +
-                        "layerWeight     REAL    NOT NULL," +
-                        "totalUnits      INTEGER NOT NULL," +
-                        "isShown         INTEGER NOT NULL);";
                 db.execSQL(createTracker);
-                db.execSQL(createLayerOptions);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.e(DataManager.class.getSimpleName(), e.getMessage());
+        }
     }
 }

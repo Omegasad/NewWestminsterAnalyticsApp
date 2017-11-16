@@ -9,20 +9,21 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.keyboardape.newwestminsteranalyticsapp.datautilities.DataManager;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.Data;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.DataType;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetTracker;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements Data.OnDownloadCompleteCallback {
+public class MainActivity extends AppCompatActivity implements DataSet.OnDataSetUpdatedCallback {
 
-    private List<DataType> mDataSets;
-    private Map<DataType, LinearLayout> mDataLabels;
-    private Map<DataType, ProgressBar> mProgressBars;
+    private List<DataSetType> mDataSets;
+    private Map<DataSetType, LinearLayout> mDataLabels;
+    private Map<DataSetType, ProgressBar> mProgressBars;
     private Button mBtnViewmaps;
 
     @Override
@@ -33,25 +34,28 @@ public class MainActivity extends AppCompatActivity implements Data.OnDownloadCo
         DataManager.Initialize(this);
 
         mDataSets = new ArrayList<>();
-        mDataSets.add(DataType.POPULATION_DENSITY);
-        mDataSets.add(DataType.SKYTRAIN_STATIONS);
-        mDataSets.add(DataType.BUS_STOPS);
-        mDataSets.add(DataType.BUSINESS_LICENSES);
-        mDataSets.add(DataType.MAJOR_SHOPPINGS);
+        mDataSets.add(DataSetType.BUILDING_ATTRIBUTES);
+        mDataSets.add(DataSetType.SKYTRAIN_STATIONS);
+        mDataSets.add(DataSetType.BUS_STOPS);
+        mDataSets.add(DataSetType.BUSINESS_LICENSES);
+        mDataSets.add(DataSetType.MAJOR_SHOPPING);
+        mDataSets.add(DataSetType.BUILDING_AGE);
 
         mProgressBars = new HashMap<>();
-        mProgressBars.put(DataType.POPULATION_DENSITY, (ProgressBar) findViewById(R.id.progressPopulationDensity));
-        mProgressBars.put(DataType.SKYTRAIN_STATIONS, (ProgressBar) findViewById(R.id.progressSkytrainStations));
-        mProgressBars.put(DataType.BUS_STOPS, (ProgressBar) findViewById(R.id.progressBusStops));
-        mProgressBars.put(DataType.BUSINESS_LICENSES, (ProgressBar) findViewById(R.id.progressBusinessLicenses));
-        mProgressBars.put(DataType.MAJOR_SHOPPINGS, (ProgressBar) findViewById(R.id.progressMajorShoppings));
+        mProgressBars.put(DataSetType.BUILDING_ATTRIBUTES, (ProgressBar) findViewById(R.id.progressPopulationDensity));
+        mProgressBars.put(DataSetType.SKYTRAIN_STATIONS, (ProgressBar) findViewById(R.id.progressSkytrainStations));
+        mProgressBars.put(DataSetType.BUS_STOPS, (ProgressBar) findViewById(R.id.progressBusStops));
+        mProgressBars.put(DataSetType.BUSINESS_LICENSES, (ProgressBar) findViewById(R.id.progressBusinessLicenses));
+        mProgressBars.put(DataSetType.MAJOR_SHOPPING, (ProgressBar) findViewById(R.id.progressMajorShoppings));
+        mProgressBars.put(DataSetType.BUILDING_AGE, (ProgressBar) findViewById(R.id.progressBuildingAge));
 
         mDataLabels = new HashMap<>();
-        mDataLabels.put(DataType.POPULATION_DENSITY, (LinearLayout) findViewById(R.id.labelPopulationDensity));
-        mDataLabels.put(DataType.SKYTRAIN_STATIONS, (LinearLayout) findViewById(R.id.labelSkytrainStations));
-        mDataLabels.put(DataType.BUS_STOPS, (LinearLayout) findViewById(R.id.labelBusStops));
-        mDataLabels.put(DataType.BUSINESS_LICENSES, (LinearLayout) findViewById(R.id.labelBusinessLicenses));
-        mDataLabels.put(DataType.MAJOR_SHOPPINGS, (LinearLayout) findViewById(R.id.labelMajorShoppings));
+        mDataLabels.put(DataSetType.BUILDING_ATTRIBUTES, (LinearLayout) findViewById(R.id.labelPopulationDensity));
+        mDataLabels.put(DataSetType.SKYTRAIN_STATIONS, (LinearLayout) findViewById(R.id.labelSkytrainStations));
+        mDataLabels.put(DataSetType.BUS_STOPS, (LinearLayout) findViewById(R.id.labelBusStops));
+        mDataLabels.put(DataSetType.BUSINESS_LICENSES, (LinearLayout) findViewById(R.id.labelBusinessLicenses));
+        mDataLabels.put(DataSetType.MAJOR_SHOPPING, (LinearLayout) findViewById(R.id.labelMajorShoppings));
+        mDataLabels.put(DataSetType.BUILDING_AGE, (LinearLayout) findViewById(R.id.labelBuildingAge));
 
         mBtnViewmaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewmaps.setEnabled(false);
@@ -66,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements Data.OnDownloadCo
 
     private void downloadDataSetOrEnableButtons() {
         if (mDataSets.size() > 0) {
-            DataType type = mDataSets.get(0);
-            Data data = DataManager.GetDataSetOrNull(type);
+            DataSetType type = mDataSets.get(0);
+            DataSet data = DataManager.GetDataSet(type);
             if (data.isRequireUpdate()) {
                 mProgressBars.get(type).setVisibility(View.VISIBLE);
                 data.updateDataAsync(this);
@@ -82,20 +86,15 @@ public class MainActivity extends AppCompatActivity implements Data.OnDownloadCo
         }
     }
 
-    /**
-     * Called when data is downloaded.
-     * @param dataType downloaded
-     * @param isSuccessful true if successful
-     */
     @Override
-    public void onDownloadComplete(DataType dataType, boolean isSuccessful) {
-        if (!isSuccessful) {
+    public void onDataSetUpdated(DataSetType dataSetType, boolean isUpdateSuccessful) {
+        if (!isUpdateSuccessful) {
             Toast.makeText(this, "Download data failed...", Toast.LENGTH_LONG).show();
         }
 
-        mProgressBars.get(dataType).setVisibility(View.INVISIBLE);
-        mDataLabels.get(dataType).setVisibility(View.INVISIBLE);
-        mDataSets.remove(dataType);
+        mProgressBars.get(dataSetType).setVisibility(View.INVISIBLE);
+        mDataLabels.get(dataSetType).setVisibility(View.INVISIBLE);
+        mDataSets.remove(dataSetType);
         downloadDataSetOrEnableButtons();
     }
 }

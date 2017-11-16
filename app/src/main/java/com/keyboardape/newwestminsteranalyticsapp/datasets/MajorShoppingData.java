@@ -14,12 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Skytrain Stations DataSet.
+ * Major Shopping DataSet.
  *
  * Downloaded from New West Open Data:
- * http://opendata.newwestcity.ca/datasets/skytrain-stations
+ * http://opendata.newwestcity.ca/datasets/major-shopping
  */
-public class SkytrainStationsData extends DataSet {
+public class MajorShoppingData extends DataSet {
 
     private final static String              TABLE_NAME;
     private final static String              DATA_SOURCE_URL;
@@ -27,24 +27,30 @@ public class SkytrainStationsData extends DataSet {
     private final static Map<String, String> TABLE_COLUMNS;
 
     static {
-        TABLE_NAME      = "skytrain_stations";
-        DATA_SOURCE_URL = "http://opendata.newwestcity.ca/downloads/skytrain-stations/SKYTRAIN_STATIONS.json";
-        DATA_SET_TYPE   = DataSetType.SKYTRAIN_STATIONS;
+        TABLE_NAME      = "major_shoppings";
+        DATA_SOURCE_URL = "http://opendata.newwestcity.ca/downloads/major-shopping/MAJOR_SHOPPING.json";
+        DATA_SET_TYPE   = DataSetType.MAJOR_SHOPPING;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");
         // Original Data
-        TABLE_COLUMNS.put("NAME",      "TEXT"); // e.g. "NEW WESTMINSTER STATION"
-        TABLE_COLUMNS.put("PHASE",     "TEXT"); // e.g. "EXPO"
-        TABLE_COLUMNS.put("LATITUDE",  "REAL"); // e.g.   49.20118360787066
-        TABLE_COLUMNS.put("LONGITUDE", "REAL"); // e.g. -122.91293786875315
-        // Discarded Data:
-        //      - ID       (values are all 0)
+        TABLE_COLUMNS.put("CATEGORY",  "TEXT");    // e.g. "Major Shopping"
+        TABLE_COLUMNS.put("STRNUM",    "TEXT");    // e.g. "825"
+        TABLE_COLUMNS.put("STRNAM",    "TEXT");    // e.g. "MCBRIDE BLVD"
+        TABLE_COLUMNS.put("BLDGNAM",   "TEXT");    // e.g. "Mcbride Plaza Shopping Centre"
+        TABLE_COLUMNS.put("BLDG_ID",   "INTEGER"); // e.g. 6510
+        TABLE_COLUMNS.put("MAPREF",    "INTEGER"); // e.g. 11226000
+        TABLE_COLUMNS.put("LATITUDE",  "REAL");    // e.g.   49.2233306124747
+        TABLE_COLUMNS.put("LONGITUDE", "REAL");    // e.g. -122.912645675014
     }
 
-    public SkytrainStationsData() {
+    public MajorShoppingData() {
         super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS);
     }
+
+    // ---------------------------------------------------------------------------------------------
+    //                                         DOWNLOAD DATA
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void downloadDataToDBAsync(final OnDataSetUpdatedCallback callback) {
@@ -56,8 +62,12 @@ public class SkytrainStationsData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
-                    c.put("NAME",  o.getString("NAME"));
-                    c.put("PHASE", o.getString("PHASE"));
+                    c.put("CATEGORY",  o.getString("CATEGORY"));
+                    c.put("STRNUM",    o.getString("STRNUM"));
+                    c.put("STRNAM",    o.getString("STRNAM"));
+                    c.put("BLDGNAM",   o.getString("BLDGNAM"));
+                    c.put("BLDG_ID",   ParseToIntOrNull("BLDG_ID"));
+                    c.put("MAPREF",    ParseToIntOrNull("MAPREF"));
 
                     JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
                     Double latitude = null;
@@ -71,7 +81,7 @@ public class SkytrainStationsData extends DataSet {
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {
-                    Log.e(SkytrainStationsData.class.getSimpleName(), e.getMessage() + "::" + o.toString());
+                    Log.e(MajorShoppingData.class.getSimpleName(), e.getMessage() + "::" + o.toString());
                 }
             }
             @Override
