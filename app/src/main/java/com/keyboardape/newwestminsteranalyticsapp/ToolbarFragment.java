@@ -47,8 +47,6 @@ public class ToolbarFragment extends Fragment {
         // Hide action icon of current activity
         if (getActivity() instanceof MapsActivity) {
             menu.findItem(R.id.action_map).setVisible(false);
-        } else if (getActivity() instanceof MapLayersActivity) {
-            menu.findItem(R.id.action_map_layers).setVisible(false);
         } else if (getActivity() instanceof ChartActivity) {
             menu.findItem(R.id.action_charts).setVisible(false);
         }
@@ -59,9 +57,6 @@ public class ToolbarFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_map:
                 startActivity(new Intent(getActivity(), MapsActivity.class));
-                return true;
-            case R.id.action_map_layers:
-                startActivity(new Intent(getActivity(), MapLayersActivity.class));
                 return true;
             case R.id.action_charts:
                 startActivity(new Intent(getActivity(), ChartActivity.class));

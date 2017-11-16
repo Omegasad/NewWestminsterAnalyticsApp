@@ -9,12 +9,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_map_layers"
-        android:title="@string/menu_map_layers"
-        android:icon="@drawable/ic_layers_black_24dp"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/action_charts"
         android:icon="@drawable/ic_insert_chart_black_24dp"
         android:title="@string/menu_charts"

@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/download_population_density"
+            android:text="@string/download_building_attributes"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -136,6 +136,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/download_major_shoppings"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/labelBuildingAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressBuildingAge"
+            android:layout_gravity="center_vertical"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:indeterminate="true"
+            android:scaleType="fitXY"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_building_age"
             android:textSize="20sp" />
 
     </LinearLayout>
