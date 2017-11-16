@@ -76,13 +76,13 @@ public class ChartActivity extends AppCompatActivity {
         SQLiteOpenHelper helper = DataManager.GetInstance();
         try {
             db = helper.getReadableDatabase();
-            cursor= db.rawQuery("select * from business_licenses", null);
+            cursor= db.rawQuery("select SIC_GROUP from business_licenses", null);
             int count = cursor.getCount();
             a = new String[count];
             if (cursor.moveToFirst()) {
                 int ndx = 0;
                 do {
-                    a[ndx] = cursor.getString(8);
+                    a[ndx] = cursor.getString(0);
                     //Ugly hash code to count most popular businesses
                     Float freq = graphCount.get(a[ndx]);
                     graphCount.put(a[ndx], (freq == null) ? 1 : freq +1);

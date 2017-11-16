@@ -172,4 +172,12 @@
         android:text="@string/btn_view_maps"
         android:onClick="onClickViewMaps"/>
 
+    <Button
+        android:id="@+id/btnViewCharts"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_view_charts"
+        android:onClick="onClickViewCharts"/>
+
 </LinearLayout>

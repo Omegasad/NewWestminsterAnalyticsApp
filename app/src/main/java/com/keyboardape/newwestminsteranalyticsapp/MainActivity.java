@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
     private List<DataSetType> mDataSets;
     private Map<DataSetType, LinearLayout> mDataLabels;
     private Map<DataSetType, ProgressBar> mProgressBars;
-    private Button mBtnViewmaps;
+    private Button mBtnViewmaps,mBtnViewCharts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +60,19 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         mBtnViewmaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewmaps.setEnabled(false);
 
+        mBtnViewCharts = (Button) findViewById(R.id.btnViewCharts);
+        mBtnViewCharts.setEnabled(false);
+
         downloadDataSetOrEnableButtons();
     }
 
     public void onClickViewMaps(View v) {
         Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
+    public void onClickViewCharts(View v) {
+        Intent i = new Intent(this, ChartActivity.class);
         startActivity(i);
     }
 
@@ -83,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
             }
         } else {
             mBtnViewmaps.setEnabled(true);
+            mBtnViewCharts.setEnabled(true);
         }
     }
 
