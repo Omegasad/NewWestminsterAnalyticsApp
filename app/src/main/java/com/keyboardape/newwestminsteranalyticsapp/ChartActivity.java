@@ -21,7 +21,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.keyboardape.newwestminsteranalyticsapp.db.DBHelper;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +73,7 @@ public class ChartActivity extends AppCompatActivity {
     private void readDb()
     {
         // Get the SQL Statement
-        SQLiteOpenHelper helper = new DBHelper(this);
+        SQLiteOpenHelper helper = DataManager.GetInstance();
         try {
             db = helper.getReadableDatabase();
             cursor= db.rawQuery("select * from business_licenses", null);
