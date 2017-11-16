@@ -14,9 +14,11 @@
     <string name="download_business_licenses">Business Licenses</string>
     <string name="download_major_shoppings">Major Shoppings</string>
     <string name="download_building_age">Building Age</string>
+    <string name="download_high_rises">High Rises</string>
 
     <string name="layer_population_density">Population Density</string>
     <string name="layer_building_age">Building Age</string>
+    <string name="layer_high_rises">Highrise Buildings Height</string>
 
     <string name="btn_view_maps">View Heatmaps</string>
     <string name="btn_view_charts">View Charts</string>

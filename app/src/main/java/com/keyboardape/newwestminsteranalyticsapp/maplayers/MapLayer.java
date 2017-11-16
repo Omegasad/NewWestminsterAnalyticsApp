@@ -21,6 +21,7 @@ public abstract class MapLayer {
         MapLayers = new HashMap<>();
         MapLayers.put(MapLayerType.POPULATION_DENSITY, new PopulationDensityLayer());
         MapLayers.put(MapLayerType.BUILDING_AGE, new BuildingAgeLayer());
+        MapLayers.put(MapLayerType.HIGH_RISES, new HighRisesLayer());
     }
 
     public static MapLayer Get(MapLayerType mapLayerType) {

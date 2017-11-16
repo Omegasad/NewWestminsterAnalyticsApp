@@ -4,6 +4,7 @@ public enum MapLayerType {
 
     POPULATION_DENSITY
     ,BUILDING_AGE
+    ,HIGH_RISES
     ;
 
     public MapLayer getLayer() {

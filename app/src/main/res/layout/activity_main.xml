@@ -164,6 +164,30 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/labelHighRises"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressHighRises"
+            android:layout_gravity="center_vertical"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:indeterminate="true"
+            android:scaleType="fitXY"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_high_rises"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btnViewMaps"
         android:layout_marginTop="20dp"

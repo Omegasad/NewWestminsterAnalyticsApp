@@ -9,6 +9,23 @@
     android:background="#CCFFFFFF">
 
     <LinearLayout
+        android:id="@+id/highRisesLayerRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/layer_high_rises"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/highRisesLayerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_line_weight_black_24dp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/buildingAgeLayerRow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

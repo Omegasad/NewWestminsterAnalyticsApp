@@ -126,7 +126,7 @@ public class BusinessLicensesData extends DataSet {
         try {
             return new SimpleDateFormat("yyyyMMdd").parse(YYYYMMDD).getTime();
         } catch (Exception e) {
-            // Expected; return 0
+            // Expected; return null
         }
         return null;
     }

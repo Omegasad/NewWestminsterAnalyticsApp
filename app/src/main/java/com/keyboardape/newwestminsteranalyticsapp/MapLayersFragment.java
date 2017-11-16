@@ -41,10 +41,12 @@ public class MapLayersFragment extends Fragment implements View.OnClickListener 
         mLayerRows = new HashMap<>();
         mLayerRows.put(MapLayerType.POPULATION_DENSITY, (LinearLayout) view.findViewById(R.id.populationDensityLayerRow));
         mLayerRows.put(MapLayerType.BUILDING_AGE, (LinearLayout) view.findViewById(R.id.buildingAgeLayerRow));
+        mLayerRows.put(MapLayerType.HIGH_RISES, (LinearLayout) view.findViewById(R.id.highRisesLayerRow));
 
         mLayerButtons = new HashMap<>();
         mLayerButtons.put(MapLayerType.POPULATION_DENSITY, (FloatingActionButton) view.findViewById(R.id.populationDensityLayerBtn));
         mLayerButtons.put(MapLayerType.BUILDING_AGE, (FloatingActionButton) view.findViewById(R.id.buildingAgeLayerBtn));
+        mLayerButtons.put(MapLayerType.HIGH_RISES, (FloatingActionButton) view.findViewById(R.id.highRisesLayerBtn));
 
         // Highlight active layer gray
         mLayerButtons.get(mActiveLayerType).setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));

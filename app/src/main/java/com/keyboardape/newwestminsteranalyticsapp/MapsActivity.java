@@ -43,6 +43,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MAP_LAYER_NAMES = new HashMap<>();
         MAP_LAYER_NAMES.put(MapLayerType.POPULATION_DENSITY, R.string.layer_population_density);
         MAP_LAYER_NAMES.put(MapLayerType.BUILDING_AGE, R.string.layer_building_age);
+        MAP_LAYER_NAMES.put(MapLayerType.HIGH_RISES, R.string.layer_high_rises);
 
         BOUNDARY = new LatLngBounds(new LatLng(49.162589, -122.957891), new LatLng(49.239221, -122.887576));
         DEFAULT_ZOOM_LEVEL = 13f;

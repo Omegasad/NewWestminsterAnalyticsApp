@@ -56,7 +56,8 @@ public abstract class DataSet {
             JSONObject geoJson = o.getJSONObject("json_geometry");
             String geoJsonType = geoJson.getString("type");
 
-            JSONArray coordinates = geoJson.getJSONArray("coordinates");
+            // different shapes have different # of array layers
+            JSONArray coordinates = geoJson.getJSONArray("coordinates"); // Line shape
             if (geoJsonType.equals("Polygon")) {
                 coordinates = coordinates.getJSONArray(0);
             } else if (geoJsonType.equals("MultiPolygon")) {
@@ -123,7 +124,7 @@ public abstract class DataSet {
     abstract protected void downloadDataToDBAsync(OnDataSetUpdatedCallback callback);
 
     public void updateDataAsync(final OnDataSetUpdatedCallback callback) {
-        dropAndCreateTable();
+        recreateDBTable();
         downloadDataToDBAsync(new OnDataSetUpdatedCallback() {
             @Override
             public void onDataSetUpdated(DataSetType dataSetType, boolean isUpdateSuccessful) {
@@ -133,7 +134,7 @@ public abstract class DataSet {
         });
     }
 
-    private void dropAndCreateTable() {
+    private void recreateDBTable() {
         SQLiteDatabase db = DataManager.GetInstance().getWritableDatabase();
         String csvColumnNamesWithAttributes = concatenateToCSV(mTableColumns);
         String queryDelete = "DROP TABLE IF EXISTS " + mTableName + ";";

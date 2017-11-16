@@ -46,7 +46,6 @@ public class BuildingAttributesData extends DataSet {
         TABLE_COLUMNS.put("SQM_FTPRNT", "REAL");    // e.g. 696.77
         TABLE_COLUMNS.put("SQM_A_GRND", "REAL");    // e.g. 3968.82
         TABLE_COLUMNS.put("SQM_B_GRND", "REAL");    // e.g. 0
-        // Derived Data
         TABLE_COLUMNS.put("LATITUDE",   "REAL");    // e.g.   49.2233306124747
         TABLE_COLUMNS.put("LONGITUDE",  "REAL");    // e.g. -122.912645675014
         // Discarded Data:
@@ -85,18 +84,10 @@ public class BuildingAttributesData extends DataSet {
                     c.put("SQM_FTPRNT", ParseToDoubleOrNull(o.getString("SQM_FTPRNT")));
                     c.put("SQM_B_GRND", ParseToDoubleOrNull(o.getString("SQM_B_GRND")));
                     c.put("SQM_A_GRND", ParseToDoubleOrNull(o.getString("SQM_A_GRND")));
-                    // Derived Data
-                    JSONArray coordinates;
-                    Double latitude = null;
-                    Double longitude = null;
-                    if (numResidents != null && numResidents > 0
-                        && (coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o)) != null) {
 
-                        latitude = coordinates.getDouble(1);
-                        longitude = coordinates.getDouble(0);
-                    }
-                    c.put("LATITUDE", latitude);
-                    c.put("LONGITUDE",longitude);
+                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

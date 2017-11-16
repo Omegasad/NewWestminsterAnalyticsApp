@@ -42,7 +42,7 @@ public class BuildingAgeData extends DataSet {
         TABLE_COLUMNS.put("BLDG_ID",   "INTEGER"); // e.g. 291
         TABLE_COLUMNS.put("MAPREF",    "INTEGER"); // e.g. 847000
         TABLE_COLUMNS.put("UNITNUM",   "INTEGER"); // e.g. null
-        TABLE_COLUMNS.put("BLDGAGE",   "INTEGER"); // e.g. "QUEEN'S COURT"
+        TABLE_COLUMNS.put("BLDGAGE",   "INTEGER"); // e.g. 1971
         TABLE_COLUMNS.put("MOVED",     "INTEGER"); // e.g. 0
         TABLE_COLUMNS.put("LATITUDE",  "REAL");    // e.g.   49.20975021764765
         TABLE_COLUMNS.put("LONGITUDE", "REAL");    // e.g. -122.90530144621799

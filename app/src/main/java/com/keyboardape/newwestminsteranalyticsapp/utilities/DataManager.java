@@ -12,6 +12,7 @@ import com.keyboardape.newwestminsteranalyticsapp.datasets.BusinessLicensesData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetTracker;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.HighRisesData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.MajorShoppingData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.SkytrainStationsData;
@@ -42,6 +43,7 @@ public final class DataManager extends SQLiteOpenHelper {
         DataSetClasses.put(DataSetType.MAJOR_SHOPPING,      MajorShoppingData.class);
         DataSetClasses.put(DataSetType.SKYTRAIN_STATIONS,   SkytrainStationsData.class);
         DataSetClasses.put(DataSetType.BUILDING_AGE,        BuildingAgeData.class);
+        DataSetClasses.put(DataSetType.HIGH_RISES,          HighRisesData.class);
     }
 
     /* ********************************************************************************************

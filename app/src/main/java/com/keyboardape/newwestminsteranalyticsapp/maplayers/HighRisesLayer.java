@@ -16,33 +16,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Building Age MapLayer.
+ * HighRises MapLayer.
  */
-public class BuildingAgeLayer extends MapLayer {
+public class HighRisesLayer extends MapLayer {
 
-    private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.BUILDING_AGE;
+    private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.HIGH_RISES;
 
-    // Used to reduce the intensity of older buildings to get
-    // a better visual representation of data
-    private final static int YEAR_REDUCTION = 15;
-
-    public BuildingAgeLayer() {
+    public HighRisesLayer() {
         super(MAP_LAYER_TYPE);
     }
 
     @Override
     public MapsActivity.MapOptions getMapOptions() {
         return new MapsActivity.MapOptions()
-                .setHeatmapRadius(15);
+                .setHeatmapRadius(30);
     }
 
     @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
-        int yearReduction = getAggregate("MAX(BLDGAGE) - " + YEAR_REDUCTION);
-        String buildingAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
-        String sqlQuery = "SELECT LATITUDE, LONGITUDE, BLDGAGE "
-                + "FROM " + buildingAgeTableName + " "
-                + "WHERE BLDGAGE IS NOT NULL "
+        float minHeight = getAggregate("MIN(BLDGAGE)");
+        String highRisesTableName = DataSetType.HIGH_RISES.getDataSet().getTableName();
+        String sqlQuery = "SELECT LATITUDE, LONGITUDE, M_BLDGHGT "
+                + "FROM " + highRisesTableName + " "
+                + "WHERE M_BLDGHGT IS NOT NULL "
                 + "AND LATITUDE IS NOT NULL "
                 + "AND LONGITUDE IS NOT NULL";
         new DBReaderAsync(new DBReaderAsync.Callbacks() {
@@ -54,7 +50,7 @@ public class BuildingAgeLayer extends MapLayer {
                         data = new ArrayList<>();
                         do {
                             LatLng latlng = new LatLng(cursor.getDouble(0), cursor.getDouble(1));
-                            float intensity = (cursor.getInt(2) - yearReduction);
+                            float intensity = (cursor.getInt(2) - minHeight);
                             WeightedLatLng wlatlng = new WeightedLatLng(latlng, intensity);
                             data.add(wlatlng);
                         } while (cursor.moveToNext());
@@ -71,7 +67,7 @@ public class BuildingAgeLayer extends MapLayer {
         }, sqlQuery).execute();
     }
 
-    private int getAggregate(String selectStatement) {
+    private float getAggregate(String selectStatement) {
         String buildingAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
         String sql = "SELECT " + selectStatement + " FROM " + buildingAgeTableName + " "
                 + "WHERE BLDGAGE IS NOT NULL "
@@ -80,7 +76,7 @@ public class BuildingAgeLayer extends MapLayer {
         SQLiteDatabase db = DataManager.GetInstance().getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
-        int aggregate = cursor.getInt(0);
+        float aggregate = cursor.getFloat(0);
         cursor.close();
         db.close();
         return aggregate;

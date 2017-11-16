@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetTracker;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
 
@@ -24,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
     private List<DataSetType> mDataSets;
     private Map<DataSetType, LinearLayout> mDataLabels;
     private Map<DataSetType, ProgressBar> mProgressBars;
-    private Button mBtnViewmaps,mBtnViewCharts;
+    private Button mBtnViewmaps;
+    private Button mBtnViewCharts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         mDataSets.add(DataSetType.BUSINESS_LICENSES);
         mDataSets.add(DataSetType.MAJOR_SHOPPING);
         mDataSets.add(DataSetType.BUILDING_AGE);
+        mDataSets.add(DataSetType.HIGH_RISES);
 
         mProgressBars = new HashMap<>();
         mProgressBars.put(DataSetType.BUILDING_ATTRIBUTES, (ProgressBar) findViewById(R.id.progressPopulationDensity));
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         mProgressBars.put(DataSetType.BUSINESS_LICENSES, (ProgressBar) findViewById(R.id.progressBusinessLicenses));
         mProgressBars.put(DataSetType.MAJOR_SHOPPING, (ProgressBar) findViewById(R.id.progressMajorShoppings));
         mProgressBars.put(DataSetType.BUILDING_AGE, (ProgressBar) findViewById(R.id.progressBuildingAge));
+        mProgressBars.put(DataSetType.HIGH_RISES, (ProgressBar) findViewById(R.id.progressHighRises));
 
         mDataLabels = new HashMap<>();
         mDataLabels.put(DataSetType.BUILDING_ATTRIBUTES, (LinearLayout) findViewById(R.id.labelPopulationDensity));
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         mDataLabels.put(DataSetType.BUSINESS_LICENSES, (LinearLayout) findViewById(R.id.labelBusinessLicenses));
         mDataLabels.put(DataSetType.MAJOR_SHOPPING, (LinearLayout) findViewById(R.id.labelMajorShoppings));
         mDataLabels.put(DataSetType.BUILDING_AGE, (LinearLayout) findViewById(R.id.labelBuildingAge));
+        mDataLabels.put(DataSetType.HIGH_RISES, (LinearLayout) findViewById(R.id.labelHighRises));
 
         mBtnViewmaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewmaps.setEnabled(false);

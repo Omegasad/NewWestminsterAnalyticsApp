@@ -13,6 +13,7 @@ public enum DataSetType {
     ,BUSINESS_LICENSES
     ,MAJOR_SHOPPING
     ,BUILDING_AGE
+    ,HIGH_RISES
     ;
 
     public DataSet getDataSet() {
