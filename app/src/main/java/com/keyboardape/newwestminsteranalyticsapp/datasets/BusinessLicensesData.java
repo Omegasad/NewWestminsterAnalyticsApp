@@ -77,14 +77,14 @@ public class BusinessLicensesData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
-                    String type = o.getString("TYPE");
-                    String civicAddress = o.getString("CIVIC_ADDRESS");
+                    String type         = ParseToStringOrNull(o.getString("TYPE"));
+                    String civicAddress = ParseToStringOrNull(o.getString("CIVIC_ADDRESS"));
                     c.put("TYPE",                type);
-                    c.put("TRADE_NAME",          o.getString("TRADE_NAME"));
-                    c.put("LICENCEE_NAME",       o.getString("LICENCEE_NAME"));
+                    c.put("TRADE_NAME",          ParseToStringOrNull(o.getString("TRADE_NAME")));
+                    c.put("LICENCEE_NAME",       ParseToStringOrNull(o.getString("LICENCEE_NAME")));
                     c.put("CIVIC_ADDRESS",       civicAddress);
-                    c.put("LICENCE_DESCRIPTION", o.getString("LICENCE_DESCRIPTION"));
-                    c.put("SIC_GROUP",           o.getString("SIC_GROUP"));
+                    c.put("LICENCE_DESCRIPTION", ParseToStringOrNull(o.getString("LICENCE_DESCRIPTION")));
+                    c.put("SIC_GROUP",           ParseToStringOrNull(o.getString("SIC_GROUP")));
                     c.put("LICENCE",             ParseToIntOrNull(o.getString("LICENCE")));
                     c.put("YEAR_OPENED",         ParseToIntOrNull(o.getString("YEAR_OPENED")));
 

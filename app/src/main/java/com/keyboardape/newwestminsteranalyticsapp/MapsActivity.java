@@ -48,14 +48,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         DEFAULT_ZOOM_LEVEL = 13f;
         DEFAULT_HEATMAP_RADIUS = 32;
         MIN_ZOOM_LEVEL = 13f;
-        MAX_ZOOM_LEVEL = 14f;
+        MAX_ZOOM_LEVEL = 14.5f;
     }
+
+    private TileOverlay       mTileOverlay = null;
+    private MapLayerType      mLastMapLayer = null;
+    private MapLayerType      mCurrentMapLayer = null;
+    private Integer           mHeatmapRadius = DEFAULT_HEATMAP_RADIUS;
 
     private GoogleMap         mMap;
     private Geocoder          mCoder;
     private MapLayersFragment mMapLayerFragment;
-    private TileOverlay       mTileOverlay;
-    private Integer           mHeatmapRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +78,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mTileOverlay = null;
-        mHeatmapRadius = DEFAULT_HEATMAP_RADIUS;
-
-        // FAB Layers
+        // FAB Layer Buttons
         mMapLayerFragment = new MapLayersFragment();
         mMapLayerFragment.setActiveLayer(MapLayerType.POPULATION_DENSITY);
         FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
@@ -88,6 +88,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 toggleMapLayerFAB();
             }
         });
+        openFabLayersBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (!mMapLayerFragment.isVisible()) {
+                    loadLayer(mLastMapLayer);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mCoder = new Geocoder(this);
+
+        LatLng l = getLatLngFromAddress("NEW WESTMINSTER BC CANADA");
+        mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, DEFAULT_ZOOM_LEVEL));
+        mMap.setMinZoomPreference(MIN_ZOOM_LEVEL);
+        mMap.setMaxZoomPreference(MAX_ZOOM_LEVEL);
+        loadLayer(DEFAULT_MAP_LAYER);
+    }
+
+    @Override
+    public void onMapLayerDataReady(MapLayerType mapLayerType, List<WeightedLatLng> dataOrNull) {
+        if (dataOrNull != null) {
+            if (mTileOverlay != null) {
+                mTileOverlay.remove();
+            }
+            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                    .weightedData(dataOrNull)
+                    .radius(mHeatmapRadius)
+                    .build();
+            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        }
     }
 
     public void toggleMapLayerFAB() {
@@ -107,45 +144,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void loadLayer(MapLayerType mapLayerType) {
-        loadLayer(mapLayerType, null);
-    }
+        if (mapLayerType == null || mapLayerType == mCurrentMapLayer) {
+            return;
+        }
 
-    public void loadLayer(MapLayerType mapLayerType, MapOptions mapOptions) {
+        MapOptions mapOptions = mapLayerType.getLayer().getMapOptions();
+        mLastMapLayer         = mCurrentMapLayer;
+        mCurrentMapLayer      = mapLayerType;
+        mHeatmapRadius        = mapOptions.HeatmapRadius;
+
+        mMapLayerFragment.setActiveLayer(mapLayerType);
         getSupportActionBar().setSubtitle(MAP_LAYER_NAMES.get(mapLayerType));
         MapLayer.Get(mapLayerType).getMapDataAsync(this);
-
-        if (mapOptions == null) {
-            mapOptions = new MapOptions();
-        }
-
-        mHeatmapRadius = mapOptions.HeatmapRadius;
-        LatLng l = getLatLngFromAddress("NEW WESTMINSTER BC CANADA");
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, mapOptions.DefZoomLevel));
-        mMap.setMinZoomPreference(mapOptions.MinZoomLevel);
-        mMap.setMaxZoomPreference(mapOptions.MaxZoomLevel);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mCoder = new Geocoder(this);
-
-        mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
-        loadLayer(DEFAULT_MAP_LAYER);
-    }
-
-    @Override
-    public void onMapLayerDataReady(MapLayerType mapLayerType, List<WeightedLatLng> dataOrNull) {
-        if (dataOrNull != null) {
-            if (mTileOverlay != null) {
-                mTileOverlay.remove();
-            }
-            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                    .weightedData(dataOrNull)
-                    .radius(mHeatmapRadius)
-                    .build();
-            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-        }
     }
 
     private LatLng getLatLngFromAddress(String address) {
@@ -160,22 +170,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public static class MapOptions {
-        public float DefZoomLevel  = DEFAULT_ZOOM_LEVEL;
-        public float MinZoomLevel  = MIN_ZOOM_LEVEL;
-        public float MaxZoomLevel  = MAX_ZOOM_LEVEL;
+//        public float DefZoomLevel  = DEFAULT_ZOOM_LEVEL;
+//        public float MinZoomLevel  = MIN_ZOOM_LEVEL;
+//        public float MaxZoomLevel  = MAX_ZOOM_LEVEL;
         public int   HeatmapRadius = DEFAULT_HEATMAP_RADIUS;
-        public MapOptions setDefZoomLevel(float f) {
-            DefZoomLevel = f;
-            return this;
-        }
-        public MapOptions setMinZoomLevel(float f) {
-            MinZoomLevel = f;
-            return this;
-        }
-        public MapOptions setMaxZoomLevel(float f) {
-            MaxZoomLevel = f;
-            return this;
-        }
+//        public MapOptions setDefZoomLevel(float f) {
+//            DefZoomLevel = f;
+//            return this;
+//        }
+//        public MapOptions setMinZoomLevel(float f) {
+//            MinZoomLevel = f;
+//            return this;
+//        }
+//        public MapOptions setMaxZoomLevel(float f) {
+//            MaxZoomLevel = f;
+//            return this;
+//        }
         public MapOptions setHeatmapRadius(int i) {
             HeatmapRadius = i;
             return this;

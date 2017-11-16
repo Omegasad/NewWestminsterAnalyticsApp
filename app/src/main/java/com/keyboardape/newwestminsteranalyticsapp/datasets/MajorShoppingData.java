@@ -62,22 +62,16 @@ public class MajorShoppingData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
-                    c.put("CATEGORY",  o.getString("CATEGORY"));
-                    c.put("STRNUM",    o.getString("STRNUM"));
-                    c.put("STRNAM",    o.getString("STRNAM"));
-                    c.put("BLDGNAM",   o.getString("BLDGNAM"));
+                    c.put("CATEGORY",  ParseToStringOrNull(o.getString("CATEGORY")));
+                    c.put("STRNUM",    ParseToStringOrNull(o.getString("STRNUM")));
+                    c.put("STRNAM",    ParseToStringOrNull(o.getString("STRNAM")));
+                    c.put("BLDGNAM",   ParseToStringOrNull(o.getString("BLDGNAM")));
                     c.put("BLDG_ID",   ParseToIntOrNull("BLDG_ID"));
                     c.put("MAPREF",    ParseToIntOrNull("MAPREF"));
 
                     JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    Double latitude = null;
-                    Double longitude = null;
-                    if (coordinates != null) {
-                        latitude = coordinates.getDouble(1);
-                        longitude = coordinates.getDouble(0);
-                    }
-                    c.put("LATITUDE", latitude);
-                    c.put("LONGITUDE",longitude);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

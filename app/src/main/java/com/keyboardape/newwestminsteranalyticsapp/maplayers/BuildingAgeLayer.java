@@ -29,9 +29,6 @@ public class BuildingAgeLayer extends MapLayer {
     @Override
     public MapsActivity.MapOptions getMapOptions() {
         return new MapsActivity.MapOptions()
-                .setDefZoomLevel(13)
-                .setMinZoomLevel(13f)
-                .setMaxZoomLevel(14f)
                 .setHeatmapRadius(15);
     }
 

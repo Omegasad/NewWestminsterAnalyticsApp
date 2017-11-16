@@ -56,18 +56,12 @@ public class SkytrainStationsData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
-                    c.put("NAME",  o.getString("NAME"));
-                    c.put("PHASE", o.getString("PHASE"));
+                    c.put("NAME",  ParseToStringOrNull(o.getString("NAME")));
+                    c.put("PHASE", ParseToStringOrNull(o.getString("PHASE")));
 
                     JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    Double latitude = null;
-                    Double longitude = null;
-                    if (coordinates != null) {
-                        latitude = coordinates.getDouble(1);
-                        longitude = coordinates.getDouble(0);
-                    }
-                    c.put("LATITUDE", latitude);
-                    c.put("LONGITUDE",longitude);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

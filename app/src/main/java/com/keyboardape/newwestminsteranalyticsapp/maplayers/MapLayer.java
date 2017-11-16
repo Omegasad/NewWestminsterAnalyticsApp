@@ -29,7 +29,7 @@ public abstract class MapLayer {
 
     protected MapLayerType mMapLayerType;
 
-    public MapLayer(MapLayerType mapLayerType/*, LayerOptions mDefaultLayerOptions*/) {
+    public MapLayer(MapLayerType mapLayerType) {
         mMapLayerType = mapLayerType;
     }
 

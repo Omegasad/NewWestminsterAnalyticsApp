@@ -73,8 +73,8 @@ public class BuildingAttributesData extends DataSet {
 
                     // Original Data
                     Integer numResidents = ParseToIntOrNull(o.getString("NUM_RES"));
-                    c.put("STRNAM",     o.getString("STRNAM"));
-                    c.put("STRNUM",     o.getString("STRNUM"));
+                    c.put("STRNAM",     ParseToStringOrNull(o.getString("STRNAM")));
+                    c.put("STRNUM",     ParseToStringOrNull(o.getString("STRNUM")));
                     c.put("BLDG_ID",    ParseToIntOrNull(o.getString("BLDG_ID")));
                     c.put("MAPREF",     ParseToIntOrNull(o.getString("MAPREF")));
                     c.put("NUM_RES",    numResidents);

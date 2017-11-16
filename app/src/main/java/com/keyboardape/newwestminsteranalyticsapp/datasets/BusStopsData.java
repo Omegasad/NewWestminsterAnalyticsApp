@@ -74,23 +74,17 @@ public class BusStopsData extends DataSet {
                         c.put("OBJECTID",   ParseToIntOrNull(o.getString("OBJECTID")));
                         c.put("BUSSTOPNUM", ParseToIntOrNull(o.getString("BUSSTOPNUM")));
                         c.put("RULEID",     ParseToIntOrNull(o.getString("RuleID")));
-                        c.put("ONSTREET",   o.getString("ONSTREET"));
-                        c.put("ATSTREET",   o.getString("ATSTREET"));
-                        c.put("DIRECTION",  o.getString("DIRECTION"));
-                        c.put("POSITION",   o.getString("POSITION"));
-                        c.put("STATUS",     o.getString("STATUS"));
-                        c.put("ACCESSIBLE", o.getString("ACCESSIBLE"));
-                        c.put("CITY_NAME",  o.getString("CITY_NAME"));
+                        c.put("ONSTREET",   ParseToStringOrNull(o.getString("ONSTREET")));
+                        c.put("ATSTREET",   ParseToStringOrNull(o.getString("ATSTREET")));
+                        c.put("DIRECTION",  ParseToStringOrNull(o.getString("DIRECTION")));
+                        c.put("POSITION",   ParseToStringOrNull(o.getString("POSITION")));
+                        c.put("STATUS",     ParseToStringOrNull(o.getString("STATUS")));
+                        c.put("ACCESSIBLE", ParseToStringOrNull(o.getString("ACCESSIBLE")));
+                        c.put("CITY_NAME",  ParseToStringOrNull(o.getString("CITY_NAME")));
 
                         JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                        Double latitude = null;
-                        Double longitude = null;
-                        if (coordinates != null) {
-                            latitude = coordinates.getDouble(1);
-                            longitude = coordinates.getDouble(0);
-                        }
-                        c.put("LATITUDE", latitude);
-                        c.put("LONGITUDE",longitude);
+                        c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                        c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                         db.insert(TABLE_NAME, null, c);
                     }

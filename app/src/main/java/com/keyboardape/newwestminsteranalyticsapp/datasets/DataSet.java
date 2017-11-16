@@ -27,6 +27,12 @@ public abstract class DataSet {
     //                                   STATIC PARSING HELPERS
     // ---------------------------------------------------------------------------------------------
 
+    public static String ParseToStringOrNull(String string) {
+        return (string.length() == 0 || string.equalsIgnoreCase("null"))
+            ? null
+            : string;
+    }
+
     public static Integer ParseToIntOrNull(String integer) {
         try {
             return Integer.parseInt(integer);

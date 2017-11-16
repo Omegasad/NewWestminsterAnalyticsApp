@@ -27,9 +27,6 @@ public class PopulationDensityLayer extends MapLayer {
     @Override
     public MapsActivity.MapOptions getMapOptions() {
         return new MapsActivity.MapOptions()
-                .setDefZoomLevel(13)
-                .setMinZoomLevel(13)
-                .setMaxZoomLevel(14)
                 .setHeatmapRadius(32);
     }
 
