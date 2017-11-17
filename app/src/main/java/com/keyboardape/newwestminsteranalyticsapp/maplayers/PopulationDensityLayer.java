@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.keyboardape.newwestminsteranalyticsapp.MapsActivity;
+import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
@@ -19,9 +20,10 @@ import java.util.List;
 public class PopulationDensityLayer extends MapLayer {
 
     private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.POPULATION_DENSITY;
+    private final static int MAP_LAYER_NAME_RESOURCE_ID = R.string.layer_population_density;
 
     public PopulationDensityLayer() {
-        super(MAP_LAYER_TYPE);
+        super(MAP_LAYER_TYPE, MAP_LAYER_NAME_RESOURCE_ID);
     }
 
     @Override

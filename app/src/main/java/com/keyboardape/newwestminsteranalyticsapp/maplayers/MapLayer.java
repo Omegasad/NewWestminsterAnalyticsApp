@@ -28,10 +28,16 @@ public abstract class MapLayer {
         return MapLayers.get(mapLayerType);
     }
 
-    protected MapLayerType mMapLayerType;
+    private MapLayerType mMapLayerType;
+    private int          mLayerNameResourceID;
 
-    public MapLayer(MapLayerType mapLayerType) {
+    public MapLayer(MapLayerType mapLayerType, int layerNameResourceID) {
         mMapLayerType = mapLayerType;
+        mLayerNameResourceID = layerNameResourceID;
+    }
+
+    public int getResourceIDForLayerName() {
+        return mLayerNameResourceID;
     }
 
     abstract public MapsActivity.MapOptions getMapOptions();

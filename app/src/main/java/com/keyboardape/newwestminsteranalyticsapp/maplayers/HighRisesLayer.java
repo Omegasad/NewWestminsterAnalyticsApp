@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.keyboardape.newwestminsteranalyticsapp.MapsActivity;
+import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
@@ -21,9 +22,10 @@ import java.util.List;
 public class HighRisesLayer extends MapLayer {
 
     private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.HIGH_RISES;
+    private final static int MAP_LAYER_NAME_RESOURCE_ID = R.string.layer_high_rises;
 
     public HighRisesLayer() {
-        super(MAP_LAYER_TYPE);
+        super(MAP_LAYER_TYPE, MAP_LAYER_NAME_RESOURCE_ID);
     }
 
     @Override

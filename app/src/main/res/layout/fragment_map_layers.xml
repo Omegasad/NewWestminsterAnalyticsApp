@@ -13,15 +13,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/layer_high_rises"/>
+            android:text="@string/layer_high_rises"
+            android:textStyle="bold" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/highRisesLayerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+
+            app:fabSize="mini"
             app:srcCompat="@drawable/ic_line_weight_black_24dp" />
     </LinearLayout>
 
@@ -30,15 +35,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/layer_building_age"/>
+            android:text="@string/layer_building_age"
+            android:textStyle="bold" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/buildingAgeLayerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            app:fabSize="mini"
             app:srcCompat="@drawable/ic_account_balance_black_24dp" />
     </LinearLayout>
 
@@ -48,15 +57,19 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/fab_maplayers_margin_bottom"
         android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/layer_population_density"/>
+            android:text="@string/layer_population_density"
+            android:textStyle="bold" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/populationDensityLayerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
+            app:fabSize="mini"
             app:srcCompat="@drawable/ic_people_black_24dp" />
     </LinearLayout>
 

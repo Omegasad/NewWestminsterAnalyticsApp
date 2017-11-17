@@ -64,7 +64,7 @@ public class MapLayersFragment extends Fragment implements View.OnClickListener 
                 MapsActivity activity = (MapsActivity) getActivity();
                 MapLayerType type = entry.getKey();
                 activity.loadLayer(type);
-                activity.toggleMapLayerFAB();
+                activity.toggleMapLayerFragment();
             }
         }
     }

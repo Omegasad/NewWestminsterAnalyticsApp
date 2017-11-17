@@ -15,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
@@ -29,30 +30,23 @@ import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, MapLayer.OnMapLayerDataReadyCallback {
 
-    private static final MapLayerType               DEFAULT_MAP_LAYER;
-    private static final Map<MapLayerType, Integer> MAP_LAYER_NAMES;
-
     private static final LatLngBounds BOUNDARY;
-    private static final float        DEFAULT_ZOOM_LEVEL;
+    private static final MapLayerType DEFAULT_MAP_LAYER;
     private static final int          DEFAULT_HEATMAP_RADIUS;
+    private static final float        INITIAL_ZOOM_LEVEL;
     private static final float        MIN_ZOOM_LEVEL;
     private static final float        MAX_ZOOM_LEVEL;
 
     static {
-        DEFAULT_MAP_LAYER = MapLayerType.POPULATION_DENSITY;
-        MAP_LAYER_NAMES = new HashMap<>();
-        MAP_LAYER_NAMES.put(MapLayerType.POPULATION_DENSITY, R.string.layer_population_density);
-        MAP_LAYER_NAMES.put(MapLayerType.BUILDING_AGE, R.string.layer_building_age);
-        MAP_LAYER_NAMES.put(MapLayerType.HIGH_RISES, R.string.layer_high_rises);
-
         BOUNDARY = new LatLngBounds(new LatLng(49.162589, -122.957891), new LatLng(49.239221, -122.887576));
-        DEFAULT_ZOOM_LEVEL = 13f;
+        DEFAULT_MAP_LAYER = MapLayerType.POPULATION_DENSITY;
         DEFAULT_HEATMAP_RADIUS = 32;
+        INITIAL_ZOOM_LEVEL = 13f;
         MIN_ZOOM_LEVEL = 13f;
         MAX_ZOOM_LEVEL = 14.5f;
     }
 
-    private TileOverlay       mTileOverlay = null;
+    private Map<MapLayerType, TileOverlay> mTileOverlays;
     private MapLayerType      mLastMapLayer = null;
     private MapLayerType      mCurrentMapLayer = null;
     private Integer           mHeatmapRadius = DEFAULT_HEATMAP_RADIUS;
@@ -74,6 +68,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Initialize data manager if not already initialized
         DataManager.Initialize(this);
 
+        mTileOverlays = new HashMap<>();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -86,7 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         openFabLayersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toggleMapLayerFAB();
+                toggleMapLayerFragment();
             }
         });
         openFabLayersBtn.setOnLongClickListener(new View.OnLongClickListener() {
@@ -103,12 +99,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
         mMap = googleMap;
         mCoder = new Geocoder(this);
 
         LatLng l = getLatLngFromAddress("NEW WESTMINSTER BC CANADA");
         mMap.setLatLngBoundsForCameraTarget(BOUNDARY);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, DEFAULT_ZOOM_LEVEL));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, INITIAL_ZOOM_LEVEL));
         mMap.setMinZoomPreference(MIN_ZOOM_LEVEL);
         mMap.setMaxZoomPreference(MAX_ZOOM_LEVEL);
         loadLayer(DEFAULT_MAP_LAYER);
@@ -117,18 +114,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapLayerDataReady(MapLayerType mapLayerType, List<WeightedLatLng> dataOrNull) {
         if (dataOrNull != null) {
-            if (mTileOverlay != null) {
-                mTileOverlay.remove();
+            TileOverlay tileOverlay;
+            if ((tileOverlay = mTileOverlays.get(mLastMapLayer)) != null) {
+                tileOverlay.setVisible(false);
             }
-            HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                    .weightedData(dataOrNull)
-                    .radius(mHeatmapRadius)
-                    .build();
-            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+            if ((tileOverlay = mTileOverlays.get(mapLayerType)) == null) {
+                HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                        .weightedData(dataOrNull)
+                        .radius(mHeatmapRadius)
+                        .build();
+                tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().fadeIn(false).tileProvider(provider));
+                mTileOverlays.put(mapLayerType, tileOverlay);
+            } else {
+                tileOverlay.setVisible(true);
+            }
         }
     }
 
-    public void toggleMapLayerFAB() {
+    public void toggleMapLayerFragment() {
         FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (mMapLayerFragment.isVisible()) {
@@ -155,8 +158,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mHeatmapRadius        = mapOptions.HeatmapRadius;
 
         mMapLayerFragment.setActiveLayer(mapLayerType);
-        getSupportActionBar().setSubtitle(MAP_LAYER_NAMES.get(mapLayerType));
-        MapLayer.Get(mapLayerType).getMapDataAsync(this);
+        getSupportActionBar().setSubtitle(mapLayerType.getLayer().getResourceIDForLayerName());
+        mapLayerType.getLayer().getMapDataAsync(this);
     }
 
     private LatLng getLatLngFromAddress(String address) {
@@ -166,27 +169,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Address location = addr.get(0);
                 return new LatLng(location.getLatitude(), location.getLongitude());
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            // Expected; return null
+        }
         return null;
     }
 
     public static class MapOptions {
-//        public float DefZoomLevel  = DEFAULT_ZOOM_LEVEL;
-//        public float MinZoomLevel  = MIN_ZOOM_LEVEL;
-//        public float MaxZoomLevel  = MAX_ZOOM_LEVEL;
-        public int   HeatmapRadius = DEFAULT_HEATMAP_RADIUS;
-//        public MapOptions setDefZoomLevel(float f) {
-//            DefZoomLevel = f;
-//            return this;
-//        }
-//        public MapOptions setMinZoomLevel(float f) {
-//            MinZoomLevel = f;
-//            return this;
-//        }
-//        public MapOptions setMaxZoomLevel(float f) {
-//            MaxZoomLevel = f;
-//            return this;
-//        }
+        public int HeatmapRadius = DEFAULT_HEATMAP_RADIUS;
         public MapOptions setHeatmapRadius(int i) {
             HeatmapRadius = i;
             return this;
