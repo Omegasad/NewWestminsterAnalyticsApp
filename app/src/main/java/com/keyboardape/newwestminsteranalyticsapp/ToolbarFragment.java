@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class ToolbarFragment extends Fragment {
+
+    private ShareActionProvider shareActionProvider;
 
     public ToolbarFragment() {
     }
@@ -47,8 +51,12 @@ public class ToolbarFragment extends Fragment {
         // Hide action icon of current activity
         if (getActivity() instanceof MapsActivity) {
             menu.findItem(R.id.action_map).setVisible(false);
+            menu.findItem(R.id.action_share).setVisible(false);
         } else if (getActivity() instanceof ChartActivity) {
             menu.findItem(R.id.action_charts).setVisible(false);
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+            shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+            setShareActionIntent("test");
         }
     }
 
@@ -61,8 +69,17 @@ public class ToolbarFragment extends Fragment {
             case R.id.action_charts:
                 startActivity(new Intent(getActivity(), ChartActivity.class));
                 return true;
+            case R.id.action_share:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setShareActionIntent(String text) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_TEXT,text);
+        shareActionProvider.setShareIntent(i);
     }
 }

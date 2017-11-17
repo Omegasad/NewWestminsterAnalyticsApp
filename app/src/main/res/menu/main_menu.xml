@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_insert_chart_black_24dp"
         android:title="@string/menu_charts"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_share"
+        android:title="action_share"
+        app:showAsAction="always"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
 </menu>
