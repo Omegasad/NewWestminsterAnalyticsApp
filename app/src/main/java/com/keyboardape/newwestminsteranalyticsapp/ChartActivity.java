@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -31,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ChartActivity extends AppCompatActivity {
+public class ChartActivity extends DBActivity {
 
     BarChart barChart;
     float barWidth;
