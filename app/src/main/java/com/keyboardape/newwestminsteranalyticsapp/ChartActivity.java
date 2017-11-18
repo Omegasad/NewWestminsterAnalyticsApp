@@ -17,12 +17,11 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +62,7 @@ public class ChartActivity extends AppCompatActivity {
     private void readDb()
     {
         // Get the SQL Statement
-        SQLiteOpenHelper helper = DataManager.GetInstance();
+        SQLiteOpenHelper helper = DBHelper.GetInstance();
         try {
             db = helper.getReadableDatabase();
             cursor= db.rawQuery("select SIC_GROUP from business_licenses", null);

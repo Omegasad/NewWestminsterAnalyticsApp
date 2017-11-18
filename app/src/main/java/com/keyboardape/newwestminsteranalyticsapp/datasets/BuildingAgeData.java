@@ -4,7 +4,8 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
+import com.keyboardape.newwestminsteranalyticsapp.R;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.JSONStreamParserAsync;
 
 import org.json.JSONArray;
@@ -25,11 +26,13 @@ public class BuildingAgeData extends DataSet {
     private final static String              DATA_SOURCE_URL;
     private final static DataSetType         DATA_SET_TYPE;
     private final static Map<String, String> TABLE_COLUMNS;
+    private final static int                 R_STRING_ID_NAME;
 
     static {
-        TABLE_NAME      = "building_age";
-        DATA_SOURCE_URL = "http://opendata.newwestcity.ca/downloads/building-age/BUILDING_AGE.json";
-        DATA_SET_TYPE   = DataSetType.BUILDING_AGE;
+        TABLE_NAME       = "building_age";
+        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/building-age/BUILDING_AGE.json";
+        DATA_SET_TYPE    = DataSetType.BUILDING_AGE;
+        R_STRING_ID_NAME = R.string.dataset_building_age;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");
@@ -49,12 +52,12 @@ public class BuildingAgeData extends DataSet {
     }
 
     public BuildingAgeData() {
-        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS);
+        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
     }
 
     @Override
-    protected void downloadDataToDBAsync(final OnDataSetUpdatedCallback callback) {
-        final SQLiteDatabase db = DataManager.GetInstance().getWritableDatabase();
+    protected void downloadDataToDBAsync(final OnDataSetUpdatedCallbackInternal callback) {
+        final SQLiteDatabase db = DBHelper.GetInstance().getWritableDatabase();
         new JSONStreamParserAsync(new JSONStreamParserAsync.Callbacks() {
             @Override
             public void onNewJsonObjectFromStream(JSONObject o) {
@@ -88,9 +91,9 @@ public class BuildingAgeData extends DataSet {
                 }
             }
             @Override
-            public void onJsonStreamParsed(boolean isSuccessful) {
+            public void onJsonStreamParsed(boolean isSuccessful, long dataLastUpdated) {
                 db.close();
-                callback.onDataSetUpdated(DATA_SET_TYPE, isSuccessful);
+                callback.onDataSetUpdated(DATA_SET_TYPE, isSuccessful, dataLastUpdated);
             }
         }, DATA_SOURCE_URL).execute();
     }

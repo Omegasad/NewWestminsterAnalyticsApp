@@ -4,7 +4,8 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
+import com.keyboardape.newwestminsteranalyticsapp.R;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.JSONStreamParserAsync;
 
 import org.json.JSONArray;
@@ -25,11 +26,13 @@ public class HighRisesData extends DataSet {
     private final static String              DATA_SOURCE_URL;
     private final static DataSetType         DATA_SET_TYPE;
     private final static Map<String, String> TABLE_COLUMNS;
+    private final static int                 R_STRING_ID_NAME;
 
     static {
-        TABLE_NAME      = "highrises";
-        DATA_SOURCE_URL = "http://opendata.newwestcity.ca/downloads/highrise-buildings/HIGHRISES.json";
-        DATA_SET_TYPE   = DataSetType.HIGH_RISES;
+        TABLE_NAME       = "highrises";
+        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/highrise-buildings/HIGHRISES.json";
+        DATA_SET_TYPE    = DataSetType.HIGH_RISES;
+        R_STRING_ID_NAME = R.string.dataset_high_rises;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");
@@ -52,12 +55,12 @@ public class HighRisesData extends DataSet {
     }
 
     public HighRisesData() {
-        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS);
+        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
     }
 
     @Override
-    protected void downloadDataToDBAsync(final OnDataSetUpdatedCallback callback) {
-        final SQLiteDatabase db = DataManager.GetInstance().getWritableDatabase();
+    protected void downloadDataToDBAsync(final OnDataSetUpdatedCallbackInternal callback) {
+        final SQLiteDatabase db = DBHelper.GetInstance().getWritableDatabase();
         new JSONStreamParserAsync(new JSONStreamParserAsync.Callbacks() {
             @Override
             public void onNewJsonObjectFromStream(JSONObject o) {
@@ -98,9 +101,9 @@ public class HighRisesData extends DataSet {
                 }
             }
             @Override
-            public void onJsonStreamParsed(boolean isSuccessful) {
+            public void onJsonStreamParsed(boolean isSuccessful, long dataLastUpdated) {
                 db.close();
-                callback.onDataSetUpdated(DATA_SET_TYPE, isSuccessful);
+                callback.onDataSetUpdated(DATA_SET_TYPE, isSuccessful, dataLastUpdated);
             }
         }, DATA_SOURCE_URL).execute();
     }
