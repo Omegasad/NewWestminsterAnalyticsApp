@@ -2,6 +2,7 @@ package com.keyboardape.newwestminsteranalyticsapp.maplayers;
 
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
@@ -31,7 +32,7 @@ public class PopulationDensityLayer extends MapLayer {
         R_STRING_ID_LAYER_NAME = R.string.layer_population_density;
         R_DRAWABLE_ID_ICON     = R.drawable.ic_people_black_24dp;
         LAYER_TYPE             = MapLayerType.POPULATION_DENSITY;
-        HEATMAP_RADIUS         = 32;
+        HEATMAP_RADIUS         = 30;
     }
 
     // ---------------------------------------------------------------------------------------------

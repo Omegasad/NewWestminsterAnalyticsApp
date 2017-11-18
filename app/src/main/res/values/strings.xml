@@ -28,7 +28,8 @@
     <!-- MapsActivity -->
     <string name="layer_population_density">Population Density</string>
     <string name="layer_building_age">Building Age</string>
-    <string name="layer_high_rises">Highrise Buildings Height</string>
+    <string name="layer_high_rises">Highrise Buildings</string>
+    <string name="layer_business_density">Business Density</string>
 
 
     <!-- ChartActivity -->

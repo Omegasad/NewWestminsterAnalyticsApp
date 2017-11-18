@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Building Age MapLayer.
+ * Business Density MapLayer.
  */
-public class BuildingAgeLayer extends MapLayer {
+public class BusinessDensityLayer extends MapLayer {
 
     // ---------------------------------------------------------------------------------------------
     //                                             STATIC
@@ -29,24 +29,18 @@ public class BuildingAgeLayer extends MapLayer {
     private final static MapLayerType LAYER_TYPE;
     private final static int          HEATMAP_RADIUS;
 
-    // Used to reduce the intensity of older buildings to get
-    // a better visual representation of data
-    private final static int          YEAR_REDUCTION;
-
     static {
-        R_STRING_ID_LAYER_NAME = R.string.layer_building_age;
-        R_DRAWABLE_ID_ICON     = R.drawable.ic_account_balance_black_24dp;
-        LAYER_TYPE             = MapLayerType.BUILDING_AGE;
-        HEATMAP_RADIUS         = 10;
-
-        YEAR_REDUCTION = 10;
+        R_STRING_ID_LAYER_NAME = R.string.layer_business_density;
+        R_DRAWABLE_ID_ICON     = R.drawable.ic_business_black_24dp;
+        LAYER_TYPE             = MapLayerType.BUSINESS_DENSITY;
+        HEATMAP_RADIUS         = 30;
     }
 
     // ---------------------------------------------------------------------------------------------
     //                                           INSTANCE
     // ---------------------------------------------------------------------------------------------
 
-    public BuildingAgeLayer() {
+    public BusinessDensityLayer() {
         super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
     }
 
@@ -56,12 +50,10 @@ public class BuildingAgeLayer extends MapLayer {
 
     @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
-        int yearReduction = getAggregate("MAX(BLDGAGE) - " + YEAR_REDUCTION);
-        String buildingAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
-        String sqlQuery = "SELECT LATITUDE, LONGITUDE, BLDGAGE "
+        String buildingAgeTableName = DataSetType.BUSINESS_LICENSES.getDataSet().getTableName();
+        String sqlQuery = "SELECT LATITUDE, LONGITUDE "
                 + "FROM " + buildingAgeTableName + " "
-                + "WHERE BLDGAGE IS NOT NULL "
-                + "AND LATITUDE IS NOT NULL "
+                + "WHERE LATITUDE IS NOT NULL "
                 + "AND LONGITUDE IS NOT NULL";
         new DBReaderAsync(new DBReaderAsync.Callbacks() {
             List<WeightedLatLng> data;
@@ -72,13 +64,12 @@ public class BuildingAgeLayer extends MapLayer {
                         data = new ArrayList<>();
                         do {
                             LatLng latlng = new LatLng(cursor.getDouble(0), cursor.getDouble(1));
-                            float intensity = (cursor.getInt(2) - yearReduction);
-                            WeightedLatLng wlatlng = new WeightedLatLng(latlng, intensity);
+                            WeightedLatLng wlatlng = new WeightedLatLng(latlng, 1);
                             data.add(wlatlng);
                         } while (cursor.moveToNext());
                     }
                 } catch (Exception e) {
-                    Log.e(BuildingAttributesData.class.getSimpleName(), e.getMessage());
+                    Log.e(BusinessDensityLayer.class.getSimpleName(), e.getMessage());
                     data = null;
                 }
             }
@@ -87,20 +78,5 @@ public class BuildingAgeLayer extends MapLayer {
                 callback.onMapLayerDataReady(LAYER_TYPE, data);
             }
         }, sqlQuery).execute();
-    }
-
-    private int getAggregate(String selectStatement) {
-        String buildingAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
-        String sql = "SELECT " + selectStatement + " FROM " + buildingAgeTableName + " "
-                + "WHERE BLDGAGE IS NOT NULL "
-                + "AND LATITUDE IS NOT NULL "
-                + "AND LONGITUDE IS NOT NULL";
-        SQLiteDatabase db = DBHelper.GetInstance().getReadableDatabase();
-        Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToFirst();
-        int aggregate = cursor.getInt(0);
-        cursor.close();
-        db.close();
-        return aggregate;
     }
 }

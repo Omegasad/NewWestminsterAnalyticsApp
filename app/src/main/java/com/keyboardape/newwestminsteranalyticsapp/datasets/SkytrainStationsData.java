@@ -32,7 +32,7 @@ public class SkytrainStationsData extends DataSet {
         TABLE_NAME       = "skytrain_stations";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/skytrain-stations/SKYTRAIN_STATIONS.json";
         DATA_SET_TYPE    = DataSetType.SKYTRAIN_STATIONS;
-        R_STRING_ID_NAME = R.string.download_skytrain_stations;
+        R_STRING_ID_NAME = R.string.dataset_skytrain_stations;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");

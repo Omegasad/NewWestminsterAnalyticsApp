@@ -32,7 +32,7 @@ public class MajorShoppingData extends DataSet {
         TABLE_NAME       = "major_shoppings";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/major-shopping/MAJOR_SHOPPING.json";
         DATA_SET_TYPE    = DataSetType.MAJOR_SHOPPING;
-        R_STRING_ID_NAME = R.string.download_major_shoppings;
+        R_STRING_ID_NAME = R.string.dataset_major_shoppings;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");

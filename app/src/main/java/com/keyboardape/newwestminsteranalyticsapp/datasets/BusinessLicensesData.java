@@ -37,7 +37,7 @@ public class BusinessLicensesData extends DataSet {
         TABLE_NAME       = "business_licenses";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/business-licenses-approved-2016/BL_APPROVED.json";
         DATA_SET_TYPE    = DataSetType.BUSINESS_LICENSES;
-        R_STRING_ID_NAME = R.string.download_business_licenses;
+        R_STRING_ID_NAME = R.string.dataset_business_licenses;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",                  "INTEGER PRIMARY KEY AUTOINCREMENT");

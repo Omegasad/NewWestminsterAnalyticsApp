@@ -32,7 +32,7 @@ public class BusStopsData extends DataSet {
         TABLE_NAME       = "bus_stops";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/bus-stops/BUS_STOPS.json";
         DATA_SET_TYPE    = DataSetType.BUS_STOPS;
-        R_STRING_ID_NAME = R.string.download_bus_stops;
+        R_STRING_ID_NAME = R.string.dataset_bus_stops;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",         "INTEGER PRIMARY KEY AUTOINCREMENT");

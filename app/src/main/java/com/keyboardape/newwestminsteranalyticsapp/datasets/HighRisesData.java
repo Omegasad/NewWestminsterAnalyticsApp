@@ -32,7 +32,7 @@ public class HighRisesData extends DataSet {
         TABLE_NAME       = "highrises";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/highrise-buildings/HIGHRISES.json";
         DATA_SET_TYPE    = DataSetType.HIGH_RISES;
-        R_STRING_ID_NAME = R.string.download_high_rises;
+        R_STRING_ID_NAME = R.string.dataset_high_rises;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");

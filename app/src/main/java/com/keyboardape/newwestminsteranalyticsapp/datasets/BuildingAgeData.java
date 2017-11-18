@@ -32,7 +32,7 @@ public class BuildingAgeData extends DataSet {
         TABLE_NAME       = "building_age";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/building-age/BUILDING_AGE.json";
         DATA_SET_TYPE    = DataSetType.BUILDING_AGE;
-        R_STRING_ID_NAME = R.string.download_building_age;
+        R_STRING_ID_NAME = R.string.dataset_building_age;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",        "INTEGER PRIMARY KEY AUTOINCREMENT");

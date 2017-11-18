@@ -10,6 +10,7 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +30,12 @@ public abstract class MapLayer {
 
     static {
         GMap = null;
-        LayerInstances = new HashMap<>();
-        LayerClasses = new HashMap<>();
+        LayerInstances = new LinkedHashMap<>();
+        LayerClasses = new LinkedHashMap<>();
         LayerClasses.put(MapLayerType.POPULATION_DENSITY, PopulationDensityLayer.class);
         LayerClasses.put(MapLayerType.BUILDING_AGE,       BuildingAgeLayer.class);
         LayerClasses.put(MapLayerType.HIGH_RISES,         HighRisesLayer.class);
+        LayerClasses.put(MapLayerType.BUSINESS_DENSITY,   BusinessDensityLayer.class);
     }
 
     public static synchronized void Initialize() {

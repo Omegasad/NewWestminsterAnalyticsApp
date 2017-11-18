@@ -31,9 +31,6 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         DBHelper.Initialize(this);
         DataSet.Initialize(this);
 
-        DataSetType.BUS_STOPS.getDataSet().setRequireUpdate(true);
-        DataSetType.HIGH_RISES.getDataSet().setRequireUpdate(true);
-
         mDataSets = DataSet.GetAllDataSets();
         mCurrentDataSet = 0;
 

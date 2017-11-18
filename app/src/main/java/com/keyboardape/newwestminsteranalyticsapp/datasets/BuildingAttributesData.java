@@ -32,7 +32,7 @@ public class BuildingAttributesData extends DataSet {
         TABLE_NAME       = "building_attributes";
         DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/building-attributes/BUILDING_ATTRIBUTES.json";
         DATA_SET_TYPE    = DataSetType.BUILDING_ATTRIBUTES;
-        R_STRING_ID_NAME = R.string.download_building_attributes;
+        R_STRING_ID_NAME = R.string.dataset_building_attributes;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",         "INTEGER PRIMARY KEY AUTOINCREMENT");
