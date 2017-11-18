@@ -2,6 +2,7 @@
 
 package com.keyboardape.newwestminsteranalyticsapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -42,6 +43,7 @@ public class ChartActivity extends AppCompatActivity {
     private List<Map.Entry<String, Float>> list;
 
     private String a[];
+    private String myString = "Sending String from ChartActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +56,8 @@ public class ChartActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.title_activity_charts));
         readDb();
         printChart();
+        printTop10();
 
-        String[] items = new String[10];
-        int i = 0;
-        for (Map.Entry<String, Float> entry:list) {
-            if (i < 10) {
-                items[i] = (i+1) + ". "+ entry.getKey();
-                i++;
-            }
-        }
-        ListView list_topten = (ListView) findViewById(R.id.topTen);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_expandable_list_item_1, items
-        );
-        list_topten.setAdapter(arrayAdapter);
     }
 
     private void readDb()
@@ -170,8 +160,29 @@ public class ChartActivity extends AppCompatActivity {
         testLegend(barChart);
     }
 
+    //Makes the list of the top 10 most popular businesses
+    private void printTop10() {
+        String[] items = new String[10];
+        int i = 0;
+        for (Map.Entry<String, Float> entry:list) {
+            if (i < 10) {
+                items[i] = (i+1) + ". "+ entry.getKey();
+                i++;
+            }
+        }
+        ListView list_topten = (ListView) findViewById(R.id.topTen);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_expandable_list_item_1, items
+        );
+        list_topten.setAdapter(arrayAdapter);
+    }
+
     private void testLegend(BarChart barChart) {
         Legend l = barChart.getLegend();
         l.setEnabled(false);
+    }
+
+    public String getMyData() {
+        return myString;
     }
 }

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 public class ToolbarFragment extends Fragment {
 
     private ShareActionProvider shareActionProvider;
+    String myDataFromActivity;
 
     public ToolbarFragment() {
     }
@@ -29,6 +30,8 @@ public class ToolbarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ChartActivity activity = (ChartActivity) getActivity();
+        myDataFromActivity = activity.getMyData();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_toolbar, container, false);
     }
@@ -56,7 +59,7 @@ public class ToolbarFragment extends Fragment {
             menu.findItem(R.id.action_charts).setVisible(false);
             MenuItem menuItem = menu.findItem(R.id.action_share);
             shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-            setShareActionIntent("test");
+            setShareActionIntent(myDataFromActivity);
         }
     }
 
