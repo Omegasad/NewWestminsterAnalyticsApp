@@ -13,6 +13,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="@string/progress_title"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -20,173 +21,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="@string/progress_description"
         android:textSize="12sp"
         android:layout_marginBottom="20dp"/>
 
-    <LinearLayout
-        android:id="@+id/labelPopulationDensity"
-        android:layout_width="wrap_content"
+    <ListView
+        android:id="@+id/downloadList"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressPopulationDensity"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_building_attributes"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/labelSkytrainStations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressSkytrainStations"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_skytrain_stations"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/labelBusStops"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressBusStops"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_bus_stops"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/labelBusinessLicenses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressBusinessLicenses"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_business_licenses"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/labelMajorShoppings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressMajorShoppings"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_major_shoppings"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/labelBuildingAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressBuildingAge"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_building_age"
-            android:textSize="20sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/labelHighRises"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/progressHighRises"
-            android:layout_gravity="center_vertical"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:indeterminate="true"
-            android:scaleType="fitXY"
-            android:visibility="invisible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/download_high_rises"
-            android:textSize="20sp" />
-
-    </LinearLayout>
+        android:divider="@null" />
 
     <Button
         android:id="@+id/btnViewMaps"

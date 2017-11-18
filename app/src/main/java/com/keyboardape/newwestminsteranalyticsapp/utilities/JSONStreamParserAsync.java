@@ -15,6 +15,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
     private Callbacks         mCallbacks;
     private String            mJsonUrl;
     private boolean           mIsStreamParsed;
+    private long              mURLLastModified;
 
     // globalized to ease cleaning up resources when parsing completes
     private HttpURLConnection mConnection;
@@ -25,6 +26,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
         mCallbacks         = callbacks;
         mJsonUrl           = jsonUrl;
         mIsStreamParsed    = false;
+        mURLLastModified   = 0;
         mConnection        = null;
         mInputStream       = null;
         mInputStreamReader = null;
@@ -50,7 +52,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        mCallbacks.onJsonStreamParsed(mIsStreamParsed);
+        mCallbacks.onJsonStreamParsed(mIsStreamParsed, mURLLastModified);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -115,6 +117,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
             URL url = new URL(mJsonUrl);
             mConnection = (HttpURLConnection) url.openConnection();
             mConnection.setRequestMethod(requestMethod);
+            mURLLastModified = mConnection.getLastModified();
             mInputStream = mConnection.getInputStream();
             mInputStreamReader = new InputStreamReader(mInputStream);
             return true;
@@ -141,11 +144,11 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
     }
 
     // ---------------------------------------------------------------------------------------------
-    //          INTERFACE : ON NEW JSON OBJECT FROM STREAM / ON JSON STREAM PARSED CALLBACK
+    //          CALLBACK : ON NEW JSON OBJECT FROM STREAM / ON JSON STREAM PARSED CALLBACK
     // ---------------------------------------------------------------------------------------------/
 
     public interface Callbacks {
         void onNewJsonObjectFromStream(JSONObject o);
-        void onJsonStreamParsed(boolean isSuccessful);
+        void onJsonStreamParsed(boolean isSuccessful, long dataLastUpdated);
     }
 }

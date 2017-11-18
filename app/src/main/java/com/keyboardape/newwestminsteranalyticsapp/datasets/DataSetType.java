@@ -1,7 +1,5 @@
 package com.keyboardape.newwestminsteranalyticsapp.datasets;
 
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
-
 /**
  * Valid types of DataSet Set.
  */
@@ -17,7 +15,7 @@ public enum DataSetType {
     ;
 
     public DataSet getDataSet() {
-        return DataManager.GetDataSet(this);
+        return DataSet.GetDataSet(this);
     }
 
 }

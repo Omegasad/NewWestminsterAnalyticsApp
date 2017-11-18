@@ -8,7 +8,7 @@ public enum MapLayerType {
     ;
 
     public MapLayer getLayer() {
-        return MapLayer.Get(this);
+        return MapLayer.GetLayer(this);
     }
 
 }

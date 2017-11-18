@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.keyboardape.newwestminsteranalyticsapp.MapsActivity;
 import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
@@ -19,17 +18,32 @@ import java.util.List;
  */
 public class PopulationDensityLayer extends MapLayer {
 
-    private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.POPULATION_DENSITY;
-    private final static int MAP_LAYER_NAME_RESOURCE_ID = R.string.layer_population_density;
+    // ---------------------------------------------------------------------------------------------
+    //                                             STATIC
+    // ---------------------------------------------------------------------------------------------
+
+    private final static int          R_STRING_ID_LAYER_NAME;
+    private final static int          R_DRAWABLE_ID_ICON;
+    private final static MapLayerType LAYER_TYPE;
+    private final static int          HEATMAP_RADIUS;
+
+    static {
+        R_STRING_ID_LAYER_NAME = R.string.layer_population_density;
+        R_DRAWABLE_ID_ICON     = R.drawable.ic_people_black_24dp;
+        LAYER_TYPE             = MapLayerType.POPULATION_DENSITY;
+        HEATMAP_RADIUS         = 32;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    //                                          INSTANCE
+    // ---------------------------------------------------------------------------------------------
 
     public PopulationDensityLayer() {
-        super(MAP_LAYER_TYPE, MAP_LAYER_NAME_RESOURCE_ID);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
     }
 
     @Override
-    public MapsActivity.MapOptions getMapOptions() {
-        return new MapsActivity.MapOptions()
-                .setHeatmapRadius(32);
+    public void onMapClick(LatLng point) {
     }
 
     @Override
@@ -60,7 +74,7 @@ public class PopulationDensityLayer extends MapLayer {
             }
             @Override
             public void onDBReadComplete() {
-                callback.onMapLayerDataReady(MAP_LAYER_TYPE, data);
+                callback.onMapLayerDataReady(LAYER_TYPE, data);
             }
         }, sqlQuery).execute();
     }

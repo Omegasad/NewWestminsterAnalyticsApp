@@ -6,12 +6,11 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
-import com.keyboardape.newwestminsteranalyticsapp.MapsActivity;
 import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,21 +20,38 @@ import java.util.List;
  */
 public class BuildingAgeLayer extends MapLayer {
 
-    private final static MapLayerType MAP_LAYER_TYPE = MapLayerType.BUILDING_AGE;
-    private final static int MAP_LAYER_NAME_RESOURCE_ID = R.string.layer_building_age;
+    // ---------------------------------------------------------------------------------------------
+    //                                             STATIC
+    // ---------------------------------------------------------------------------------------------
+
+    private final static int          R_STRING_ID_LAYER_NAME;
+    private final static int          R_DRAWABLE_ID_ICON;
+    private final static MapLayerType LAYER_TYPE;
+    private final static int          HEATMAP_RADIUS;
 
     // Used to reduce the intensity of older buildings to get
     // a better visual representation of data
-    private final static int YEAR_REDUCTION = 15;
+    private final static int          YEAR_REDUCTION;
+
+    static {
+        R_STRING_ID_LAYER_NAME = R.string.layer_building_age;
+        R_DRAWABLE_ID_ICON     = R.drawable.ic_account_balance_black_24dp;
+        LAYER_TYPE             = MapLayerType.BUILDING_AGE;
+        HEATMAP_RADIUS         = 15;
+
+        YEAR_REDUCTION = 15;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    //                                           INSTANCE
+    // ---------------------------------------------------------------------------------------------
 
     public BuildingAgeLayer() {
-        super(MAP_LAYER_TYPE, MAP_LAYER_NAME_RESOURCE_ID);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
     }
 
     @Override
-    public MapsActivity.MapOptions getMapOptions() {
-        return new MapsActivity.MapOptions()
-                .setHeatmapRadius(15);
+    public void onMapClick(LatLng point) {
     }
 
     @Override
@@ -68,7 +84,7 @@ public class BuildingAgeLayer extends MapLayer {
             }
             @Override
             public void onDBReadComplete() {
-                callback.onMapLayerDataReady(MAP_LAYER_TYPE, data);
+                callback.onMapLayerDataReady(LAYER_TYPE, data);
             }
         }, sqlQuery).execute();
     }
@@ -79,7 +95,7 @@ public class BuildingAgeLayer extends MapLayer {
                 + "WHERE BLDGAGE IS NOT NULL "
                 + "AND LATITUDE IS NOT NULL "
                 + "AND LONGITUDE IS NOT NULL";
-        SQLiteDatabase db = DataManager.GetInstance().getWritableDatabase();
+        SQLiteDatabase db = DBHelper.GetInstance().getReadableDatabase();
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
         int aggregate = cursor.getInt(0);

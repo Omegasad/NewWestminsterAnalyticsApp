@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DataManager;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
 public class DataSetTracker {
 
@@ -20,7 +20,7 @@ public class DataSetTracker {
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
-            db = DataManager.GetInstance().getReadableDatabase();
+            db = DBHelper.GetInstance().getReadableDatabase();
             cursor = db.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
                 c = new ContentValues();
@@ -40,7 +40,7 @@ public class DataSetTracker {
         return c;
     }
 
-    public static void SetRequireUpdate(DataSetType dataSetType, boolean isRequireUpdate) {
+    public static void SetRequireUpdate(DataSetType dataSetType, boolean isRequireUpdate, long dataLastUpdated) {
         String tableName = dataSetType.getDataSet().getTableName();
         String selectQuery = "SELECT tableName, isRequireUpdate, lastUpdated " +
                              "FROM " + TABLE_NAME + " " +
@@ -49,13 +49,13 @@ public class DataSetTracker {
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
-            db = DataManager.GetInstance().getWritableDatabase();
+            db = DBHelper.GetInstance().getWritableDatabase();
             cursor = db.rawQuery(selectQuery, null);
 
             // Set stats
             ContentValues c = new ContentValues();
             c.put("isRequireUpdate", (isRequireUpdate) ? 1 : 0);
-            c.put("lastUpdated", System.currentTimeMillis());
+            c.put("lastUpdated", dataLastUpdated);
 
             // Insert or update database row
             if (cursor.getCount() == 0) {
@@ -74,6 +74,13 @@ public class DataSetTracker {
                 db.close();
             }
         }
+    }
+
+    public static String GetQueryForTableCreation() {
+        return "CREATE TABLE IF NOT EXISTS " + DataSetTracker.TABLE_NAME + "(" +
+                "tableName       TEXT    PRIMARY KEY UNIQUE NOT NULL," +
+                "isRequireUpdate INTEGER NOT NULL," +
+                "lastUpdated     INTEGER NOT NULL);";
     }
 
     private DataSetTracker() {
