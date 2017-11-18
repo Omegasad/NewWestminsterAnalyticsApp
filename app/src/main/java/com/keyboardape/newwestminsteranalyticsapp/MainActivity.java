@@ -2,7 +2,6 @@ package com.keyboardape.newwestminsteranalyticsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -11,9 +10,8 @@ import android.widget.Toast;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetAdapter;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
-import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
-public class MainActivity extends AppCompatActivity implements DataSet.OnDataSetUpdatedCallback {
+public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdatedCallback {
 
     private DataSet[] mDataSets;
     private int       mCurrentDataSet;
@@ -28,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DBHelper.Initialize(this);
         DataSet.Initialize(this);
 
         mDataSets = DataSet.GetAllDataSets();
@@ -76,13 +73,7 @@ public class MainActivity extends AppCompatActivity implements DataSet.OnDataSet
         if (!isUpdateSuccessful) {
             Toast.makeText(this, "Download data failed...", Toast.LENGTH_LONG).show();
         }
-        mDataSetAdapter.notifyDataSetInvalidated();
         mDataSetAdapter.notifyDataSetChanged();
-
-//        mDownloadList.setAdapter(mDataSetAdapter);
-//        mProgressBars.get(dataSetType).setVisibility(View.INVISIBLE);
-//        mDataLabels.get(dataSetType).setVisibility(View.INVISIBLE);
-//        mDataSets.remove(dataSetType);
         downloadDataSetOrEnableButtons();
     }
 }

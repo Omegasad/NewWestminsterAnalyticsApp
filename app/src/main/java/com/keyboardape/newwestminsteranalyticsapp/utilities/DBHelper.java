@@ -20,11 +20,17 @@ public final class DBHelper extends SQLiteOpenHelper {
     private final static int    DB_VERSION = 1;
 
     private static DBHelper     DBHelperInstance = null;
+    private static boolean      IsActivityStopped = false;
 
     public static synchronized void Initialize(Context context) {
-        if (DBHelperInstance == null) {
+        if (DBHelperInstance == null || IsActivityStopped) {
+            IsActivityStopped = false;
             DBHelperInstance = new DBHelper(context.getApplicationContext());
         }
+    }
+
+    public static void SetActivityStopped() {
+        IsActivityStopped = true;
     }
 
     public static DBHelper GetInstance() {

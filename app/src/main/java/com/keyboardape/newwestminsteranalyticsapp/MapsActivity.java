@@ -5,10 +5,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,7 +22,7 @@ import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
 import java.util.List;
 
 public class      MapsActivity
-       extends    AppCompatActivity
+       extends    DBActivity
        implements OnMapReadyCallback,
                   GoogleMap.OnMapClickListener {
 
@@ -57,14 +55,13 @@ public class      MapsActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        // Setup toolbar and title
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_activity_maps));
-
         // Initialize data manager if not already initialized
         DataSet.Initialize(this);
         MapLayer.Initialize();
+
+        // Setup toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -138,7 +135,7 @@ public class      MapsActivity
                 .remove(mMapLayerFragment)
                 .commit();
         mGMap.getUiSettings().setAllGesturesEnabled(true);
-        openFabLayersBtn.setImageResource(R.drawable.ic_layers_black_24dp);
+        openFabLayersBtn.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
     }
 
     public void loadLayer(MapLayerType mapLayerType) {
@@ -157,8 +154,10 @@ public class      MapsActivity
         }
         mCurrentMapLayerType.getLayer().showLayer();
 
-        // Update activity subtitle
-        getSupportActionBar().setSubtitle(getString(mCurrentMapLayerType.getLayer().getRStringIDLayerName()));
+        // Update activity subtitle and FAB button
+        getSupportActionBar().setTitle(getString(mCurrentMapLayerType.getLayer().getRStringIDLayerName()));
+        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
+        openFabLayersBtn.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
     }
 
     private LatLng getLatLngFromAddress(String address) {

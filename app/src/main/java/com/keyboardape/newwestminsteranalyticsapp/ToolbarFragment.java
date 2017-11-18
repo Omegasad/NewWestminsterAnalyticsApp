@@ -30,20 +30,13 @@ public class ToolbarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ChartActivity activity = (ChartActivity) getActivity();
-        myDataFromActivity = activity.getMyData();
+        if (getActivity() instanceof ChartActivity) {
+            ChartActivity activity = (ChartActivity) getActivity();
+            myDataFromActivity = activity.getMyData();
+        }
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_toolbar, container, false);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
