@@ -10,7 +10,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
-import com.keyboardape.newwestminsteranalyticsapp.utilities.JSONStreamParserAsync;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.JSONParserAsync;
 
 import org.json.JSONObject;
 
@@ -73,7 +73,7 @@ public class BusinessLicensesData extends DataSet {
     @Override
     protected void downloadDataToDBAsync(final OnDataSetUpdatedCallbackInternal callback) {
         final SQLiteDatabase db = DBHelper.GetInstance().getWritableDatabase();
-        new JSONStreamParserAsync(new JSONStreamParserAsync.Callbacks() {
+        new JSONParserAsync(new JSONParserAsync.Callbacks() {
             @Override
             public void onNewJsonObjectFromStream(JSONObject o) {
                 try {

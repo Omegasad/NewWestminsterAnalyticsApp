@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
+public class JSONParserAsync extends AsyncTask<Void, Void, Void> {
 
     private Callbacks         mCallbacks;
     private String            mJsonUrl;
@@ -22,7 +22,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
     private InputStream       mInputStream;
     private InputStreamReader mInputStreamReader;
 
-    public JSONStreamParserAsync(Callbacks callbacks, String jsonUrl) {
+    public JSONParserAsync(Callbacks callbacks, String jsonUrl) {
         mCallbacks         = callbacks;
         mJsonUrl           = jsonUrl;
         mIsStreamParsed    = false;
@@ -93,7 +93,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
                 }
             }
         } catch (Exception e) {
-            Log.e(JSONStreamParserAsync.class.getSimpleName(), e.getMessage());
+            Log.e(JSONParserAsync.class.getSimpleName(), e.getMessage());
         }
 
         // return JSONObject or null
@@ -122,7 +122,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
             mInputStreamReader = new InputStreamReader(mInputStream);
             return true;
         } catch (Exception e) {
-            Log.e(JSONStreamParserAsync.class.getSimpleName(), e.getMessage());
+            Log.e(JSONParserAsync.class.getSimpleName(), e.getMessage());
         }
         return false;
     }
@@ -139,7 +139,7 @@ public class JSONStreamParserAsync extends AsyncTask<Void, Void, Void> {
                 mConnection.disconnect();
             }
         } catch (Exception e) {
-            Log.e(JSONStreamParserAsync.class.getSimpleName(), e.getMessage());
+            Log.e(JSONParserAsync.class.getSimpleName(), e.getMessage());
         }
     }
 
