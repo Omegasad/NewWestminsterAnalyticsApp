@@ -20,6 +20,7 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
     private DataSetAdapter mDataSetAdapter;
     private Button   mBtnViewMaps;
     private Button   mBtnViewCharts;
+    private Button   mBtnViewDemographics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,11 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
 
     public void onClickViewCharts(View v) {
         Intent i = new Intent(this, ChartActivity.class);
+        startActivity(i);
+    }
+
+    public void onClickViewDemographics(View v) {
+        Intent i = new Intent(this, Demo_2001_activity.class);
         startActivity(i);
     }
 
