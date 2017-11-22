@@ -20,6 +20,7 @@
     <string name="dataset_major_shoppings">Major Shoppings</string>
     <string name="dataset_building_age">Building Age</string>
     <string name="dataset_high_rises">High Rises</string>
+    <string name="dataset_age_demographics">Age Demographics</string>
     <!-- Buttons -->
     <string name="btn_view_maps">View Heatmaps</string>
     <string name="btn_view_charts">View Charts</string>

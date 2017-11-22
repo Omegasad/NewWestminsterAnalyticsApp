@@ -10,7 +10,7 @@ import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -31,15 +31,16 @@ public abstract class DataSet {
 
     static {
         IsInitialized = false;
-        DataSetInstances = new HashMap<>();
-        DataSetClasses = new HashMap<>();
+        DataSetInstances = new LinkedHashMap<>();
+        DataSetClasses = new LinkedHashMap<>();
+        DataSetClasses.put(DataSetType.BUS_STOPS,           BusStopsData.class);
+        DataSetClasses.put(DataSetType.SKYTRAIN_STATIONS,   SkytrainStationsData.class);
         DataSetClasses.put(DataSetType.BUILDING_ATTRIBUTES, BuildingAttributesData.class);
         DataSetClasses.put(DataSetType.BUSINESS_LICENSES,   BusinessLicensesData.class);
-        DataSetClasses.put(DataSetType.BUS_STOPS,           BusStopsData.class);
         DataSetClasses.put(DataSetType.MAJOR_SHOPPING,      MajorShoppingData.class);
-        DataSetClasses.put(DataSetType.SKYTRAIN_STATIONS,   SkytrainStationsData.class);
         DataSetClasses.put(DataSetType.BUILDING_AGE,        BuildingAgeData.class);
         DataSetClasses.put(DataSetType.HIGH_RISES,          HighRisesData.class);
+        DataSetClasses.put(DataSetType.AGE_DEMOGRAPHICS,    AgeDemographicsData.class);
     }
 
     public static synchronized void Initialize(Context context) {

@@ -12,6 +12,7 @@ public enum DataSetType {
     ,MAJOR_SHOPPING
     ,BUILDING_AGE
     ,HIGH_RISES
+    ,AGE_DEMOGRAPHICS
     ;
 
     public DataSet getDataSet() {
