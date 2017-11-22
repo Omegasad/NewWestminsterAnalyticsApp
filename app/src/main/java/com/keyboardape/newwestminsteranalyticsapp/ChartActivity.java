@@ -32,11 +32,13 @@ import java.util.Set;
 
 public class ChartActivity extends DBActivity {
 
+
     BarChart barChart;
     float barWidth;
     private SQLiteDatabase db;
     private Cursor cursor;
     private Map<String,Float> graphCount = new HashMap<String,Float>();
+
     //Sorted list
     private List<Map.Entry<String, Float>> list;
 

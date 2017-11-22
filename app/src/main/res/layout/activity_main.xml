@@ -30,7 +30,8 @@
         android:id="@+id/downloadList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null" />
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"/>
 
     <Button
         android:id="@+id/btnViewMaps"
