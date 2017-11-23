@@ -1,24 +1,31 @@
-package com.keyboardape.newwestminsteranalyticsapp;
+package com.keyboardape.newwestminsteranalyticsapp.demographics;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.keyboardape.newwestminsteranalyticsapp.DBActivity;
+import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
 import java.util.ArrayList;
 
-public class Demo_2001_activity extends DBActivity {
+public class Demo2001Activity extends DBActivity implements GestureDetector.OnGestureListener{
 
     BarChart barChart;
     float barWidth;
@@ -30,13 +37,24 @@ public class Demo_2001_activity extends DBActivity {
     int count;
     int[] male;
     int[] female;
+    String[] labels;
+
+    private GestureDetectorCompat detector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo_2001_activity);
+        setContentView(R.layout.activity_demographics);
+
+        // Setup toolbar and title
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.title_demo2001));
+
         readDb();
         printChart();
+
+        detector = new GestureDetectorCompat(this,this);
     }
 
     private void readDb()
@@ -49,9 +67,12 @@ public class Demo_2001_activity extends DBActivity {
             count = cursor.getCount();
             female = new int[count];
             male = new int[count];
+            labels = new String[count];
             if (cursor.moveToFirst()) {
                 int ndx = 0;
                 do {
+                    //Get the labels populated here too
+                    labels[ndx] = Integer.toString(cursor.getInt(1)) + "-" + Integer.toString(cursor.getInt(0));
                     female[ndx] = cursor.getInt(4);
                     male[ndx++] = cursor.getInt(5);
                 } while (cursor.moveToNext());
@@ -73,9 +94,9 @@ public class Demo_2001_activity extends DBActivity {
     {
         // Declarations
         barChart = (BarChart) findViewById(R.id.bargraph);
-        barWidth = 0.3f;
+        barWidth = 0.4f;
         barSpace = 0f;
-        groupSpace = 0.4f;
+        groupSpace = 0.3f;
 
         // Set animation to make it cool
         barChart.animateY(3000);
@@ -83,6 +104,7 @@ public class Demo_2001_activity extends DBActivity {
         // X-Axis settings
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getXAxis().setDrawLabels(false);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
         // Y-Axis settings
         barChart.getAxisLeft().setAxisMinimum(0); // Starts at 0
@@ -102,16 +124,18 @@ public class Demo_2001_activity extends DBActivity {
         // Populate the female chart
         ArrayList<BarEntry> dummyEntries2 = new ArrayList<>();
         for (int i = 0; i < female.length; i++) {
-            dummyEntries2.add(new BarEntry(i+1,female[i]));
+            dummyEntries2.add(new BarEntry(i + 1, female[i]));
         }
 
         // Is needed so the data can be outputted
         BarDataSet dummySet1 = new BarDataSet(dummyEntries,"Male");
+        //dummySet1.setDrawValues(false);
         BarDataSet dummySet2 = new BarDataSet(dummyEntries2,"Female");
+        //dummySet2.setDrawValues(false);
 
         // Changes the color of the bar
-        dummySet1.setColor(Color.CYAN);
-        dummySet2.setColor(Color.BLACK);
+        dummySet1.setColor(Color.BLUE);
+        dummySet2.setColor(Color.MAGENTA);
 
         BarData dummyData = new BarData(dummySet1,dummySet2);
 
@@ -120,7 +144,7 @@ public class Demo_2001_activity extends DBActivity {
         barChart.getBarData().setBarWidth(barWidth); // Sets the width of the chart
         barChart.getXAxis().setAxisMinimum(0); // Shows the mininum of the chart
 
-        // Shows the maximum amount of the width and height, 4 because there are 4 entries
+        // Shows the maximum amount of the width and height, depending on the entries
         barChart.getXAxis().setAxisMaximum(0 + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * count);
         barChart.groupBars(0, groupSpace, barSpace); // Helps splits the bars
         barChart.invalidate(); // don't know what this does
@@ -133,5 +157,43 @@ public class Demo_2001_activity extends DBActivity {
         barChart.setDoubleTapToZoomEnabled(true);
         barChart.invalidate(); // refreshes (redraws the chart)
 
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        Intent intent = new Intent(this,Demo2006Activity.class);
+        startActivity(intent);
+        return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 }

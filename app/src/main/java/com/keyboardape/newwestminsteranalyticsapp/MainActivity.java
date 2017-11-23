@@ -10,6 +10,10 @@ import android.widget.Toast;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetAdapter;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
+import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2001Activity;
+import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2006Activity;
+import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2011Activity;
+import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2016Activity;
 
 public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdatedCallback {
 
@@ -42,6 +46,9 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
         mBtnViewCharts = (Button) findViewById(R.id.btnViewCharts);
         mBtnViewCharts.setEnabled(false);
 
+        mBtnViewDemographics = (Button) findViewById(R.id.btnViewDemographics);
+        mBtnViewCharts.setEnabled(false);
+
         downloadDataSetOrEnableButtons();
     }
 
@@ -56,7 +63,7 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
     }
 
     public void onClickViewDemographics(View v) {
-        Intent i = new Intent(this, Demo_2001_activity.class);
+        Intent i = new Intent(this, Demo2001Activity.class);
         startActivity(i);
     }
 
@@ -71,6 +78,7 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
         } else {
             mBtnViewMaps.setEnabled(true);
             mBtnViewCharts.setEnabled(true);
+            mBtnViewDemographics.setEnabled(true);
         }
     }
 

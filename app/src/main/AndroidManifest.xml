@@ -41,7 +41,10 @@
         <activity
             android:name=".ChartActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".Demo_2001_activity"></activity>
+        <activity android:name=".demographics.Demo2001Activity" />
+        <activity android:name=".demographics.Demo2006Activity" />
+        <activity android:name=".demographics.Demo2011Activity" />
+        <activity android:name=".demographics.Demo2016Activity"></activity>
     </application>
 
 </manifest>
