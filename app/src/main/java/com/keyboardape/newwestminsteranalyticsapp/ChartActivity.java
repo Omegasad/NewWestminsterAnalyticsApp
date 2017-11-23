@@ -16,9 +16,11 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
@@ -91,6 +93,13 @@ public class ChartActivity extends DBActivity {
 
     private void printChart()
     {
+        // Set up the labels
+        String[] labels = new String[11];
+        for (int i = 0; i < labels.length; i++) {
+            labels[i] = Integer.toString(i);
+        }
+
+
         // Declarations
         barChart = (BarChart) findViewById(R.id.bargraph);
         barWidth = 0.9f;
@@ -100,7 +109,10 @@ public class ChartActivity extends DBActivity {
 
         // X-Axis settings
         barChart.getXAxis().setDrawGridLines(false);
-        barChart.getXAxis().setDrawLabels(false);
+        barChart.getXAxis().setDrawLabels(true);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setLabelCount(10);
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
         // Y-Axis settings
         barChart.getAxisLeft().setAxisMinimum(0); // Starts at 0
