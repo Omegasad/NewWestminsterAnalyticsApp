@@ -1,8 +1,6 @@
 package com.keyboardape.newwestminsteranalyticsapp;
 
 import android.support.v4.app.FragmentManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +17,7 @@ import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.MapLayerInfoFragment;
 import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayer;
 import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
-
-import java.util.List;
+import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayersListFragment;
 
 public class      MapsActivity
        extends    DBActivity

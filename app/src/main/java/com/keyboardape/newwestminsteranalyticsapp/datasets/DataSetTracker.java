@@ -7,6 +7,11 @@ import android.util.Log;
 
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
+/**
+ * DataSetTracker.
+ *
+ * Keeps track of DataSets to see if they require updating or not.
+ */
 public class DataSetTracker {
 
     public static final String TABLE_NAME = "dataset_tracker";

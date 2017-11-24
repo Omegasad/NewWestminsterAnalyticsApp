@@ -37,6 +37,7 @@
     <string name="layer_building_age">Building Age</string>
     <string name="layer_high_rises">Highrise Buildings</string>
     <string name="layer_business_density">Business Density</string>
+    <string name="layer_public_transit">Public Transit</string>
 
     <!-- ChartActivity -->
     <string name="top_ten_title">Most Popular Businesses in New West</string>

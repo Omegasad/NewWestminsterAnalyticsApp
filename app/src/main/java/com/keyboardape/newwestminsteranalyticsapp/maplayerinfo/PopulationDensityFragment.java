@@ -36,6 +36,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * PopulationDensity's MapLayerInfoFragment.
+ */
 public class PopulationDensityFragment extends MapLayerInfoFragment {
 
     private AgeDemographics    mAgeDemographics;

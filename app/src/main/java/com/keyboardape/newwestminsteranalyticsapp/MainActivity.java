@@ -13,6 +13,9 @@ import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetAdapter;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.charts.Demo2001Activity;
 
+/**
+ * Application entry point.
+ */
 public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdatedCallback {
 
     private DataSet[] mDataSets;

@@ -43,6 +43,10 @@ public abstract class DataSet {
         DataSetClasses.put(DataSetType.AGE_DEMOGRAPHICS,    AgeDemographicsData.class);
     }
 
+    /**
+     * Initializes all DataSets.
+     * @param context of caller
+     */
     public static synchronized void Initialize(Context context) {
         if (!IsInitialized) {
             IsInitialized = true;
@@ -66,14 +70,27 @@ public abstract class DataSet {
     //                                     STATIC : GETTERS
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     * Returns DataSet given a DataSetType.
+     * @param dataSetType instance to get
+     * @return DataSet
+     */
     public static DataSet GetDataSet(DataSetType dataSetType) {
         return DataSetInstances.get(dataSetType);
     }
 
+    /**
+     * Returns an array of all valid DataSetTypes.
+     * @return DataSetType[]
+     */
     public static DataSetType[] GetAllDataSetTypes() {
         return DataSetClasses.keySet().toArray(new DataSetType[DataSetClasses.size()]);
     }
 
+    /**
+     * Returns an array of all DataSet instances.
+     * @return DataSet[]
+     */
     public static DataSet[] GetAllDataSets() {
         return DataSetInstances.values().toArray(new DataSet[DataSetInstances.size()]);
     }
@@ -82,12 +99,22 @@ public abstract class DataSet {
     //                                  STATIC : DATA PARSING HELPERS
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     * Parses a string to a string or null if string = "null".
+     * @param string to be parsed
+     * @return string or null
+     */
     protected static String ParseToStringOrNull(String string) {
         return (string.length() == 0 || string.equalsIgnoreCase("null"))
             ? null
             : string;
     }
 
+    /**
+     * Parses a string to an Integer or null if failed.
+     * @param integer to be parsed
+     * @return Integer or null
+     */
     protected static Integer ParseToIntOrNull(String integer) {
         try {
             return Integer.parseInt(integer);
@@ -97,6 +124,11 @@ public abstract class DataSet {
         return null;
     }
 
+    /**
+     * Parses a string to a Double or null if failed.
+     * @param aDouble to be parsed
+     * @return Double or null
+     */
     protected static Double ParseToDoubleOrNull(String aDouble) {
         try {
             return Double.parseDouble(aDouble);
@@ -106,6 +138,11 @@ public abstract class DataSet {
         return null;
     }
 
+    /**
+     * Parses and returns an average of all coordinates in a GeoJSON object.
+     * @param o JSON object containing a GeoJSON
+     * @return JSONArray containing latitude and longitude, or null if failed
+     */
     protected static JSONArray GetAverageCoordinatesFromJsonGeometryOrNull(JSONObject o) {
         try {
             JSONObject geoJson = o.getJSONObject("json_geometry");
@@ -164,6 +201,13 @@ public abstract class DataSet {
     private boolean mIsUpdating;
     private boolean mIsUpToDate;
 
+    /**
+     * Constructor.
+     * @param dataSetType of this DataSet
+     * @param tableName of this DataSet
+     * @param tableColumns of this DataSet
+     * @param rStringIDName Android string resource ID of this DataSet name
+     */
     public DataSet(DataSetType dataSetType,
                    String tableName,
                    Map<String, String> tableColumns,
@@ -177,32 +221,61 @@ public abstract class DataSet {
         mIsUpToDate = false;
     }
 
+    /**
+     * Returns DataSetType of this DataSet.
+     * @return DataSetType
+     */
     public DataSetType getDataSetType() {
         return mDataSetType;
     }
 
+    /**
+     * Returns database table name of this DataSet.
+     * @return string
+     */
     public String getTableName() {
         return mTableName;
     }
 
+    /**
+     * Returns Android string resource ID of this DataSet name.
+     * @return Android string resource ID as an int
+     */
     public int getRStringIDDataSetName() {
         return mRStringIDName;
     }
 
+    /**
+     * Returns true if this DataSet requires update.
+     * @return true if DataSet requires update
+     */
     public boolean isRequireUpdate() {
         ContentValues c = DataSetTracker.GetStatsOrNull(mDataSetType);
         mIsUpToDate = !((c == null) || c.getAsBoolean("isRequireUpdate"));
         return !mIsUpToDate;
     }
 
+    /**
+     * Returns true if this DataSet is currently updating.
+     * @return true if this DataSet is currently updating
+     */
     public boolean isUpdating() {
         return mIsUpdating;
     }
 
+    /**
+     * Returns true if this DataSet is up to date. This flag is used to bypass an error thrown
+     * from too many DB requests when calling isRequireUpdate() multiple times.
+     * @return true if DataSet is up to date
+     */
     public boolean isUpToDate() {
         return mIsUpToDate;
     }
 
+    /**
+     * Flag/unflag this DataSet for update on next application startup.
+     * @param isRequireUpdate true if flagging DataSet for update
+     */
     public void setRequireUpdate(boolean isRequireUpdate) {
         DataSetTracker.SetRequireUpdate(mDataSetType, isRequireUpdate, 0);
     }
@@ -211,8 +284,16 @@ public abstract class DataSet {
     //                                       UPDATE DATA SET
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     * Download data to database in the background.
+     * @param callback function when download task completes, success or fail
+     */
     abstract protected void downloadDataToDBAsync(OnDataSetUpdatedCallbackInternal callback);
 
+    /**
+     * (Re) Downloads data into the database in the background.
+     * @param callback function when download task completes, success or fail
+     */
     public void updateDataAsync(final OnDataSetUpdatedCallback callback) {
         mIsUpdating = true;
         recreateDBTable();
@@ -227,6 +308,9 @@ public abstract class DataSet {
         });
     }
 
+    /**
+     * Drop and re-create database table.
+     */
     private void recreateDBTable() {
         SQLiteDatabase db = DBHelper.GetInstance().getWritableDatabase();
         String csvColumnNamesWithAttributes = concatenateToCSV(mTableColumns);
@@ -237,6 +321,11 @@ public abstract class DataSet {
         db.close();
     }
 
+    /**
+     * Concatenates Map into comma-separated-values as a string.
+     * @param map to be concatenated
+     * @return string
+     */
     private String concatenateToCSV(Map<String, String> map) {
         StringBuilder str = new StringBuilder();
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -253,10 +342,16 @@ public abstract class DataSet {
     //                               INTERFACE : ON DATA SET UPDATED CALLBACK
     // ---------------------------------------------------------------------------------------------/
 
+    /**
+     * Callback function for caller.
+     */
     public interface OnDataSetUpdatedCallback {
         void onDataSetUpdated(DataSetType dataSetType, boolean isUpdateSuccessful);
     }
 
+    /**
+     * Callback function used internally.
+     */
     protected interface OnDataSetUpdatedCallbackInternal {
         void onDataSetUpdated(DataSetType dataSetType, boolean isUpdateSuccessful, long dataLastUpdated);
     }

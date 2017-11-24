@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * JSON Parser async task.
+ */
 public class JSONParserAsync extends AsyncTask<Void, Void, Void> {
 
     private Callbacks         mCallbacks;

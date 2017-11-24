@@ -13,6 +13,11 @@ import android.widget.TextView;
 
 import com.keyboardape.newwestminsteranalyticsapp.R;
 
+/**
+ * DataSetAdapter.
+ *
+ * Used in MainActivity to display download progress.
+ */
 public class DataSetAdapter extends ArrayAdapter<DataSet> {
 
     public DataSetAdapter(Context context, DataSet[] dataSets) {

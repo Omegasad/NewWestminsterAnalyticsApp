@@ -15,6 +15,11 @@ import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * MapLayerInfoFragment.
+ *
+ * Displayed in MapsActivity for some MapLayers.
+ */
 public abstract class MapLayerInfoFragment extends Fragment {
 
     private static boolean                                                  IsInitialized;

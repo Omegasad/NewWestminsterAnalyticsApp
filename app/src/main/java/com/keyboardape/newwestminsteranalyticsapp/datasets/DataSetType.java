@@ -1,7 +1,7 @@
 package com.keyboardape.newwestminsteranalyticsapp.datasets;
 
 /**
- * Valid types of DataSet Set.
+ * Valid DataSet types.
  */
 public enum DataSetType {
 

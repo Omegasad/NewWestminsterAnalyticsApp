@@ -5,6 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 
+/**
+ * Base Database Activity.
+ *
+ * Ensures children will always have a valid DBHelper object.
+ */
 public abstract class DBActivity extends AppCompatActivity {
 
     @Override

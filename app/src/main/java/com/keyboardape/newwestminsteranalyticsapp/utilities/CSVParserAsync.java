@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * CSV Parser async task.
+ */
 public class CSVParserAsync extends AsyncTask<Void, Void, Void> {
 
     private Callbacks         mCallbacks;

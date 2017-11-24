@@ -7,7 +7,6 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.keyboardape.newwestminsteranalyticsapp.R;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAgeData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;

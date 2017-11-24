@@ -36,14 +36,16 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
 
     static {
         TABLE_NAME       = "age_demographics";
+        DATA_SET_TYPE    = DataSetType.AGE_DEMOGRAPHICS;
+        R_STRING_ID_NAME = R.string.dataset_age_demographics;
+        MAX_AGE          = 300;
+
+        // Order declared here must match switch in function onNewCSVRowFromStream()
         DATA_SOURCE_URLS = new String[] {
                 "http://keyboardape.com/2016newwestanalytics/datasets/2001_age_demographics.CSV"    // 2001
                 ,"http://keyboardape.com/2016newwestanalytics/datasets/2006_community_profile.CSV"  // 2006
                 ,"http://keyboardape.com/2016newwestanalytics/datasets/2011_age_demographics.CSV"   // 2011
                 ,"http://keyboardape.com/2016newwestanalytics/datasets/2016_age_demographics.CSV"}; // 2016
-        DATA_SET_TYPE    = DataSetType.AGE_DEMOGRAPHICS;
-        R_STRING_ID_NAME = R.string.dataset_age_demographics;
-        MAX_AGE = 300;
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",                "INTEGER PRIMARY KEY AUTOINCREMENT");

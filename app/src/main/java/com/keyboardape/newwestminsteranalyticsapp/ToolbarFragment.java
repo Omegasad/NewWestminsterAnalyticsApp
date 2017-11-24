@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 
 import com.keyboardape.newwestminsteranalyticsapp.charts.ChartActivity;
 
+/**
+ * Toolbar Fragment.
+ */
 public class ToolbarFragment extends Fragment {
 
     private ShareActionProvider shareActionProvider;

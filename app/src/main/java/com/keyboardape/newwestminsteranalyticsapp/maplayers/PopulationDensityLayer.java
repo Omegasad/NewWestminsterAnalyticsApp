@@ -2,7 +2,6 @@ package com.keyboardape.newwestminsteranalyticsapp.maplayers;
 
 import android.database.Cursor;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;

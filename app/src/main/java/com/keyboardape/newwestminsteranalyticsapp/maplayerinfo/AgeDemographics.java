@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * AgeDemographics data object.
+ */
 public class AgeDemographics {
 
     private Map<Integer, Map<Integer, Long>>                   mAgeGroups;

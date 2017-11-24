@@ -15,6 +15,11 @@ import android.widget.TextView;
 
 import com.keyboardape.newwestminsteranalyticsapp.R;
 
+/**
+ * MapLayerAdapter.
+ *
+ * Used for display a list of MapLayers.
+ */
 public class MapLayerAdapter extends ArrayAdapter<MapLayer> {
 
     private MapLayerType mActiveMapLayerType;
