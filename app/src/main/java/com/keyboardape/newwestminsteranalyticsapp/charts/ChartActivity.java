@@ -1,6 +1,6 @@
 // TODO: 9/29/2017 find out what barChart.invalidate(); does
 
-package com.keyboardape.newwestminsteranalyticsapp;
+package com.keyboardape.newwestminsteranalyticsapp.charts;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,7 +23,12 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.keyboardape.newwestminsteranalyticsapp.DBActivity;
+import com.keyboardape.newwestminsteranalyticsapp.R;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.BusinessLicensesData;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +44,6 @@ public class ChartActivity extends DBActivity {
     BarChart barChart;
     float barWidth;
     private SQLiteDatabase db;
-    private Cursor cursor;
     private Map<String,Float> graphCount = new HashMap<String,Float>();
 
     //Sorted list
@@ -57,38 +62,41 @@ public class ChartActivity extends DBActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_activity_charts));
         readDb();
-        printChart();
-        printTop10();
-
     }
 
     private void readDb()
     {
         // Get the SQL Statement
-        SQLiteOpenHelper helper = DBHelper.GetInstance();
-        try {
-            db = helper.getReadableDatabase();
-            cursor= db.rawQuery("select SIC_GROUP from business_licenses", null);
-            int count = cursor.getCount();
-            a = new String[count];
-            if (cursor.moveToFirst()) {
-                int ndx = 0;
-                do {
-                    a[ndx] = cursor.getString(0);
-                    //Ugly hash code to count most popular businesses
-                    Float freq = graphCount.get(a[ndx]);
-                    graphCount.put(a[ndx], (freq == null) ? 1 : freq +1);
-                    ndx++;
-                } while (cursor.moveToNext());
+        String chartTableName = DataSetType.BUSINESS_LICENSES.getDataSet().getTableName();
+        String sqlQuery = "SELECT SIC_GROUP " + "FROM " + chartTableName;
+
+        new DBReaderAsync(new DBReaderAsync.Callbacks() {
+            @Override
+            public void onDBCursorReady(Cursor cursor) {
+                int count = cursor.getCount();
+                a = new String[count];
+                try {
+                    if (cursor.moveToFirst()) {
+                        int ndx = 0;
+                        do {
+                            a[ndx] = cursor.getString(0);
+                            //Ugly hash code to count most popular businesses
+                            Float freq = graphCount.get(a[ndx]);
+                            graphCount.put(a[ndx], (freq == null) ? 1 : freq +1);
+                            ndx++;
+                        } while (cursor.moveToNext());
+                    }
+                } catch (Exception e) {
+                    Log.e(BusinessLicensesData.class.getSimpleName(),e.getMessage());
+                    a = null;
+                }
             }
-
-        } catch (SQLiteException sqlex) {
-            String msg = "[MainActivity / getContinents] DB unavailable";
-            msg += "\n\n" + sqlex.toString();
-
-            Toast t = Toast.makeText(this, msg, Toast.LENGTH_LONG);
-            t.show();
-        }
+            @Override
+            public void onDBReadComplete() {
+                printChart();
+                printTop10();
+            }
+        }, sqlQuery).execute();
     }
 
     private void printChart()

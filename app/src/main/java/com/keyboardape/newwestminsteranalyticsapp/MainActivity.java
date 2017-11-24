@@ -7,13 +7,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.keyboardape.newwestminsteranalyticsapp.charts.ChartActivity;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetAdapter;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
-import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2001Activity;
-import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2006Activity;
-import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2011Activity;
-import com.keyboardape.newwestminsteranalyticsapp.demographics.Demo2016Activity;
+import com.keyboardape.newwestminsteranalyticsapp.charts.Demo2001Activity;
 
 public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdatedCallback {
 

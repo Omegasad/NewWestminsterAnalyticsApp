@@ -1,4 +1,4 @@
-package com.keyboardape.newwestminsteranalyticsapp.demographics;
+package com.keyboardape.newwestminsteranalyticsapp.charts;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -21,11 +22,14 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.keyboardape.newwestminsteranalyticsapp.DBActivity;
 import com.keyboardape.newwestminsteranalyticsapp.R;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.AgeDemographicsData;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
 
 import java.util.ArrayList;
 
-public class Demo2001Activity extends DBActivity implements GestureDetector.OnGestureListener{
+public class Demo2006Activity extends DBActivity implements GestureDetector.OnGestureListener{
 
     BarChart barChart;
     float barWidth;
@@ -49,10 +53,9 @@ public class Demo2001Activity extends DBActivity implements GestureDetector.OnGe
         // Setup toolbar and title
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_demo2001));
+        getSupportActionBar().setTitle(getString(R.string.title_demo2006));
 
         readDb();
-        printChart();
 
         detector = new GestureDetectorCompat(this,this);
     }
@@ -60,34 +63,38 @@ public class Demo2001Activity extends DBActivity implements GestureDetector.OnGe
     private void readDb()
     {
         //Get the SQL statement
-        SQLiteOpenHelper helper = DBHelper.GetInstance();
-        try {
-            db = helper.getReadableDatabase();
-            cursor = db.rawQuery("select * from age_demographics where year = 2001",null);
-            count = cursor.getCount();
-            female = new int[count];
-            male = new int[count];
-            labels = new String[count];
-            if (cursor.moveToFirst()) {
-                int ndx = 0;
-                do {
-                    //Get the labels populated here too
-                    labels[ndx] = Integer.toString(cursor.getInt(1)) + "-" + Integer.toString(cursor.getInt(0));
-                    female[ndx] = cursor.getInt(4);
-                    male[ndx++] = cursor.getInt(5);
-                } while (cursor.moveToNext());
+        String chartTableName = DataSetType.AGE_DEMOGRAPHICS.getDataSet().getTableName();
+        String sqlQuery = "SELECT * "
+                + "FROM " + chartTableName + " "
+                + "WHERE YEAR IS 2006";
+
+        new DBReaderAsync(new DBReaderAsync.Callbacks() {
+            @Override
+            public void onDBCursorReady(Cursor cursor) {
+                count = cursor.getCount();
+                female = new int[count];
+                male = new int[count];
+                labels = new String[count];
+                try {
+                    if (cursor.moveToFirst()) {
+                        int ndx = 0;
+                        do {
+                            //Get the labels populated here too
+                            labels[ndx] = Integer.toString(cursor.getInt(1)) + "-" + Integer.toString(cursor.getInt(0));
+                            female[ndx] = cursor.getInt(4);
+                            male[ndx++] = cursor.getInt(5);
+                        } while (cursor.moveToNext());
+                    }
+                } catch (Exception e) {
+                    Log.e(AgeDemographicsData.class.getSimpleName(),e.getMessage());
+                }
             }
 
-            for (int i = 0; i < female.length;i++) {
-                System.out.println(female[i]);
+            @Override
+            public void onDBReadComplete() {
+                printChart();
             }
-        } catch (SQLiteException sqlex) {
-            String msg = "[MainActivity / getContinents] DB unavailable";
-            msg += "\n\n" + sqlex.toString();
-
-            Toast t = Toast.makeText(this, msg, Toast.LENGTH_LONG);
-            t.show();
-        }
+        }, sqlQuery).execute();
     }
 
     private void printChart()
@@ -186,7 +193,7 @@ public class Demo2001Activity extends DBActivity implements GestureDetector.OnGe
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Intent intent = new Intent(this,Demo2006Activity.class);
+        Intent intent = new Intent(this,Demo2011Activity.class);
         startActivity(intent);
         return true;
     }
