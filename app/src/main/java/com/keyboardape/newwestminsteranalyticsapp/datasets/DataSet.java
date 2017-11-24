@@ -112,7 +112,7 @@ public abstract class DataSet {
             String geoJsonType = geoJson.getString("type");
 
             // different shapes have different # of array layers
-            JSONArray coordinates = geoJson.getJSONArray("coordinates"); // Line shape
+            JSONArray coordinates = geoJson.getJSONArray("coordinates"); // a Line
             if (geoJsonType.equals("Polygon")) {
                 coordinates = coordinates.getJSONArray(0);
             } else if (geoJsonType.equals("MultiPolygon")) {
@@ -126,12 +126,19 @@ public abstract class DataSet {
             double coord2 = 0;
             try {
                 int i = 0;
-                while (true) {
-                    JSONArray coordinate = coordinates.getJSONArray(i++);
-                    coord1 += coordinate.getDouble(0);
+                if (geoJsonType.equals("Point")) {
+                    coord1 += coordinates.getDouble(0);
                     ++numCoord1;
-                    coord2 += coordinate.getDouble(1);
+                    coord2 += coordinates.getDouble(1);
                     ++numCoord2;
+                } else {
+                    while (true) {
+                        JSONArray coordinate = coordinates.getJSONArray(i++);
+                        coord1 += coordinate.getDouble(0);
+                        ++numCoord1;
+                        coord2 += coordinate.getDouble(1);
+                        ++numCoord2;
+                    }
                 }
             } catch (Exception e) {
                 // Expected to end with exception 100% of time when there's no more coordinates

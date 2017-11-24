@@ -7,8 +7,8 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 import com.keyboardape.newwestminsteranalyticsapp.R;
+import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAgeData;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
-import com.keyboardape.newwestminsteranalyticsapp.datasets.BuildingAttributesData;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
 
@@ -78,7 +78,7 @@ public class BuildingAgeLayer extends MapLayer {
                         } while (cursor.moveToNext());
                     }
                 } catch (Exception e) {
-                    Log.e(BuildingAttributesData.class.getSimpleName(), e.getMessage());
+                    Log.e(BuildingAgeLayer.class.getSimpleName(), e.getMessage());
                     data = null;
                 }
             }
