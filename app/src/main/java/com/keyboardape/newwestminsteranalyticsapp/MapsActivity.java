@@ -140,9 +140,11 @@ public class      MapsActivity
         }
 
         // Update current/last layer types
-        mLastMapLayerType = mCurrentMapLayerType;
-        mCurrentMapLayerType = mapLayerType;
-        mMapLayerFragment.setActiveLayer(mCurrentMapLayerType);
+        if (mCurrentMapLayerType != mapLayerType) {
+            mLastMapLayerType = mCurrentMapLayerType;
+            mCurrentMapLayerType = mapLayerType;
+            mMapLayerFragment.setActiveLayer(mCurrentMapLayerType);
+        }
 
         // Hide last layer, show current layer
         if (mLastMapLayerType != null) {
@@ -161,6 +163,20 @@ public class      MapsActivity
         } else {
             mMapInfoFAB.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mGMap != null) {
+            loadLayer(mCurrentMapLayerType);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MapLayer.SetActivityStopped();
     }
 
     private void initializeResourcesAndEventListeners() {

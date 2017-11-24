@@ -52,6 +52,12 @@ public abstract class MapLayer {
         }
     }
 
+    public static synchronized void SetActivityStopped() {
+        for (MapLayer layer : LayerInstances.values()) {
+            layer.resetLayer();
+        }
+    }
+
     public static void SetGoogleMap(GoogleMap gMap) {
         GMap = gMap;
     }
@@ -130,6 +136,13 @@ public abstract class MapLayer {
     public void hideLayer() {
         if (mTileOverlay != null) {
             mTileOverlay.setVisible(false);
+        }
+    }
+
+    public void resetLayer() {
+        if (mTileOverlay != null) {
+            mTileOverlay.remove();
+            mTileOverlay = null;
         }
     }
 
