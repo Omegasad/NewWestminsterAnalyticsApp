@@ -87,16 +87,16 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
         try {
             switch (mCurrentDataSource) {
                 case 0:
-                    saveDataFrom2001OrNull(row);
+                    saveDataFrom2001(row);
                     break;
                 case 1:
-                    saveDataFrom2006OrNull(row);
+                    saveDataFrom2006(row);
                     break;
                 case 2:
-                    saveDataFrom2011Or2016OrNull(row, 2011);
+                    saveDataFrom2011Or2016(row, 2011);
                     break;
                 case 3:
-                    saveDataFrom2011Or2016OrNull(row, 2016);
+                    saveDataFrom2011Or2016(row, 2016);
                     break;
                 default:
                     Log.e(AgeDemographicsData.class.getSimpleName(), "Data source out of bounds.");
@@ -118,7 +118,7 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
         }
     }
 
-    private void saveDataFrom2011Or2016OrNull(String[] row, int year) {
+    private void saveDataFrom2011Or2016(String[] row, int year) {
         if (row.length != 4
             || !row[0].contains("years")) {
             return;
@@ -155,7 +155,7 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
         mDB.insert(TABLE_NAME, null, c);
     }
 
-    private void saveDataFrom2006OrNull(String[] row) {
+    private void saveDataFrom2006(String[] row) {
         if (row.length != 8
             || !row[0].equals("Age characteristics")
             || !row[1].contains("years")) {
@@ -179,7 +179,7 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
         mDB.insert(TABLE_NAME, null, c);
     }
 
-    private void saveDataFrom2001OrNull(String[] row) {
+    private void saveDataFrom2001(String[] row) {
         if (row[0].contains("Male")) {
             m2001TrackingDataGroup = 1;
             return;

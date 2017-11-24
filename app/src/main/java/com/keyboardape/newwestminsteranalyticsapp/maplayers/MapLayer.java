@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
+import com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.MapLayerInfoFragment;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public abstract class MapLayer {
         LayerClasses = new LinkedHashMap<>();
         LayerClasses.put(MapLayerType.POPULATION_DENSITY, PopulationDensityLayer.class);
         LayerClasses.put(MapLayerType.BUILDING_AGE,       BuildingAgeLayer.class);
-        LayerClasses.put(MapLayerType.HIGH_RISES,         HighRisesLayer.class);
+//        LayerClasses.put(MapLayerType.HIGH_RISES,         HighRisesLayer.class);
         LayerClasses.put(MapLayerType.BUSINESS_DENSITY,   BusinessDensityLayer.class);
     }
 
@@ -75,11 +75,11 @@ public abstract class MapLayer {
     //                                         INSTANCE
     // ---------------------------------------------------------------------------------------------
 
-    private MapLayerType mLayerType;
-    private int          mRStringIDLayerName;
-    private int          mRDrawableIDIcon;
-    private int          mHeatmapRadius;
-    private TileOverlay  mTileOverlay;
+    private MapLayerType         mLayerType;
+    private int                  mRStringIDLayerName;
+    private int                  mRDrawableIDIcon;
+    private int                  mHeatmapRadius;
+    private TileOverlay          mTileOverlay;
 
     public MapLayer(MapLayerType layerType, int rStringIDLayerName, int rDrawableIDIcon, int heatmapRadius) {
         mLayerType          = layerType;
@@ -91,6 +91,10 @@ public abstract class MapLayer {
 
     public MapLayerType getMapLayerType() {
         return mLayerType;
+    }
+
+    public MapLayerInfoFragment getMapLayerInfoFragmentOrNull() {
+        return MapLayerInfoFragment.GetFragmentOrNull(mLayerType);
     }
 
     public int getRStringIDLayerName() {

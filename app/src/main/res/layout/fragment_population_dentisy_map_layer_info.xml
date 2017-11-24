@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.MapLayerInfoFragment"
+    android:background="#EEFFFFFF"
+    android:paddingBottom="60dp"
+    android:paddingTop="60dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/chart_age_groups"
+                android:layout_width="match_parent"
+                android:layout_height="280dp" />
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/chart_age_demographics"
+                android:layout_width="match_parent"
+                android:layout_height="280dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

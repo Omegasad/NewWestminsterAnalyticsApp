@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
+import com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.MapLayerInfoFragment;
 import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayer;
 import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
 
@@ -27,6 +28,7 @@ public class      MapsActivity
                   GoogleMap.OnMapClickListener {
 
     private static final LatLngBounds PANNING_BOUNDARY;
+    private static final LatLng       NEW_WEST_COORDINATE;
     private static final MapLayerType DEFAULT_MAP_LAYER_TYPE;
     private static final float        INITIAL_ZOOM_LEVEL;
     private static final float        MIN_ZOOM_LEVEL;
@@ -37,27 +39,27 @@ public class      MapsActivity
                 new LatLng(49.162589, -122.957891),
                 new LatLng(49.239221, -122.887576)
                 );
+        NEW_WEST_COORDINATE    = new LatLng(49.205717899999996, -122.910956);
         DEFAULT_MAP_LAYER_TYPE = MapLayerType.POPULATION_DENSITY;
         INITIAL_ZOOM_LEVEL     = 13f;
         MIN_ZOOM_LEVEL         = 13f;
-        MAX_ZOOM_LEVEL         = 14.5f;
+        MAX_ZOOM_LEVEL         = 20f;
     }
 
     private MapLayerType          mLastMapLayerType = null;
     private MapLayerType          mCurrentMapLayerType = null;
 
     private GoogleMap             mGMap;
-    private Geocoder              mGeocoder;
     private MapLayersListFragment mMapLayerFragment;
+    private boolean               mIsMapLayerInfoFragmentVisible;
+
+    private FloatingActionButton  mMapListFAB;
+    private FloatingActionButton  mMapInfoFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-        // Initialize data manager if not already initialized
-        DataSet.Initialize(this);
-        MapLayer.Initialize();
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,31 +69,6 @@ public class      MapsActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        // Map Layer Buttons Fragment
-        mMapLayerFragment = new MapLayersListFragment();
-        mMapLayerFragment.setActiveLayer(DEFAULT_MAP_LAYER_TYPE);
-        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
-        openFabLayersBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mMapLayerFragment.isVisible()) {
-                    hideMapLayersList();
-                } else {
-                    showMapLayersList();
-                }
-            }
-        });
-        openFabLayersBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (!mMapLayerFragment.isVisible()) {
-                    loadLayer(mLastMapLayerType);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override
@@ -99,13 +76,13 @@ public class      MapsActivity
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
         MapLayer.SetGoogleMap(googleMap);
 
-        mGMap = googleMap;
-        mGeocoder = new Geocoder(this);
+        initializeResourcesAndEventListeners();
 
-        LatLng l = getLatLngFromAddress("NEW WESTMINSTER BC CANADA");
+        mGMap = googleMap;
+        mGMap.getUiSettings().setRotateGesturesEnabled(false);
         mGMap.setOnMapClickListener(this);
         mGMap.setLatLngBoundsForCameraTarget(PANNING_BOUNDARY);
-        mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(l, INITIAL_ZOOM_LEVEL));
+        mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(NEW_WEST_COORDINATE, INITIAL_ZOOM_LEVEL));
         mGMap.setMinZoomPreference(MIN_ZOOM_LEVEL);
         mGMap.setMaxZoomPreference(MAX_ZOOM_LEVEL);
         loadLayer(DEFAULT_MAP_LAYER_TYPE);
@@ -118,28 +95,50 @@ public class      MapsActivity
         }
     }
 
+    public void showMapInfoFragment() {
+        MapLayerInfoFragment infoFragment = MapLayerInfoFragment.GetFragmentOrNull(mCurrentMapLayerType);
+        if (infoFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.overlay_fragment_container, infoFragment)
+                    .commit();
+            mIsMapLayerInfoFragmentVisible = true;
+            mMapInfoFAB.setImageResource(R.drawable.ic_close_black_24dp);
+        }
+    }
+
+    public void hideMapInfoFragment() {
+        MapLayerInfoFragment infoFragment = MapLayerInfoFragment.GetFragmentOrNull(mCurrentMapLayerType);
+        if (infoFragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .remove(infoFragment)
+                    .commit();
+            mIsMapLayerInfoFragmentVisible = false;
+            mMapInfoFAB.setImageResource(R.drawable.ic_info_outline_black_24dp);
+        }
+    }
+
     public void showMapLayersList() {
-        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.overlay_fragment_container, mMapLayerFragment)
                 .commit();
         mGMap.getUiSettings().setAllGesturesEnabled(false);
-        openFabLayersBtn.setImageResource(R.drawable.ic_close_black_24dp);
+        mMapListFAB.setImageResource(R.drawable.ic_close_black_24dp);
     }
 
     public void hideMapLayersList() {
-        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .remove(mMapLayerFragment)
                 .commit();
         mGMap.getUiSettings().setAllGesturesEnabled(true);
-        openFabLayersBtn.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
+        mMapListFAB.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
     }
 
     public void loadLayer(MapLayerType mapLayerType) {
-        if (mapLayerType == null || mapLayerType == mCurrentMapLayerType) {
+        if (mapLayerType == null) {
             return;
         }
 
@@ -154,22 +153,77 @@ public class      MapsActivity
         }
         mCurrentMapLayerType.getLayer().showLayer();
 
-        // Update activity subtitle and FAB button
+        // Update activity subtitle and Map List FAB button
         getSupportActionBar().setTitle(getString(mCurrentMapLayerType.getLayer().getRStringIDLayerName()));
-        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton openFabLayersBtn = (FloatingActionButton) findViewById(R.id.fab_layers);
         openFabLayersBtn.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
+
+        // Show/hide Map Info Fragment FAB button
+        if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() == null) {
+            mMapInfoFAB.setVisibility(View.GONE);
+        } else {
+            mMapInfoFAB.setVisibility(View.VISIBLE);
+        }
     }
 
-    private LatLng getLatLngFromAddress(String address) {
-        try {
-            List<Address> addr = mGeocoder.getFromLocationName(address, 1);
-            if (addr != null) {
-                Address location = addr.get(0);
-                return new LatLng(location.getLatitude(), location.getLongitude());
+    private void initializeResourcesAndEventListeners() {
+        // Initialize classes
+        DataSet.Initialize(this);
+        MapLayer.Initialize();
+        MapLayerInfoFragment.Initialize();
+
+        // Map Layer Info Button
+        mIsMapLayerInfoFragmentVisible = false;
+        mMapInfoFAB = (FloatingActionButton) findViewById(R.id.fab_layers_info);
+        mMapInfoFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() == null) {
+                    return;
+                }
+
+                if (mIsMapLayerInfoFragmentVisible) {
+                    hideMapInfoFragment();
+                    mMapListFAB.setVisibility(View.VISIBLE);
+                } else {
+                    if (mMapLayerFragment.isVisible()) {
+                        hideMapLayersList();
+                    }
+                    mMapListFAB.setVisibility(View.GONE);
+                    showMapInfoFragment();
+                }
             }
-        } catch (Exception e) {
-            // Expected; return null
-        }
-        return null;
+        });
+
+        // Map Layer Buttons Fragment
+        mMapLayerFragment = new MapLayersListFragment();
+        mMapLayerFragment.setActiveLayer(DEFAULT_MAP_LAYER_TYPE);
+        mMapListFAB = (FloatingActionButton) findViewById(R.id.fab_layers);
+        mMapListFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapLayerFragment.isVisible()) {
+                    if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() != null) {
+                        mMapInfoFAB.setVisibility(View.VISIBLE);
+                    }
+                    hideMapLayersList();
+                } else {
+                    if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() != null) {
+                        mMapInfoFAB.setVisibility(View.GONE);
+                    }
+                    showMapLayersList();
+                }
+            }
+        });
+        mMapListFAB.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (!mMapLayerFragment.isVisible()) {
+                    loadLayer(mLastMapLayerType);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
