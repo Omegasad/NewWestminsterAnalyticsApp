@@ -121,7 +121,10 @@ public class      MapsActivity
                     .commit();
             mMapInfoFAB.setImageResource(R.drawable.ic_info_outline_black_24dp);
             mMapListFAB.setVisibility(View.VISIBLE);
-            mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
+
+            if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+                mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -139,6 +142,11 @@ public class      MapsActivity
                 .remove(mMapLayerFragment)
                 .commit();
         mMapListFAB.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
+        if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+            mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
+        } else {
+            mClearSelectedAreaFAB.setVisibility(View.GONE);
+        }
     }
 
     public void loadLayer(MapLayerType mapLayerType) {
@@ -174,6 +182,8 @@ public class      MapsActivity
             mMapInfoFAB.setVisibility(View.VISIBLE);
             if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
                 mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
+            } else {
+                mClearSelectedAreaFAB.setVisibility(View.GONE);
             }
         }
     }
