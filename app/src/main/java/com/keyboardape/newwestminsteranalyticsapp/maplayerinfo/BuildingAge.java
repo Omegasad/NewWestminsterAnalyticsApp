@@ -16,11 +16,18 @@ public class BuildingAge {
     private int[] mBuildingsAge;
     private long  mTotalBuildings;
 
+    /**
+     * Constructor.
+     */
     public BuildingAge() {
         mCurrentYear = Calendar.getInstance().get(Calendar.YEAR);
         mBuildingsAge = new int[YEARS_TO_TRACK / NUMBER_OF_YEARS_TO_GROUP_BY];
     }
 
+    /**
+     * Add a building age entry.
+     * @param yearBuilt entry
+     */
     public void add(int yearBuilt) {
         int yearsOld = mCurrentYear - yearBuilt;
         int index = yearsOld / NUMBER_OF_YEARS_TO_GROUP_BY;
@@ -32,10 +39,18 @@ public class BuildingAge {
         ++mTotalBuildings;
     }
 
+    /**
+     * Return count of buildings age groupd by NUMBER_OF_YEARS_TO_GROUP_BY.
+     * @return int[]
+     */
     public int[] getAbsoluteValues() {
         return mBuildingsAge;
     }
 
+    /**
+     * Return building age percentages grouped.
+     * @return Map
+     */
     public Map<String, Integer> getPercentages() {
         Map<String, Integer> sum = new LinkedHashMap<>();
         long untracked = mTotalBuildings;
@@ -70,7 +85,10 @@ public class BuildingAge {
 
         Map<String, Integer> percentage = new LinkedHashMap<>();
         for (Map.Entry<String, Integer> entry : sum.entrySet()) {
-            percentage.put(entry.getKey(), (int)(entry.getValue() * 100 / mTotalBuildings));
+            int percent = (int)(entry.getValue() * 100 / mTotalBuildings);
+            if (percent > 0) {
+                percentage.put(entry.getKey(), percent);
+            }
         }
         return percentage;
     }

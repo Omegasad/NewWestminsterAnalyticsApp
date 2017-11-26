@@ -26,12 +26,14 @@ public class PopulationDensityLayer extends MapLayer {
     private final static int          R_DRAWABLE_ID_ICON;
     private final static MapLayerType LAYER_TYPE;
     private final static int          HEATMAP_RADIUS;
+    private final static boolean      HAS_SELECTED_AREA_FUNCTIONS;
 
     static {
-        R_STRING_ID_LAYER_NAME = R.string.layer_population_density;
-        R_DRAWABLE_ID_ICON     = R.drawable.ic_people_black_24dp;
-        LAYER_TYPE             = MapLayerType.POPULATION_DENSITY;
-        HEATMAP_RADIUS         = 30;
+        R_STRING_ID_LAYER_NAME      = R.string.layer_population_density;
+        R_DRAWABLE_ID_ICON          = R.drawable.ic_people_black_24dp;
+        LAYER_TYPE                  = MapLayerType.POPULATION_DENSITY;
+        HEATMAP_RADIUS              = 30;
+        HAS_SELECTED_AREA_FUNCTIONS = false;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -39,7 +41,7 @@ public class PopulationDensityLayer extends MapLayer {
     // ---------------------------------------------------------------------------------------------
 
     public PopulationDensityLayer() {
-        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS, HAS_SELECTED_AREA_FUNCTIONS);
     }
 
     @Override

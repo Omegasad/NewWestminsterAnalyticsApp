@@ -38,7 +38,21 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_info_outline_black_24dp"
-        app:fabSize="mini" />
+        app:fabSize="mini"
+        android:visibility="gone" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_clear_selected_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginTop="@dimen/fab_margin"
+        android:layout_marginLeft="60dp"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_grid_off_black_24dp"
+        app:fabSize="mini"
+        android:visibility="gone" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_layers"

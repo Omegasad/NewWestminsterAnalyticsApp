@@ -28,12 +28,14 @@ public class HighRisesLayer extends MapLayer {
     private final static int          R_DRAWABLE_ID_ICON;
     private final static MapLayerType LAYER_TYPE;
     private final static int          HEATMAP_RADIUS;
+    private final static boolean      HAS_SELECTED_AREA_FUNCTIONS;
 
     static {
-        R_STRING_ID_LAYER_NAME = R.string.layer_high_rises;
-        R_DRAWABLE_ID_ICON     = R.drawable.ic_line_weight_black_24dp;
-        LAYER_TYPE             = MapLayerType.HIGH_RISES;
-        HEATMAP_RADIUS         = 30;
+        R_STRING_ID_LAYER_NAME      = R.string.layer_high_rises;
+        R_DRAWABLE_ID_ICON          = R.drawable.ic_line_weight_black_24dp;
+        LAYER_TYPE                  = MapLayerType.HIGH_RISES;
+        HEATMAP_RADIUS              = 30;
+        HAS_SELECTED_AREA_FUNCTIONS = false;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -41,7 +43,7 @@ public class HighRisesLayer extends MapLayer {
     // ---------------------------------------------------------------------------------------------
 
     public HighRisesLayer() {
-        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS, HAS_SELECTED_AREA_FUNCTIONS);
     }
 
     @Override

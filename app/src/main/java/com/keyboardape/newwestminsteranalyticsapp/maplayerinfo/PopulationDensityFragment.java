@@ -46,10 +46,16 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
     private HorizontalBarChart mAgeDemographicsChart;
     private PieChart           mAgeGroupsChart;
 
+    /**
+     * Constructor.
+     */
     public PopulationDensityFragment() {
         mAgeDemographics = new AgeDemographics();
     }
 
+    /**
+     * Called by Android's system onCreateView.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +72,16 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         return v;
     }
 
+    /**
+     * Reloads MapLayerInfoFragment.
+     */
+    @Override
+    public void reloadLayerInfo() {
+    }
+
+    /**
+     * Load Age Demographics from database.
+     */
     private void loadAgeDemographicsFromDB() {
         String sqlQuery = "SELECT YEAR, MINAGE, MALE_POPULATION, FEMALE_POPULATION " +
                 "FROM '" + DataSetType.AGE_DEMOGRAPHICS.getDataSet().getTableName() + "' " +
@@ -93,6 +109,13 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         }, sqlQuery).execute();
     }
 
+    // ---------------------------------------------------------------------------------------------
+    //                                  AGE DEMOGRAPHICS BAR CHART
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Setup age demographics chart.
+     */
     private void setupAgeDemographicsChart() {
         mAgeDemographicsChart.setDrawGridBackground(false);
         mAgeDemographicsChart.getDescription().setEnabled(false);
@@ -134,6 +157,9 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         l.setXEntrySpace(6f);
     }
 
+    /**
+     * Load age demographics chart.
+     */
     private void loadAgeDemographicsChart() {
         // IMPORTANT: When using negative values in stacked bars, always make sure the negative values are in the array first
         ArrayList<BarEntry> yValues = new ArrayList<BarEntry>();
@@ -159,6 +185,13 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         mAgeDemographicsChart.animateY(1500);
     }
 
+    // ---------------------------------------------------------------------------------------------
+    //                                      AGE GROUPS PIE CHART
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Setup age groups chart.
+     */
     private void setupAgeGroupsChart() {
         mAgeGroupsChart.setUsePercentValues(true);
         mAgeGroupsChart.getDescription().setEnabled(false);
@@ -179,6 +212,9 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         mAgeGroupsChart.setHighlightPerTapEnabled(false);
     }
 
+    /**
+     * Load age groups chart.
+     */
     private void loadAgeGroupsChart() {
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -224,6 +260,13 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         this.mAgeGroupsChart.setEntryLabelTextSize(12f);
     }
 
+    // ---------------------------------------------------------------------------------------------
+    //                                      CUSTOM FORMATTERS
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Custom formatter.
+     */
     private class CustomFormatter implements IValueFormatter, IAxisValueFormatter
     {
         private DecimalFormat mFormat;

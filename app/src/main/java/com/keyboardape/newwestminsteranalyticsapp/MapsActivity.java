@@ -51,6 +51,7 @@ public class      MapsActivity
 
     private FloatingActionButton  mMapListFAB;
     private FloatingActionButton  mMapInfoFAB;
+    private FloatingActionButton  mClearSelectedAreaFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class      MapsActivity
                     .commit();
             mMapInfoFAB.setImageResource(R.drawable.ic_info_outline_black_24dp);
             mMapListFAB.setVisibility(View.VISIBLE);
+            mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
         }
     }
 
@@ -161,8 +163,14 @@ public class      MapsActivity
         // Show/hide Map Info Fragment FAB button
         if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() == null) {
             mMapInfoFAB.setVisibility(View.GONE);
+            if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+                mClearSelectedAreaFAB.setVisibility(View.GONE);
+            }
         } else {
             mMapInfoFAB.setVisibility(View.VISIBLE);
+            if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+                mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -202,6 +210,18 @@ public class      MapsActivity
             }
         });
 
+        // Clear Selected Area Button
+        mClearSelectedAreaFAB = (FloatingActionButton) findViewById(R.id.fab_clear_selected_area);
+        mClearSelectedAreaFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+                    MapLayer.ClearSelectedArea();
+                    mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull().reloadLayerInfo();
+                }
+            }
+        });
+
         // Map Layer Buttons Fragment
         mMapLayerFragment = new MapLayersListFragment();
         mMapLayerFragment.setActiveLayer(DEFAULT_MAP_LAYER_TYPE);
@@ -212,11 +232,13 @@ public class      MapsActivity
                 if (mMapLayerFragment.isVisible()) {
                     if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() != null) {
                         mMapInfoFAB.setVisibility(View.VISIBLE);
+                        mClearSelectedAreaFAB.setVisibility(View.VISIBLE);
                     }
                     hideMapLayersList();
                 } else {
                     if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() != null) {
                         mMapInfoFAB.setVisibility(View.GONE);
+                        mClearSelectedAreaFAB.setVisibility(View.GONE);
                     }
                     showMapLayersList();
                 }

@@ -25,12 +25,14 @@ public class PublicTransitLayer extends MapLayer {
     private final static int          R_DRAWABLE_ID_ICON;
     private final static MapLayerType LAYER_TYPE;
     private final static int          HEATMAP_RADIUS;
+    private final static boolean      HAS_SELECTED_AREA_FUNCTIONS;
 
     static {
-        R_STRING_ID_LAYER_NAME = R.string.layer_public_transit;
-        R_DRAWABLE_ID_ICON     = R.drawable.ic_traffic_black_24dp;
-        LAYER_TYPE             = MapLayerType.PUBLIC_TRANSIT;
-        HEATMAP_RADIUS         = 25;
+        R_STRING_ID_LAYER_NAME      = R.string.layer_public_transit;
+        R_DRAWABLE_ID_ICON          = R.drawable.ic_traffic_black_24dp;
+        LAYER_TYPE                  = MapLayerType.PUBLIC_TRANSIT;
+        HEATMAP_RADIUS              = 25;
+        HAS_SELECTED_AREA_FUNCTIONS = false;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -38,7 +40,7 @@ public class PublicTransitLayer extends MapLayer {
     // ---------------------------------------------------------------------------------------------
 
     public PublicTransitLayer () {
-        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS, HAS_SELECTED_AREA_FUNCTIONS);
     }
 
     @Override

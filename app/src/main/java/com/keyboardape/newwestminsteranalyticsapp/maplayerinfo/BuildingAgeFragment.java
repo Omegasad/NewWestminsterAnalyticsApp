@@ -29,10 +29,12 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.google.android.gms.maps.model.LatLng;
 import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
+import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayer;
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBReaderAsync;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,52 +42,66 @@ import java.util.Map;
  */
 public class BuildingAgeFragment extends MapLayerInfoFragment {
 
-    private TextView mNoteText;
-    private CombinedChart mBuildingAgeChart;
-    private PieChart mBuildingAgePercentChart;
+    private TextView             mNoteText;
+    private CombinedChart        mBuildingAgeChart;
+    private PieChart             mBuildingAgePercentChart;
 
-    private LatLng[] mCoordinates;
-    private int[] mBuildingAgeSelectedArea;
+    private int[]                mBuildingAgeSelectedArea;
     private Map<String, Integer> mBuildingAgeSelectedAreaPercentage;
-    private int[] mBuildingAgeWholeCity;
+    private int[]                mBuildingAgeWholeCity;
 
+    /**
+     * Constructor.
+     */
     public BuildingAgeFragment() {
         mNoteText = null;
         mBuildingAgeChart = null;
         mBuildingAgePercentChart = null;
-        mCoordinates = null;
+
         mBuildingAgeSelectedArea = null;
         mBuildingAgeSelectedAreaPercentage = null;
         mBuildingAgeWholeCity = null;
     }
 
-    public void setCoordinates(LatLng[] coordinates) {
-        mCoordinates = coordinates;
-        if (this.isVisible()) {
-            setupAndLoadEverything();
-        }
-    }
-
+    /**
+     * Android system calls this function onCreateView.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_map_layer_info_building_age, container, false);
+
         mNoteText = (TextView) v.findViewById(R.id.textView);
         mBuildingAgeChart = (CombinedChart) v.findViewById(R.id.building_age_chart);
         mBuildingAgePercentChart = (PieChart) v.findViewById(R.id.building_age_percentage_chart);
-        setupAndLoadEverything();
-        return v;
-    }
 
-    private void setupAndLoadEverything() {
         setupBuildingAgeChart();
         setupBuildingAgePercentChart();
 
-        if (mCoordinates != null) {
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        reloadLayerInfo();
+    }
+
+    /**
+     * Reloads MapLayerInfoFragment.
+     */
+    @Override
+    public void reloadLayerInfo() {
+        if (!isVisible()) {
+            return;
+        }
+
+        LatLng[] selectedArea = MapLayer.GetSelectedAreaOrNull();
+        if (selectedArea != null) {
             mBuildingAgeChart.setVisibility(View.VISIBLE);
             mBuildingAgePercentChart.setVisibility(View.VISIBLE);
             mNoteText.setVisibility(View.INVISIBLE);
-            loadSelectedAreaFromDB();
+            loadSelectedAreaFromDB(selectedArea);
         } else {
             mBuildingAgeChart.setVisibility(View.GONE);
             mBuildingAgePercentChart.setVisibility(View.GONE);
@@ -95,11 +111,19 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         loadWholeCityFromDB();
     }
 
-    private void loadSelectedAreaFromDB() {
+    // ---------------------------------------------------------------------------------------------
+    //                                         LOADING DATA
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Loads data for selected area.
+     * @param selectedArea to load
+     */
+    private void loadSelectedAreaFromDB(LatLng[] selectedArea) {
         String bldAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
         String sqlQuery = "SELECT BLDGAGE FROM '" + bldAgeTableName + "' " +
-                "WHERE " + mCoordinates[0].latitude + " < LATITUDE AND LATITUDE < " + mCoordinates[2].latitude + " " +
-                "AND " + mCoordinates[0].longitude + " < LONGITUDE AND LONGITUDE < " + mCoordinates[2].longitude + " " +
+                "WHERE " + selectedArea[0].latitude + " < LATITUDE AND LATITUDE < " + selectedArea[2].latitude + " " +
+                "AND " + selectedArea[0].longitude + " < LONGITUDE AND LONGITUDE < " + selectedArea[2].longitude + " " +
                 "AND BLDGAGE IS NOT NULL";
         new DBReaderAsync(new DBReaderAsync.Callbacks() {
             @Override
@@ -124,12 +148,22 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         }, sqlQuery).execute();
     }
 
+    /**
+     * Loads data for whole city.
+     */
     private void loadWholeCityFromDB() {
     }
 
+    // ---------------------------------------------------------------------------------------------
+    //                                            BAR CHART
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Load Building Age BarChart.
+     */
     private void loadBuildingAgeChart() {
         if (mBuildingAgeSelectedArea == null) {
-            return;
+            mBuildingAgeSelectedArea = new int[0];
         }
 
         // Generate bar data
@@ -160,6 +194,9 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         mBuildingAgeChart.animateY(1500);
     }
 
+    /**
+     * Setup BuildingAge BarChart.
+     */
     private void setupBuildingAgeChart() {
         mBuildingAgeChart.getDescription().setEnabled(false);
         mBuildingAgeChart.setScaleEnabled(false);
@@ -204,6 +241,13 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         });
     }
 
+    // ---------------------------------------------------------------------------------------------
+    //                                          PIE CHART
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Setup BuildingAge PieChart.
+     */
     private void setupBuildingAgePercentChart() {
         mBuildingAgePercentChart.setUsePercentValues(true);
         mBuildingAgePercentChart.getDescription().setEnabled(false);
@@ -223,9 +267,12 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         mBuildingAgePercentChart.setHighlightPerTapEnabled(false);
     }
 
+    /**
+     * Load BuildingAge PieChart.
+     */
     private void loadBuildingAgePercentChart() {
         if (mBuildingAgeSelectedAreaPercentage == null) {
-            return;
+            mBuildingAgeSelectedAreaPercentage = new HashMap<>();
         }
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();

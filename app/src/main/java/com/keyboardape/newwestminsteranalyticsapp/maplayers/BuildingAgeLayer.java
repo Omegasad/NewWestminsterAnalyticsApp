@@ -29,93 +29,50 @@ public class BuildingAgeLayer extends MapLayer {
     //                                             STATIC
     // ---------------------------------------------------------------------------------------------
 
+    /** Android resource id: layer name. */
     private final static int          R_STRING_ID_LAYER_NAME;
+
+    /** Android resource id: layer icon. */
     private final static int          R_DRAWABLE_ID_ICON;
+
+    /** MapLayerType. */
     private final static MapLayerType LAYER_TYPE;
+
+    /** TileOverlay heatmap spread radius. */
     private final static int          HEATMAP_RADIUS;
 
-    // Used to reduce the intensity of older buildings to getAbsoluteValues
+    /** Tracks whether this MapLayer has selected area functions. */
+    private final static boolean      HAS_SELECTED_AREA_FUNCTIONS;
+
+    // Used to reduce the intensity of older buildings to give values
     // a better visual representation of data
     private final static int          YEAR_REDUCTION;
 
     static {
-        R_STRING_ID_LAYER_NAME = R.string.layer_building_age;
-        R_DRAWABLE_ID_ICON     = R.drawable.ic_account_balance_black_24dp;
-        LAYER_TYPE             = MapLayerType.BUILDING_AGE;
-        HEATMAP_RADIUS         = 10;
+        R_STRING_ID_LAYER_NAME      = R.string.layer_building_age;
+        R_DRAWABLE_ID_ICON          = R.drawable.ic_account_balance_black_24dp;
+        LAYER_TYPE                  = MapLayerType.BUILDING_AGE;
+        HEATMAP_RADIUS              = 10;
+        HAS_SELECTED_AREA_FUNCTIONS = true;
 
-        YEAR_REDUCTION = 10;
+        YEAR_REDUCTION              = 10;
     }
 
     // ---------------------------------------------------------------------------------------------
     //                                           INSTANCE
     // ---------------------------------------------------------------------------------------------
 
-    private Polygon mPolygon = null;
-
+    /**
+     * Constructor.
+     */
     public BuildingAgeLayer() {
-        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS);
+        super(LAYER_TYPE, R_STRING_ID_LAYER_NAME, R_DRAWABLE_ID_ICON, HEATMAP_RADIUS, HAS_SELECTED_AREA_FUNCTIONS);
     }
 
-    @Override
-    public void showLayer() {
-        super.showLayer();
-        if (mPolygon != null) {
-            mPolygon.setVisible(true);
-        }
-    }
-
-    @Override
-    public void hideLayer() {
-        super.hideLayer();
-        if (mPolygon != null) {
-            mPolygon.setVisible(false);
-        }
-    }
-
-    @Override
-    public boolean onMapClick(LatLng p) {
-        if (mPolygon != null) {
-            mPolygon.remove();
-        }
-
-        // Calculate multiplier to show same rectangle size on screen
-        // disregarding the zoom level
-        float zoomMultiplier = GMap.getCameraPosition().zoom * 2.3f;
-        for (int i = 32 - (int) GMap.getCameraPosition().zoom; i > 0; --i) {
-            zoomMultiplier *= 1.383;
-        }
-        for (int i = (int) GMap.getCameraPosition().zoom; i > 0; --i) {
-            zoomMultiplier *= .55;
-        }
-        float xOffset = 0.002f * zoomMultiplier;
-        float yOffset = 0.0013f * zoomMultiplier;
-
-        // Calculate rectangle coordinates
-        LatLng[] coord = new LatLng[4];
-        coord[0] = new LatLng(p.latitude - yOffset, p.longitude - xOffset);
-        coord[1] = new LatLng(p.latitude - yOffset, p.longitude + xOffset);
-        coord[2] = new LatLng(p.latitude + yOffset, p.longitude + xOffset);
-        coord[3] = new LatLng(p.latitude + yOffset, p.longitude - xOffset);
-
-        // Set coordinates for Map Layer Info Fragment
-        BuildingAgeFragment frag = (BuildingAgeFragment) MapLayerInfoFragment.GetFragmentOrNull(MapLayerType.BUILDING_AGE);
-        frag.setCoordinates(coord);
-
-        // Draw rectangle on map
-        mPolygon = GMap.addPolygon(new PolygonOptions()
-            .add(coord[0], coord[1], coord[2], coord[3], coord[0])
-            .strokeColor(Color.RED)
-            .strokeWidth(6));
-
-        // Center rectangle on screen
-        LatLng moveTo = new LatLng(p.latitude - (2.8 * yOffset), p.longitude);
-        GMap.animateCamera(CameraUpdateFactory.newLatLng(moveTo));
-
-        // Automatically launch Map Layer Info Fragment
-        return true;
-    }
-
+    /**
+     * Gets MapLayer data asynchronously.
+     * @param callback function when data is ready
+     */
     @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
         int yearReduction = getAggregate("MAX(BLDGAGE) - " + YEAR_REDUCTION);
@@ -151,6 +108,11 @@ public class BuildingAgeLayer extends MapLayer {
         }, sqlQuery).execute();
     }
 
+    /**
+     * Get aggregate data from SQL.
+     * @param selectStatement of SQL query
+     * @return aggregate value as int
+     */
     private int getAggregate(String selectStatement) {
         String buildingAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
         String sql = "SELECT " + selectStatement + " FROM " + buildingAgeTableName + " "

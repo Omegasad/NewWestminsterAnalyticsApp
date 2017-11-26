@@ -1,9 +1,13 @@
 package com.keyboardape.newwestminsteranalyticsapp.maplayers;
 
+import android.graphics.Color;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
@@ -23,14 +27,28 @@ public abstract class MapLayer {
     //                                   STATIC : INITIALIZATION
     // ---------------------------------------------------------------------------------------------
 
+    /** GoogleMap instance. */
     protected static GoogleMap                                  GMap;
+
+    /** Polygon of selected area. */
+    private static Polygon                                      SelectedAreaPolygon;
+    /** Coordinates of selected area. */
+    private static LatLng[]                                     SelectedAreaCoordinates;
+
+    /** Tracks if MapLayer is initialized or not. */
     private static boolean                                      IsInitialized;
+    /** All MapLayer instances. */
     private static Map<MapLayerType, MapLayer>                  LayerInstances;
+    /** All MapLayer classes. */
     private static Map<MapLayerType, Class<? extends MapLayer>> LayerClasses;
 
     static {
         GMap = null;
+        SelectedAreaPolygon = null;
+        SelectedAreaCoordinates = null;
+
         LayerInstances = new LinkedHashMap<>();
+
         LayerClasses = new LinkedHashMap<>();
         LayerClasses.put(MapLayerType.POPULATION_DENSITY, PopulationDensityLayer.class);
         LayerClasses.put(MapLayerType.BUILDING_AGE,       BuildingAgeLayer.class);
@@ -39,6 +57,9 @@ public abstract class MapLayer {
         LayerClasses.put(MapLayerType.PUBLIC_TRANSIT,     PublicTransitLayer.class);
     }
 
+    /**
+     * Initialize an instance for every MapLayer.
+     */
     public static synchronized void Initialize() {
         if (!IsInitialized) {
             IsInitialized = true;
@@ -52,67 +73,161 @@ public abstract class MapLayer {
         }
     }
 
+    /**
+     * Reset all MapLayers if MapsActivity has been stopped.
+     * Fixes a bug where sometimes MapLayer would not load on Activity resume.
+     */
     public static synchronized void SetActivityStopped() {
         for (MapLayer layer : LayerInstances.values()) {
             layer.resetLayer();
         }
     }
 
+    /**
+     * Set GoogleMap instance.
+     * @param gMap GoogleMap instance
+     */
     public static void SetGoogleMap(GoogleMap gMap) {
         GMap = gMap;
     }
 
     // ---------------------------------------------------------------------------------------------
-    //                                     STATIC : GETTERS
+    //                                    OTHER STATIC FUNCTIONS
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     * Return instance of MapLayer for specified MapLayerType.
+     * @param mapLayerType to return
+     * @return MapLayer
+     */
     public static MapLayer GetLayer(MapLayerType mapLayerType) {
         return LayerInstances.get(mapLayerType);
     }
 
+    /**
+     * Return all MapLayerTypes.
+     * @return MapLayerType[]
+     */
     public static MapLayerType[] GetAllMapLayerTypes() {
         return LayerClasses.keySet().toArray(new MapLayerType[LayerClasses.size()]);
     }
 
+    /**
+     * Return all MapLayer instances.
+     * @return MapLayer[]
+     */
     public static MapLayer[] GetAllMapLayers() {
         return LayerInstances.values().toArray(new MapLayer[LayerInstances.size()]);
+    }
+
+    /**
+     * Returns selected area or null.
+     * @return LatLng[]
+     */
+    public static LatLng[] GetSelectedAreaOrNull() {
+        return SelectedAreaCoordinates;
+    }
+
+    /**
+     * Clear selected area.
+     */
+    public static void ClearSelectedArea() {
+        if (SelectedAreaPolygon != null) {
+            SelectedAreaPolygon.remove();
+            SelectedAreaPolygon = null;
+        }
+        if (SelectedAreaCoordinates != null) {
+            SelectedAreaCoordinates = null;
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
     //                                         INSTANCE
     // ---------------------------------------------------------------------------------------------
 
+    /** MapLayerType. */
     private MapLayerType         mLayerType;
+
+    /** Android resource id: MapLayer name. */
     private int                  mRStringIDLayerName;
+    /** Android resource id: MapLayer icon. */
     private int                  mRDrawableIDIcon;
+
+    /** Heatmap spread radius for this MapLayer. */
     private int                  mHeatmapRadius;
+    /** MapLayer's TileOverlay instance. */
     private TileOverlay          mTileOverlay;
 
-    public MapLayer(MapLayerType layerType, int rStringIDLayerName, int rDrawableIDIcon, int heatmapRadius) {
-        mLayerType          = layerType;
-        mRStringIDLayerName = rStringIDLayerName;
-        mRDrawableIDIcon    = rDrawableIDIcon;
-        mHeatmapRadius      = heatmapRadius;
-        mTileOverlay        = null;
+    /** Tracks whether this MapLayer has functions related to selected areas. */
+    private boolean              mHasSelectedAreaFunctions;
+
+    /**
+     * Constructor.
+     * @param layerType of MapLayer
+     * @param rStringIDLayerName Android resource id: MapLayer name
+     * @param rDrawableIDIcon Android resource id: MapLayer icon
+     * @param heatmapRadius Heatmap spread radius for MapLayer
+     */
+    public MapLayer(MapLayerType layerType
+                   ,int rStringIDLayerName
+                   ,int rDrawableIDIcon
+                   ,int heatmapRadius
+                   ,boolean hasSelectedAreaFunctions) {
+
+        mLayerType                = layerType;
+        mRStringIDLayerName       = rStringIDLayerName;
+        mRDrawableIDIcon          = rDrawableIDIcon;
+        mHeatmapRadius            = heatmapRadius;
+        mTileOverlay              = null;
+        mHasSelectedAreaFunctions = hasSelectedAreaFunctions;
     }
 
+    /**
+     * Returns MapLayerType of this MapLayer.
+     * @return MapLayerType
+     */
     public MapLayerType getMapLayerType() {
         return mLayerType;
     }
 
+    /**
+     * Returns MapLayerInfoFragment or null.
+     * @return MapLayerInfoFragment or null
+     */
     public MapLayerInfoFragment getMapLayerInfoFragmentOrNull() {
         return MapLayerInfoFragment.GetFragmentOrNull(mLayerType);
     }
 
+    /**
+     * Returns true if MapLayer has selected area functions.
+     * @return true if has selected area functions
+     */
+    public boolean hasSelectedAreaFunctions() {
+        return mHasSelectedAreaFunctions;
+    }
+
+    /**
+     * Returns Android resource id of MapLayer name.
+     * @return int
+     */
     public int getRStringIDLayerName() {
         return mRStringIDLayerName;
     }
 
+    /**
+     * Returns Android resource id of MapLayer icon.
+     * @return int
+     */
     public int getRDrawableIDIcon() {
         return mRDrawableIDIcon;
     }
 
+    /**
+     * Shows the TileOverlay onto the GoogleMap instance.
+     */
     public void showLayer() {
+
+        // TileOverlay
         if (mTileOverlay == null) {
             getMapDataAsync(new OnMapLayerDataReadyCallback() {
                 @Override
@@ -131,14 +246,32 @@ public abstract class MapLayer {
         } else {
             mTileOverlay.setVisible(true);
         }
-    }
 
-    public void hideLayer() {
-        if (mTileOverlay != null) {
-            mTileOverlay.setVisible(false);
+        // Selected Area
+        if (mHasSelectedAreaFunctions && SelectedAreaPolygon != null) {
+            SelectedAreaPolygon.setVisible(true);
         }
     }
 
+    /**
+     * Hides the TileOverlay from the GoogleMap instance.
+     */
+    public void hideLayer() {
+
+        // TileOverlay
+        if (mTileOverlay != null) {
+            mTileOverlay.setVisible(false);
+        }
+
+        // Selected Area
+        if (mHasSelectedAreaFunctions && SelectedAreaPolygon != null) {
+            SelectedAreaPolygon.setVisible(false);
+        }
+    }
+
+    /**
+     * Resets MapLayer cache. (Fixes a bug that shows an empty TileOverlay on Activity resume).
+     */
     public void resetLayer() {
         if (mTileOverlay != null) {
             mTileOverlay.remove();
@@ -146,10 +279,56 @@ public abstract class MapLayer {
         }
     }
 
-    public boolean onMapClick(LatLng point) {
-        return false;
+    /**
+     * Called when MapLayer has been clicked.
+     * @param p coordinate point where user clicked
+     * @return true: will show MapLayerInfoFragment, false: will not show MapLayerInfoFragment
+     */
+    public boolean onMapClick(LatLng p) {
+        if (!mHasSelectedAreaFunctions) {
+            return false;
+        }
+        MapLayerInfoFragment layerInfo = MapLayerInfoFragment.GetFragmentOrNull(mLayerType);
+        if (layerInfo == null) {
+            return false;
+        }
+
+        ClearSelectedArea();
+
+        // Calculate multiplier to show same rectangle size on screen, disregarding zoom level
+        float zoomLevel = GMap.getCameraPosition().zoom;
+        float zoomMultiplier = zoomLevel * 50f * (float) Math.pow(0.48, zoomLevel);
+        float xOffset = 0.2f * zoomMultiplier;
+        float yOffset = 0.13f * zoomMultiplier;
+
+        // Calculate rectangle coordinates
+        SelectedAreaCoordinates = new LatLng[4];
+        SelectedAreaCoordinates[0] = new LatLng(p.latitude - yOffset, p.longitude - xOffset);
+        SelectedAreaCoordinates[1] = new LatLng(p.latitude - yOffset, p.longitude + xOffset);
+        SelectedAreaCoordinates[2] = new LatLng(p.latitude + yOffset, p.longitude + xOffset);
+        SelectedAreaCoordinates[3] = new LatLng(p.latitude + yOffset, p.longitude - xOffset);
+
+        // Draw rectangle on map
+        SelectedAreaPolygon = GMap.addPolygon(new PolygonOptions()
+                .add(SelectedAreaCoordinates[0], SelectedAreaCoordinates[1], SelectedAreaCoordinates[2], SelectedAreaCoordinates[3], SelectedAreaCoordinates[0])
+                .strokeColor(Color.RED)
+                .strokeWidth(6));
+
+        // Center rectangle on screen
+        LatLng moveTo = new LatLng(p.latitude - (3.5 * yOffset), p.longitude);
+        GMap.animateCamera(CameraUpdateFactory.newLatLng(moveTo));
+
+        // Reload MapLayerInfoFragment
+        layerInfo.reloadLayerInfo();
+
+        // Automatically launch Map Layer Info Fragment
+        return true;
     }
 
+    /**
+     * Gets MapLayer data asynchronously.
+     * @param callback function when data is ready
+     */
     abstract public void getMapDataAsync(final OnMapLayerDataReadyCallback callback);
 
     // ---------------------------------------------------------------------------------------------
