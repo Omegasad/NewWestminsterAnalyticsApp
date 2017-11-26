@@ -54,9 +54,10 @@ public class ToolbarFragment extends Fragment {
             menu.findItem(R.id.action_share).setVisible(false);
         } else if (getActivity() instanceof ChartActivity) {
             menu.findItem(R.id.action_charts).setVisible(false);
-            MenuItem menuItem = menu.findItem(R.id.action_share);
-            shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-            setShareActionIntent(myDataFromActivity);
+            menu.findItem(R.id.action_share).setVisible(false);
+//            MenuItem menuItem = menu.findItem(R.id.action_share);
+//            shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+//            setShareActionIntent(myDataFromActivity);
         }
     }
 

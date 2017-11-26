@@ -81,6 +81,7 @@ public abstract class MapLayer {
      * Fixes a bug where sometimes MapLayer would not load on Activity resume.
      */
     public static synchronized void SetActivityStopped() {
+        ClearSelectedArea();
         for (MapLayer layer : LayerInstances.values()) {
             layer.resetLayer();
         }
