@@ -23,8 +23,8 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tap an area on the map to see more details."
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:layout_margin="10dp"/>
 
             <com.github.mikephil.charting.charts.CombinedChart
                 android:id="@+id/building_age_chart"

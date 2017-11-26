@@ -46,9 +46,8 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
     private CombinedChart        mBuildingAgeChart;
     private PieChart             mBuildingAgePercentChart;
 
-    private int[]                mBuildingAgeSelectedArea;
-    private Map<String, Integer> mBuildingAgeSelectedAreaPercentage;
-    private int[]                mBuildingAgeWholeCity;
+    private int[]                mBuildingAge;
+    private Map<String, Integer> mBuildingAgePercentage;
 
     /**
      * Constructor.
@@ -58,9 +57,8 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         mBuildingAgeChart = null;
         mBuildingAgePercentChart = null;
 
-        mBuildingAgeSelectedArea = null;
-        mBuildingAgeSelectedAreaPercentage = null;
-        mBuildingAgeWholeCity = null;
+        mBuildingAge = null;
+        mBuildingAgePercentage = null;
     }
 
     /**
@@ -81,6 +79,9 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         return v;
     }
 
+    /**
+     * Android system calls this function onViewCreated.
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -100,15 +101,14 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         if (selectedArea != null) {
             mBuildingAgeChart.setVisibility(View.VISIBLE);
             mBuildingAgePercentChart.setVisibility(View.VISIBLE);
-            mNoteText.setVisibility(View.INVISIBLE);
+            mNoteText.setText("Selected Area");
             loadSelectedAreaFromDB(selectedArea);
         } else {
-            mBuildingAgeChart.setVisibility(View.GONE);
-            mBuildingAgePercentChart.setVisibility(View.GONE);
-            mNoteText.setVisibility(View.VISIBLE);
+            mBuildingAgeChart.setVisibility(View.VISIBLE);
+            mBuildingAgePercentChart.setVisibility(View.VISIBLE);
+            mNoteText.setText("All Of New West");
+            loadWholeCityFromDB();
         }
-
-        loadWholeCityFromDB();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -121,7 +121,8 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      */
     private void loadSelectedAreaFromDB(LatLng[] selectedArea) {
         String bldAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
-        String sqlQuery = "SELECT BLDGAGE FROM '" + bldAgeTableName + "' " +
+        String sqlQuery =
+                "SELECT BLDGAGE FROM '" + bldAgeTableName + "' " +
                 "WHERE " + selectedArea[0].latitude + " < LATITUDE AND LATITUDE < " + selectedArea[2].latitude + " " +
                 "AND " + selectedArea[0].longitude + " < LONGITUDE AND LONGITUDE < " + selectedArea[2].longitude + " " +
                 "AND BLDGAGE IS NOT NULL";
@@ -133,11 +134,11 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
                     do {
                         bldAge.add(cursor.getInt(0));
                     } while (cursor.moveToNext());
-                    mBuildingAgeSelectedArea = bldAge.getAbsoluteValues();
-                    mBuildingAgeSelectedAreaPercentage = bldAge.getPercentages();
+                    mBuildingAge = bldAge.getAbsoluteValues();
+                    mBuildingAgePercentage = bldAge.getPercentages();
                 } else {
-                    mBuildingAgeSelectedArea = null;
-                    mBuildingAgeSelectedAreaPercentage = null;
+                    mBuildingAge = null;
+                    mBuildingAgePercentage = null;
                 }
             }
             @Override
@@ -152,6 +153,33 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      * Loads data for whole city.
      */
     private void loadWholeCityFromDB() {
+        String bldAgeTableName = DataSetType.BUILDING_AGE.getDataSet().getTableName();
+        String sqlQuery =
+                "SELECT BLDGAGE FROM '" + bldAgeTableName + "' " +
+                "WHERE LONGITUDE IS NOT NULL " +
+                "AND LATITUDE IS NOT NULL " +
+                "AND BLDGAGE IS NOT NULL";
+        new DBReaderAsync(new DBReaderAsync.Callbacks() {
+            @Override
+            public void onDBCursorReady(Cursor cursor) {
+                if (cursor.moveToFirst()) {
+                    BuildingAge bldAge = new BuildingAge();
+                    do {
+                        bldAge.add(cursor.getInt(0));
+                    } while (cursor.moveToNext());
+                    mBuildingAge = bldAge.getAbsoluteValues();
+                    mBuildingAgePercentage = bldAge.getPercentages();
+                } else {
+                    mBuildingAge = null;
+                    mBuildingAgePercentage = null;
+                }
+            }
+            @Override
+            public void onDBReadComplete() {
+                loadBuildingAgeChart();
+                loadBuildingAgePercentChart();
+            }
+        }, sqlQuery).execute();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -162,16 +190,16 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      * Load Building Age BarChart.
      */
     private void loadBuildingAgeChart() {
-        if (mBuildingAgeSelectedArea == null) {
-            mBuildingAgeSelectedArea = new int[0];
+        if (mBuildingAge == null) {
+            mBuildingAge = new int[0];
         }
 
         // Generate bar data
         ArrayList<BarEntry> entries1 = new ArrayList<BarEntry>();
-        for (int i = 0; i < mBuildingAgeSelectedArea.length; ++i) {
-            entries1.add(new BarEntry(Math.abs(mBuildingAgeSelectedArea.length - 1 - i) * 5 + 2.5f, mBuildingAgeSelectedArea[i]));
+        for (int i = 0; i < mBuildingAge.length; ++i) {
+            entries1.add(new BarEntry(Math.abs(mBuildingAge.length - 1 - i) * 5 + 2.5f, mBuildingAge[i]));
         }
-        BarDataSet set1 = new BarDataSet(entries1, "Buildings Built In Selected Area");
+        BarDataSet set1 = new BarDataSet(entries1, "Buildings Built");
         set1.setColor(Color.rgb(67,67,72));
         set1.setValueTextColor(Color.rgb(67,67,72));
         set1.setValueTextSize(10f);
@@ -213,7 +241,7 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
 
         Legend l = mBuildingAgeChart.getLegend();
         l.setWordWrapEnabled(true);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
@@ -271,14 +299,14 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      * Load BuildingAge PieChart.
      */
     private void loadBuildingAgePercentChart() {
-        if (mBuildingAgeSelectedAreaPercentage == null) {
-            mBuildingAgeSelectedAreaPercentage = new HashMap<>();
+        if (mBuildingAgePercentage == null) {
+            mBuildingAgePercentage = new HashMap<>();
         }
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (Map.Entry<String, Integer> entry : mBuildingAgeSelectedAreaPercentage.entrySet()) {
+        for (Map.Entry<String, Integer> entry : mBuildingAgePercentage.entrySet()) {
             entries.add(new PieEntry(entry.getValue(), entry.getKey()));
         }
         PieDataSet dataSet = new PieDataSet(entries, "");
