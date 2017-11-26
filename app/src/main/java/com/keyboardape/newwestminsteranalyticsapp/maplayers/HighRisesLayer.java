@@ -45,10 +45,6 @@ public class HighRisesLayer extends MapLayer {
     }
 
     @Override
-    public void onMapClick(LatLng point) {
-    }
-
-    @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
         float minHeight = getAggregate("MIN(BLDGAGE)");
         String highRisesTableName = DataSetType.HIGH_RISES.getDataSet().getTableName();

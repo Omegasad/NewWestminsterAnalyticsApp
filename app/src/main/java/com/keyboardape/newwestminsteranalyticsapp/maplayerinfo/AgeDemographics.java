@@ -11,9 +11,20 @@ import java.util.Map;
  */
 public class AgeDemographics {
 
+    // Map<Year, Map<AgeGroupNum, AgeGroupPopulation>>
+    // AgeGroupNum: 0 =  0 - 14 yrs old
+    //              1 = 15 - 24 yrs old
+    //              2 = 25 - 64 yrs old
+    //              3 = 65+ yrs old
     private Map<Integer, Map<Integer, Long>>                   mAgeGroups;
+
+    // Map<Year, Map<AgeFrom, Pair<MalePopulation, FemalePopulation>>
     private Map<Integer, Map<Integer, Pair<Integer, Integer>>> mPopulation;
+
+    // Map<Year, MalePopulation>
     private Map<Integer, Long>                                 mTotalMale;
+
+    // Map<Year, FemalePopulation>
     private Map<Integer, Long>                                 mTotalFemale;
 
     public AgeDemographics() {
@@ -77,17 +88,5 @@ public class AgeDemographics {
             mPopulation.put(year, demographics);
         }
         demographics.put(ageFrom, new Pair<Integer, Integer>(malePopulation, femalePopulation));
-
-//        // Sort age groups into decades
-//        if (ageFrom != 0) {
-//            ageFrom = (ageFrom / 10) * 10;
-//        }
-//
-//        // Add to existing population data if in same age group
-//        Pair<Integer, Integer> oldPopulation = demographics.get(ageFrom);
-//        if (oldPopulation != null) {
-//            malePopulation += oldPopulation.first;
-//            femalePopulation += oldPopulation.second;
-//        }
     }
 }

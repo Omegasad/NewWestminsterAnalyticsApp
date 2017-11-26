@@ -3,10 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.MapLayerInfoFragment"
+    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.PopulationDensityFragment"
     android:background="#EEFFFFFF"
     android:paddingBottom="60dp"
-    android:paddingTop="60dp">
+    android:paddingTop="60dp"
+    android:clickable="true"
+    android:focusable="true">
 
     <ScrollView
         android:layout_width="match_parent"

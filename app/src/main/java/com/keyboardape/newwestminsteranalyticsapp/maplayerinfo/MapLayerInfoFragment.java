@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.keyboardape.newwestminsteranalyticsapp.R;
 import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
 
@@ -32,6 +33,7 @@ public abstract class MapLayerInfoFragment extends Fragment {
 
         LayerInfoFragmentClasses = new LinkedHashMap<>();
         LayerInfoFragmentClasses.put(MapLayerType.POPULATION_DENSITY, PopulationDensityFragment.class);
+        LayerInfoFragmentClasses.put(MapLayerType.BUILDING_AGE,       BuildingAgeFragment.class);
     }
 
     public static void Initialize() {
@@ -66,7 +68,7 @@ public abstract class MapLayerInfoFragment extends Fragment {
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //                             Bundle savedInstanceState) {
-//        View v = inflater.inflate(R.layout.fragment_population_dentisy_map_layer_info, container, false);
+//        View v = inflater.inflate(R.layout.fragment_map_layer_info_population_dentisy, container, false);
 //        ListView list = (ListView) v.findViewById(R.id.map_layer_info_list);
 //        return v;
 //    }

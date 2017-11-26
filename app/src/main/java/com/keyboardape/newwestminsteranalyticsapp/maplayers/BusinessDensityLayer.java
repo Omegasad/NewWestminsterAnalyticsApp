@@ -42,10 +42,6 @@ public class BusinessDensityLayer extends MapLayer {
     }
 
     @Override
-    public void onMapClick(LatLng point) {
-    }
-
-    @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
         String buildingAgeTableName = DataSetType.BUSINESS_LICENSES.getDataSet().getTableName();
         String sqlQuery = "SELECT LATITUDE, LONGITUDE "

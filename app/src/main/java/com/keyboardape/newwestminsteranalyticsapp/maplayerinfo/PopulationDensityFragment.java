@@ -53,7 +53,7 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_population_dentisy_map_layer_info, container, false);
+        View v = inflater.inflate(R.layout.fragment_map_layer_info_population_dentisy, container, false);
 
         mAgeDemographicsChart = (HorizontalBarChart) v.findViewById(R.id.chart_age_demographics);
         mAgeGroupsChart = (PieChart) v.findViewById(R.id.chart_age_groups);
@@ -215,17 +215,10 @@ public class PopulationDensityFragment extends MapLayerInfoFragment {
         // undo all highlights
         mAgeGroupsChart.highlightValues(null);
         mAgeGroupsChart.invalidate();
-        this.mAgeGroupsChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        mAgeGroupsChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
         Legend l = this.mAgeGroupsChart.getLegend();
         l.setEnabled(false);
-//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-//        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-//        l.setDrawInside(false);
-//        l.setXEntrySpace(7f);
-//        l.setYEntrySpace(0f);
-//        l.setYOffset(0f);
         // entry label styling
         this.mAgeGroupsChart.setEntryLabelColor(Color.BLACK);
         this.mAgeGroupsChart.setEntryLabelTextSize(12f);

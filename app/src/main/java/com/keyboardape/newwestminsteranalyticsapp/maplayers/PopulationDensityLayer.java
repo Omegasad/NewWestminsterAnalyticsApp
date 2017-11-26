@@ -43,10 +43,6 @@ public class PopulationDensityLayer extends MapLayer {
     }
 
     @Override
-    public void onMapClick(LatLng point) {
-    }
-
-    @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
         String buildingAttributesTableName = DataSetType.BUILDING_ATTRIBUTES.getDataSet().getTableName();
         String sqlQuery = "SELECT LATITUDE, LONGITUDE, NUM_RES "

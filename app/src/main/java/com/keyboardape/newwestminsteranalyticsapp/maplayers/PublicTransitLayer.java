@@ -42,10 +42,6 @@ public class PublicTransitLayer extends MapLayer {
     }
 
     @Override
-    public void onMapClick(LatLng point) {
-    }
-
-    @Override
     public void getMapDataAsync(final OnMapLayerDataReadyCallback callback) {
         String skytrainStationsTableName = DataSetType.SKYTRAIN_STATIONS.getDataSet().getTableName();
         String sqlQuery =

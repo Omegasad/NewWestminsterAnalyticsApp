@@ -23,8 +23,8 @@ public abstract class MapLayer {
     //                                   STATIC : INITIALIZATION
     // ---------------------------------------------------------------------------------------------
 
+    protected static GoogleMap                                  GMap;
     private static boolean                                      IsInitialized;
-    private static GoogleMap                                    GMap;
     private static Map<MapLayerType, MapLayer>                  LayerInstances;
     private static Map<MapLayerType, Class<? extends MapLayer>> LayerClasses;
 
@@ -146,7 +146,9 @@ public abstract class MapLayer {
         }
     }
 
-    abstract public void onMapClick(LatLng point);
+    public boolean onMapClick(LatLng point) {
+        return false;
+    }
 
     abstract public void getMapDataAsync(final OnMapLayerDataReadyCallback callback);
 

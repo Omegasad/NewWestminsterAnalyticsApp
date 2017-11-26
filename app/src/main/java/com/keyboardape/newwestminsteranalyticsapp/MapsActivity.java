@@ -48,7 +48,6 @@ public class      MapsActivity
 
     private GoogleMap             mGMap;
     private MapLayersListFragment mMapLayerFragment;
-    private boolean               mIsMapLayerInfoFragmentVisible;
 
     private FloatingActionButton  mMapListFAB;
     private FloatingActionButton  mMapInfoFAB;
@@ -66,6 +65,12 @@ public class      MapsActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Initialize resources
+        DataSet.Initialize(this);
+        MapLayer.Initialize();
+        MapLayerInfoFragment.Initialize();
+        initializeEventListeners();
     }
 
     @Override
@@ -73,11 +78,9 @@ public class      MapsActivity
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
         MapLayer.SetGoogleMap(googleMap);
 
-        initializeResourcesAndEventListeners();
-
         mGMap = googleMap;
-        mGMap.getUiSettings().setRotateGesturesEnabled(false);
         mGMap.setOnMapClickListener(this);
+        mGMap.getUiSettings().setRotateGesturesEnabled(false);
         mGMap.setLatLngBoundsForCameraTarget(PANNING_BOUNDARY);
         mGMap.moveCamera(CameraUpdateFactory.newLatLngZoom(NEW_WEST_COORDINATE, INITIAL_ZOOM_LEVEL));
         mGMap.setMinZoomPreference(MIN_ZOOM_LEVEL);
@@ -87,19 +90,19 @@ public class      MapsActivity
 
     @Override
     public void onMapClick(LatLng point) {
-        if (mCurrentMapLayerType != null) {
-            mCurrentMapLayerType.getLayer().onMapClick(point);
+        if (mCurrentMapLayerType != null && mCurrentMapLayerType.getLayer().onMapClick(point)) {
+            showMapInfoFragment();
         }
     }
 
     public void showMapInfoFragment() {
         MapLayerInfoFragment infoFragment = MapLayerInfoFragment.GetFragmentOrNull(mCurrentMapLayerType);
-        if (infoFragment != null) {
+        if (infoFragment != null && !infoFragment.isAdded()) {
+            mMapListFAB.setVisibility(View.GONE);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.overlay_fragment_container, infoFragment)
                     .commit();
-            mIsMapLayerInfoFragmentVisible = true;
             mMapInfoFAB.setImageResource(R.drawable.ic_close_black_24dp);
         }
     }
@@ -111,8 +114,8 @@ public class      MapsActivity
             fragmentManager.beginTransaction()
                     .remove(infoFragment)
                     .commit();
-            mIsMapLayerInfoFragmentVisible = false;
             mMapInfoFAB.setImageResource(R.drawable.ic_info_outline_black_24dp);
+            mMapListFAB.setVisibility(View.VISIBLE);
         }
     }
 
@@ -121,7 +124,6 @@ public class      MapsActivity
         fragmentManager.beginTransaction()
                 .add(R.id.overlay_fragment_container, mMapLayerFragment)
                 .commit();
-        mGMap.getUiSettings().setAllGesturesEnabled(false);
         mMapListFAB.setImageResource(R.drawable.ic_close_black_24dp);
     }
 
@@ -130,7 +132,6 @@ public class      MapsActivity
         fragmentManager.beginTransaction()
                 .remove(mMapLayerFragment)
                 .commit();
-        mGMap.getUiSettings().setAllGesturesEnabled(true);
         mMapListFAB.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
     }
 
@@ -179,30 +180,23 @@ public class      MapsActivity
         MapLayer.SetActivityStopped();
     }
 
-    private void initializeResourcesAndEventListeners() {
-        // Initialize classes
-        DataSet.Initialize(this);
-        MapLayer.Initialize();
-        MapLayerInfoFragment.Initialize();
-
+    private void initializeEventListeners() {
         // Map Layer Info Button
-        mIsMapLayerInfoFragmentVisible = false;
         mMapInfoFAB = (FloatingActionButton) findViewById(R.id.fab_layers_info);
         mMapInfoFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull() == null) {
+                MapLayerInfoFragment fragment = mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull();
+                if (fragment == null) {
                     return;
                 }
 
-                if (mIsMapLayerInfoFragmentVisible) {
+                if (fragment.isAdded()) {
                     hideMapInfoFragment();
-                    mMapListFAB.setVisibility(View.VISIBLE);
                 } else {
                     if (mMapLayerFragment.isVisible()) {
                         hideMapLayersList();
                     }
-                    mMapListFAB.setVisibility(View.GONE);
                     showMapInfoFragment();
                 }
             }

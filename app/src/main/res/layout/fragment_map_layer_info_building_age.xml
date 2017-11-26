@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.BuildingAgeFragment"
+    android:background="#EEFFFFFF"
+    android:paddingBottom="60dp"
+    android:layout_marginTop="300dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap an area on the map to see more details."
+                android:textAlignment="center" />
+
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/building_age_chart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:visibility="gone"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/building_age_percentage_chart"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
