@@ -105,6 +105,10 @@ public class      MapsActivity
                     .add(R.id.overlay_fragment_container, infoFragment)
                     .commit();
             mMapInfoFAB.setImageResource(R.drawable.ic_close_black_24dp);
+
+            if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
+                MapLayer.AnimateToSelectedArea();
+            }
         }
     }
 

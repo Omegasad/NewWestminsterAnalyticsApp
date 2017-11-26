@@ -34,6 +34,8 @@ public abstract class MapLayer {
     private static Polygon                                      SelectedAreaPolygon;
     /** Coordinates of selected area. */
     private static LatLng[]                                     SelectedAreaCoordinates;
+    /** Center point to move to. */
+    private static LatLng                                       CenterPoint;
 
     /** Tracks if MapLayer is initialized or not. */
     private static boolean                                      IsInitialized;
@@ -46,6 +48,7 @@ public abstract class MapLayer {
         GMap = null;
         SelectedAreaPolygon = null;
         SelectedAreaCoordinates = null;
+        CenterPoint = null;
 
         LayerInstances = new LinkedHashMap<>();
 
@@ -121,6 +124,15 @@ public abstract class MapLayer {
     }
 
     /**
+     * Animate to selected area center point.
+     */
+    public static void AnimateToSelectedArea() {
+        if (CenterPoint != null) {
+            GMap.animateCamera(CameraUpdateFactory.newLatLng(CenterPoint));
+        }
+    }
+
+    /**
      * Returns selected area or null.
      * @return LatLng[]
      */
@@ -138,6 +150,9 @@ public abstract class MapLayer {
         }
         if (SelectedAreaCoordinates != null) {
             SelectedAreaCoordinates = null;
+        }
+        if (CenterPoint != null) {
+            CenterPoint = null;
         }
     }
 
@@ -315,8 +330,8 @@ public abstract class MapLayer {
                 .strokeWidth(6));
 
         // Center rectangle on screen
-        LatLng moveTo = new LatLng(p.latitude - (3.5 * yOffset), p.longitude);
-        GMap.animateCamera(CameraUpdateFactory.newLatLng(moveTo));
+        CenterPoint = new LatLng(p.latitude - (3.5 * yOffset), p.longitude);
+        AnimateToSelectedArea();
 
         // Reload MapLayerInfoFragment
         layerInfo.reloadLayerInfo();
