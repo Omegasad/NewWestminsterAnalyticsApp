@@ -198,7 +198,7 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-                int v = currentYear - 4 - Math.abs(45 - ((int) value));
+                int v = currentYear - 4 - Math.abs(55 - ((int) value));
                 return v + "-";
             }
         });
