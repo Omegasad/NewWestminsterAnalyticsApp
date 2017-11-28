@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -79,10 +81,18 @@ public class Demo2016Activity extends DBActivity implements GestureDetector.OnGe
                     if (cursor.moveToFirst()) {
                         int ndx = 0;
                         do {
-                            //Get the labels populated here too
-                            labels[ndx] = Integer.toString(cursor.getInt(1)) + "-" + Integer.toString(cursor.getInt(0));
-                            female[ndx] = cursor.getInt(4);
-                            male[ndx++] = cursor.getInt(5);
+                            if (cursor.isLast()) {
+                                labels[ndx] = "Age: " + Integer.toString(cursor.getInt(1)) + "+ : M:"
+                                        + cursor.getInt(4) + " F:" + cursor.getInt(5);
+                                female[ndx] = cursor.getInt(4);
+                                male[ndx++] = cursor.getInt(5);
+                            } else {
+                                //Get the labels populated here too
+                                labels[ndx] = "Age: " + Integer.toString(cursor.getInt(1)) + "-" + Integer.toString(cursor.getInt(0)) + ": M:"
+                                        + cursor.getInt(4) + " F:" + cursor.getInt(5);
+                                female[ndx] = cursor.getInt(4);
+                                male[ndx++] = cursor.getInt(5);
+                            }
                         } while (cursor.moveToNext());
                     }
                 } catch (Exception e) {
@@ -93,6 +103,7 @@ public class Demo2016Activity extends DBActivity implements GestureDetector.OnGe
             @Override
             public void onDBReadComplete() {
                 printChart();
+                printListings();
             }
         }, sqlQuery).execute();
     }
@@ -136,9 +147,10 @@ public class Demo2016Activity extends DBActivity implements GestureDetector.OnGe
 
         // Is needed so the data can be outputted
         BarDataSet dummySet1 = new BarDataSet(dummyEntries,"Male");
-        //dummySet1.setDrawValues(false);
+        dummySet1.setDrawValues(false);
+
         BarDataSet dummySet2 = new BarDataSet(dummyEntries2,"Female");
-        //dummySet2.setDrawValues(false);
+        dummySet2.setDrawValues(false);
 
         // Changes the color of the bar
         dummySet1.setColor(Color.BLUE);
@@ -164,6 +176,14 @@ public class Demo2016Activity extends DBActivity implements GestureDetector.OnGe
         barChart.setDoubleTapToZoomEnabled(true);
         barChart.invalidate(); // refreshes (redraws the chart)
 
+    }
+
+    private void printListings() {
+        ListView listData = (ListView) findViewById (R.id.listData);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_expandable_list_item_1, labels
+        );
+        listData.setAdapter(arrayAdapter);
     }
 
     @Override
