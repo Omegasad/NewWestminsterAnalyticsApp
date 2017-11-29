@@ -39,7 +39,7 @@
             android:name=".MapsActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".charts.ChartActivity"
+            android:name=".ChartActivity"
             android:launchMode="singleTask" />
         <activity android:name=".charts.Demo2001Activity" />
         <activity android:name=".charts.Demo2006Activity" />

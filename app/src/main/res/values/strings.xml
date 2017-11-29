@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NewWestminsterAnalyticsApp</string>
+    <string name="app_name">NW Analytics</string>
     <string name="title_activity_maps">Heatmaps</string>
     <string name="title_activity_charts">Charts</string>
     <string name="title_demo2001">Demographics 2001</string>

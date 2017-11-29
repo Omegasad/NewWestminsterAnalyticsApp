@@ -49,12 +49,12 @@
         android:text="@string/btn_view_charts"
         android:onClick="onClickViewCharts"/>
 
-    <Button
-        android:id="@+id/btnViewDemographics"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Demographics"
-        android:onClick="onClickViewDemographics"/>
+    <!--<Button-->
+        <!--android:id="@+id/btnViewDemographics"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="View Demographics"-->
+        <!--android:onClick="onClickViewDemographics"/>-->
 
 </LinearLayout>

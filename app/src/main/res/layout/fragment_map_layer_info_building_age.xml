@@ -29,14 +29,12 @@
             <com.github.mikephil.charting.charts.CombinedChart
                 android:id="@+id/building_age_chart"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:visibility="gone"/>
+                android:layout_height="250dp"/>
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/building_age_percentage_chart"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:visibility="gone"/>
+                android:layout_height="280dp"/>
 
         </LinearLayout>
 

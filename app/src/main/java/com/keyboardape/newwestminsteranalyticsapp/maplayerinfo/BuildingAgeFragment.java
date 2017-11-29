@@ -99,13 +99,9 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
 
         LatLng[] selectedArea = MapLayer.GetSelectedAreaOrNull();
         if (selectedArea != null) {
-            mBuildingAgeChart.setVisibility(View.VISIBLE);
-            mBuildingAgePercentChart.setVisibility(View.VISIBLE);
             mNoteText.setText("Selected Area");
             loadSelectedAreaFromDB(selectedArea);
         } else {
-            mBuildingAgeChart.setVisibility(View.VISIBLE);
-            mBuildingAgePercentChart.setVisibility(View.VISIBLE);
             mNoteText.setText("All Of New West");
             loadWholeCityFromDB();
         }
@@ -191,7 +187,8 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      */
     private void loadBuildingAgeChart() {
         if (mBuildingAge == null) {
-            mBuildingAge = new int[0];
+            mBuildingAgeChart.clear();
+            return;
         }
 
         // Generate bar data
@@ -219,7 +216,7 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
 
         mBuildingAgeChart.setData(data);
         mBuildingAgeChart.invalidate();
-        mBuildingAgeChart.animateY(1500);
+        mBuildingAgeChart.animateY(1000);
     }
 
     /**
@@ -300,7 +297,8 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
      */
     private void loadBuildingAgePercentChart() {
         if (mBuildingAgePercentage == null) {
-            mBuildingAgePercentage = new HashMap<>();
+            mBuildingAgePercentChart.clear();
+            return;
         }
 
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
@@ -328,7 +326,7 @@ public class BuildingAgeFragment extends MapLayerInfoFragment {
         // undo all highlights
         mBuildingAgePercentChart.highlightValues(null);
         mBuildingAgePercentChart.invalidate();
-        mBuildingAgePercentChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+        mBuildingAgePercentChart.animateY(1000, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
         Legend l = this.mBuildingAgePercentChart.getLegend();
         l.setEnabled(false);

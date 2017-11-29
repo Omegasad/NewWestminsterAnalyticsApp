@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * AgeDemographics data object.
+ * PopulationDensity data object.
  */
-public class AgeDemographics {
+public class PopulationDensity {
 
     // Map<Year, Map<AgeGroupNum, AgeGroupPopulation>>
     // AgeGroupNum: 0 =  0 - 14 yrs old
@@ -27,11 +27,19 @@ public class AgeDemographics {
     // Map<Year, FemalePopulation>
     private Map<Integer, Long>                                 mTotalFemale;
 
-    public AgeDemographics() {
+    public PopulationDensity() {
         mAgeGroups   = new LinkedHashMap<>();
         mPopulation  = new LinkedHashMap<>();
         mTotalMale   = new HashMap<>();
         mTotalFemale = new HashMap<>();
+    }
+
+    public int getTotalMalePercent(int year) {
+        return (int) (getTotalMale(year) * 100 / (getTotalFemale(year) + getTotalMale(year)));
+    }
+
+    public int getTotalFemalePercent(int year) {
+        return (int) (getTotalFemale(year) * 100 / (getTotalMale(year) + getTotalFemale(year)));
     }
 
     public Long getTotalMale(int year) {
@@ -58,7 +66,7 @@ public class AgeDemographics {
 
         // Update total female count
         Long totalFemale = mTotalFemale.get(year);
-        mTotalMale.put(year, (totalFemale != null) ? femalePopulation + totalFemale : femalePopulation);
+        mTotalFemale.put(year, (totalFemale != null) ? femalePopulation + totalFemale : femalePopulation);
 
         // Update age groups count
         Map<Integer, Long> ageGroups = getAgeGroups(year);

@@ -10,9 +10,6 @@ import android.widget.ListView;
 
 import com.keyboardape.newwestminsteranalyticsapp.MapsActivity;
 import com.keyboardape.newwestminsteranalyticsapp.R;
-import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayer;
-import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerAdapter;
-import com.keyboardape.newwestminsteranalyticsapp.maplayers.MapLayerType;
 
 public class MapLayersListFragment extends Fragment implements AdapterView.OnItemClickListener {
 

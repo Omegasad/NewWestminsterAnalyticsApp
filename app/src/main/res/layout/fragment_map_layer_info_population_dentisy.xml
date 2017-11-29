@@ -6,39 +6,24 @@
     tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.PopulationDensityFragment"
     android:background="#EEFFFFFF"
     android:paddingBottom="60dp"
-    android:paddingTop="60dp"
+    android:orientation="vertical"
     android:clickable="true"
     android:focusable="true">
 
-    <ScrollView
+
+    <LinearLayout
+        android:id="@+id/census_years"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" />
 
-        <LinearLayout
-            android:orientation="vertical"
+    <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="From 2016 Census Data"
-                android:layout_margin="10dp"/>
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart_age_groups"
-                android:layout_width="match_parent"
-                android:layout_height="270dp" />
-
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/chart_age_demographics"
-                android:layout_width="match_parent"
-                android:layout_height="270dp" />
-
-        </LinearLayout>
-
-    </ScrollView>
+            android:layout_height="match_parent" />
 
 </LinearLayout>

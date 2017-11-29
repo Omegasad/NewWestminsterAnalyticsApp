@@ -1,5 +1,7 @@
 package com.keyboardape.newwestminsteranalyticsapp;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -92,7 +94,33 @@ public class      MapsActivity
     @Override
     public void onMapClick(LatLng point) {
         if (mCurrentMapLayerType != null && mCurrentMapLayerType.getLayer().onMapClick(point)) {
+            autoEnableDisableClearSelectedAreaFAB();
             showMapInfoFragment();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mGMap != null) {
+            loadLayer(mCurrentMapLayerType);
+            autoEnableDisableClearSelectedAreaFAB();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MapLayer.SetActivityStopped();
+    }
+
+    private void autoEnableDisableClearSelectedAreaFAB() {
+        if (MapLayer.GetSelectedAreaOrNull() != null) {
+            mClearSelectedAreaFAB.setEnabled(true);
+            mClearSelectedAreaFAB.setBackgroundTintList(ColorStateList.valueOf(-16738680));
+        } else {
+            mClearSelectedAreaFAB.setEnabled(false);
+            mClearSelectedAreaFAB.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         }
     }
 
@@ -102,6 +130,7 @@ public class      MapsActivity
             mMapListFAB.setVisibility(View.GONE);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                     .add(R.id.overlay_fragment_container, infoFragment)
                     .commit();
             mMapInfoFAB.setImageResource(R.drawable.ic_close_black_24dp);
@@ -117,6 +146,7 @@ public class      MapsActivity
         if (infoFragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                     .remove(infoFragment)
                     .commit();
             mMapInfoFAB.setImageResource(R.drawable.ic_info_outline_black_24dp);
@@ -131,6 +161,7 @@ public class      MapsActivity
     public void showMapLayersList() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                 .add(R.id.overlay_fragment_container, mMapLayerFragment)
                 .commit();
         mMapListFAB.setImageResource(R.drawable.ic_close_black_24dp);
@@ -139,6 +170,7 @@ public class      MapsActivity
     public void hideMapLayersList() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                 .remove(mMapLayerFragment)
                 .commit();
         mMapListFAB.setImageResource(mCurrentMapLayerType.getLayer().getRDrawableIDIcon());
@@ -188,20 +220,6 @@ public class      MapsActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mGMap != null) {
-            loadLayer(mCurrentMapLayerType);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MapLayer.SetActivityStopped();
-    }
-
     private void initializeEventListeners() {
         // Map Layer Info Button
         mMapInfoFAB = (FloatingActionButton) findViewById(R.id.fab_layers_info);
@@ -226,12 +244,14 @@ public class      MapsActivity
 
         // Clear Selected Area Button
         mClearSelectedAreaFAB = (FloatingActionButton) findViewById(R.id.fab_clear_selected_area);
+        autoEnableDisableClearSelectedAreaFAB();
         mClearSelectedAreaFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mCurrentMapLayerType.getLayer().hasSelectedAreaFunctions()) {
                     MapLayer.ClearSelectedArea();
                     mCurrentMapLayerType.getLayer().getMapLayerInfoFragmentOrNull().reloadLayerInfo();
+                    autoEnableDisableClearSelectedAreaFAB();
                 }
             }
         });

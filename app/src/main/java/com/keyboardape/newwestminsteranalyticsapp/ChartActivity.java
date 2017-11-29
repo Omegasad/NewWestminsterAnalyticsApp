@@ -1,6 +1,6 @@
 // TODO: 9/29/2017 find out what barChart.invalidate(); does
 
-package com.keyboardape.newwestminsteranalyticsapp.charts;
+package com.keyboardape.newwestminsteranalyticsapp;
 
 import android.content.Intent;
 import android.database.Cursor;

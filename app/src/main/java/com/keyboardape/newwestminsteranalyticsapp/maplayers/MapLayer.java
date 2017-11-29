@@ -36,6 +36,8 @@ public abstract class MapLayer {
     private static LatLng[]                                     SelectedAreaCoordinates;
     /** Center point to move to. */
     private static LatLng                                       CenterPoint;
+    /** Zoom level of saved CenterPoint */
+    private static float                                        CenterPointZoomLevel;
 
     /** Tracks if MapLayer is initialized or not. */
     private static boolean                                      IsInitialized;
@@ -130,7 +132,7 @@ public abstract class MapLayer {
      */
     public static void AnimateToSelectedArea() {
         if (CenterPoint != null) {
-            GMap.animateCamera(CameraUpdateFactory.newLatLng(CenterPoint));
+            GMap.animateCamera(CameraUpdateFactory.newLatLngZoom(CenterPoint, CenterPointZoomLevel));
         }
     }
 
@@ -293,6 +295,11 @@ public abstract class MapLayer {
         if (mTileOverlay != null) {
             mTileOverlay.remove();
             mTileOverlay = null;
+
+            MapLayerInfoFragment layerInfo = MapLayerInfoFragment.GetFragmentOrNull(mLayerType);
+            if (layerInfo != null) {
+                layerInfo.reloadLayerInfo();
+            }
         }
     }
 
@@ -333,6 +340,7 @@ public abstract class MapLayer {
 
         // Center rectangle on screen
         CenterPoint = new LatLng(p.latitude - (3.5 * yOffset), p.longitude);
+        CenterPointZoomLevel = zoomLevel;
         AnimateToSelectedArea();
 
         // Reload MapLayerInfoFragment

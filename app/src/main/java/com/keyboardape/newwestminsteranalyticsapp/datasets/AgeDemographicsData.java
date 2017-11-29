@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callbacks {
 
+    public static final int[]                CENSUS_DATA_YEARS;
+
     private final static String              TABLE_NAME;
     private final static String[]            DATA_SOURCE_URLS;
     private final static DataSetType         DATA_SET_TYPE;
@@ -35,6 +37,8 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
     private final static int                 MAX_AGE;
 
     static {
+        CENSUS_DATA_YEARS = new int[] {2016, 2011, 2006, 2001};
+
         TABLE_NAME       = "age_demographics";
         DATA_SET_TYPE    = DataSetType.AGE_DEMOGRAPHICS;
         R_STRING_ID_NAME = R.string.dataset_age_demographics;

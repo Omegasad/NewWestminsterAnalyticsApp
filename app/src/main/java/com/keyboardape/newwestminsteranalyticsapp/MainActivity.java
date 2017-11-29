@@ -7,11 +7,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.keyboardape.newwestminsteranalyticsapp.charts.ChartActivity;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSet;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetAdapter;
 import com.keyboardape.newwestminsteranalyticsapp.datasets.DataSetType;
-import com.keyboardape.newwestminsteranalyticsapp.charts.Demo2001Activity;
 
 /**
  * Application entry point.
@@ -25,7 +23,7 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
     private DataSetAdapter mDataSetAdapter;
     private Button   mBtnViewMaps;
     private Button   mBtnViewCharts;
-    private Button   mBtnViewDemographics;
+//    private Button   mBtnViewDemographics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +43,8 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
         mBtnViewMaps.setEnabled(false);
         mBtnViewCharts = (Button) findViewById(R.id.btnViewCharts);
         mBtnViewCharts.setEnabled(false);
-        mBtnViewDemographics = (Button) findViewById(R.id.btnViewDemographics);
-        mBtnViewDemographics.setEnabled(false);
+//        mBtnViewDemographics = (Button) findViewById(R.id.btnViewDemographics);
+//        mBtnViewDemographics.setEnabled(false);
 
         downloadDataSetOrEnableButtons();
     }
@@ -61,10 +59,10 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
         startActivity(i);
     }
 
-    public void onClickViewDemographics(View v) {
-        Intent i = new Intent(this, Demo2001Activity.class);
-        startActivity(i);
-    }
+//    public void onClickViewDemographics(View v) {
+//        Intent i = new Intent(this, Demo2001Activity.class);
+//        startActivity(i);
+//    }
 
     private void downloadDataSetOrEnableButtons() {
         mDataSetAdapter.notifyDataSetChanged();
@@ -84,7 +82,7 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
         } else {
             mBtnViewMaps.setEnabled(true);
             mBtnViewCharts.setEnabled(true);
-            mBtnViewDemographics.setEnabled(true);
+//            mBtnViewDemographics.setEnabled(true);
         }
     }
 
