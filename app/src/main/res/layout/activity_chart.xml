@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3" />
+        android:layout_below="@+id/toolbar" />
 
     <ListView
         android:id="@+id/topTen"
@@ -25,13 +25,5 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/bargraph"
         android:listSelector="@android:color/transparent"/>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar"
-        android:text="@string/top_ten_title" />
 
 </RelativeLayout>

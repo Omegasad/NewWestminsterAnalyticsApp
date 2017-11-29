@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NW Analytics</string>
     <string name="title_activity_maps">Heatmaps</string>
-    <string name="title_activity_charts">Charts</string>
+    <string name="title_activity_charts">Most Popular Businesses</string>
     <string name="title_demo2001">Demographics 2001</string>
     <string name="title_demo2006">Demographics 2006</string>
     <string name="title_demo2011">Demographics 2011</string>
