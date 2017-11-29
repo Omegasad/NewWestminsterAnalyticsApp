@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.PopulationDensityFragment"
+    tools:context="com.keyboardape.newwestminsteranalyticsapp.maplayerinfo.BusinessDensityFragment"
     android:background="#EEFFFFFF"
     android:paddingBottom="60dp"
-    android:paddingTop="60dp"
+    android:layout_marginTop="60dp"
     android:clickable="true"
     android:focusable="true">
 
@@ -24,18 +24,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="From 2016 Census Data"
+                android:text="Existing Businesses in 2017"
                 android:layout_margin="10dp"/>
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/chart_age_groups"
+            <com.github.mikephil.charting.charts.CombinedChart
+                android:id="@+id/business_age_chart"
                 android:layout_width="match_parent"
-                android:layout_height="270dp" />
+                android:layout_height="250dp"/>
 
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/chart_age_demographics"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/building_age_percentage_chart"
                 android:layout_width="match_parent"
-                android:layout_height="270dp" />
+                android:layout_height="280dp"/>
 
         </LinearLayout>
 

@@ -10,6 +10,7 @@ public enum MapLayerType {
     ,HIGH_RISES
     ,BUSINESS_DENSITY
     ,PUBLIC_TRANSIT
+    ,SCHOOL_BUILDINGS
     ;
 
     public MapLayer getLayer() {

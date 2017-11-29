@@ -26,11 +26,11 @@
     <string name="dataset_building_age">Building Age</string>
     <string name="dataset_high_rises">High Rises</string>
     <string name="dataset_age_demographics">Age Demographics</string>
+    <string name="dataset_school_buildings">School Buildings</string>
 
     <!-- Buttons -->
     <string name="btn_view_maps">View Heatmaps</string>
     <string name="btn_view_charts">View Charts</string>
-
 
     <!-- MapsActivity -->
     <string name="layer_population_density">Population Density</string>
@@ -38,6 +38,7 @@
     <string name="layer_high_rises">Highrise Buildings</string>
     <string name="layer_business_density">Business Density</string>
     <string name="layer_public_transit">Public Transit</string>
+    <string name="layer_school_buildings">School Buildings</string>
 
     <!-- ChartActivity -->
     <string name="top_ten_title">Most Popular Businesses in New West</string>

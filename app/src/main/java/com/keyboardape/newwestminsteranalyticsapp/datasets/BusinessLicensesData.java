@@ -62,7 +62,7 @@ public class BusinessLicensesData extends DataSet {
     private Geocoder mGeocoder;
 
     public BusinessLicensesData(Context context) {
-        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
+        super(DATA_SOURCE_URL, DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
         mGeocoder = new Geocoder(context);
     }
 

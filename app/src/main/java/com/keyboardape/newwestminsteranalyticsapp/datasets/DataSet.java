@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.keyboardape.newwestminsteranalyticsapp.utilities.DBHelper;
+import com.keyboardape.newwestminsteranalyticsapp.utilities.GetURLLastUpdateAsync;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,8 +40,9 @@ public abstract class DataSet {
         DataSetClasses.put(DataSetType.BUSINESS_LICENSES,   BusinessLicensesData.class);
         DataSetClasses.put(DataSetType.MAJOR_SHOPPING,      MajorShoppingData.class);
         DataSetClasses.put(DataSetType.BUILDING_AGE,        BuildingAgeData.class);
-        DataSetClasses.put(DataSetType.HIGH_RISES,          HighRisesData.class);
+//        DataSetClasses.put(DataSetType.HIGH_RISES,          HighRisesData.class);
         DataSetClasses.put(DataSetType.AGE_DEMOGRAPHICS,    AgeDemographicsData.class);
+        DataSetClasses.put(DataSetType.SCHOOL_BUILDINGS,    SchoolBuildingsData.class);
     }
 
     /**
@@ -193,6 +195,7 @@ public abstract class DataSet {
     //                                         INSTANCE
     // ---------------------------------------------------------------------------------------------
 
+    private final String              mDataSourceURL;
     private final DataSetType         mDataSetType;
     private final String              mTableName;
     private final Map<String, String> mTableColumns;
@@ -208,10 +211,12 @@ public abstract class DataSet {
      * @param tableColumns of this DataSet
      * @param rStringIDName Android string resource ID of this DataSet name
      */
-    public DataSet(DataSetType dataSetType,
+    public DataSet(String dataSourceURL,
+                   DataSetType dataSetType,
                    String tableName,
                    Map<String, String> tableColumns,
                    int rStringIDName) {
+        mDataSourceURL = dataSourceURL;
         mDataSetType  = dataSetType;
         mTableName    = tableName;
         mTableColumns = tableColumns;
@@ -247,12 +252,29 @@ public abstract class DataSet {
 
     /**
      * Returns true if this DataSet requires update.
-     * @return true if DataSet requires update
      */
-    public boolean isRequireUpdate() {
+    public void isRequireUpdateAsync(OnDataSetRequireUpdate callback) {
+        mIsUpdating = true;
+
+        // Check database flag first
         ContentValues c = DataSetTracker.GetStatsOrNull(mDataSetType);
         mIsUpToDate = !((c == null) || c.getAsBoolean("isRequireUpdate"));
-        return !mIsUpToDate;
+        if (!mIsUpToDate) {
+            callback.onDataSetRequireUpdate(true);
+            mIsUpdating = false;
+            return;
+        }
+
+        // Check URL for last update time
+        new GetURLLastUpdateAsync(new GetURLLastUpdateAsync.Callbacks() {
+            @Override
+            public void onURLLastUpdateRead(Long dataLastUpdatedOrNull) {
+                boolean isRequireUpdate = (dataLastUpdatedOrNull == null) ||
+                        (dataLastUpdatedOrNull > c.getAsLong("lastUpdated"));
+                callback.onDataSetRequireUpdate(isRequireUpdate);
+                mIsUpdating = false;
+            }
+        }, mDataSourceURL).execute();
     }
 
     /**
@@ -341,6 +363,13 @@ public abstract class DataSet {
     // ---------------------------------------------------------------------------------------------
     //                               INTERFACE : ON DATA SET UPDATED CALLBACK
     // ---------------------------------------------------------------------------------------------/
+
+    /**
+     * Callback function when data set requires update.
+     */
+    public interface OnDataSetRequireUpdate {
+        void onDataSetRequireUpdate(boolean isRequireUpdate);
+    }
 
     /**
      * Callback function for caller.

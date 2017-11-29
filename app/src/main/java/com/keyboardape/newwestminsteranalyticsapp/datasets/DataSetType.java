@@ -13,6 +13,7 @@ public enum DataSetType {
     ,BUILDING_AGE
     ,HIGH_RISES
     ,AGE_DEMOGRAPHICS
+    ,SCHOOL_BUILDINGS
     ;
 
     public DataSet getDataSet() {

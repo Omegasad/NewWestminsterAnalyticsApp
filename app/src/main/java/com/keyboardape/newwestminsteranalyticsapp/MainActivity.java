@@ -43,12 +43,10 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
 
         mBtnViewMaps = (Button) findViewById(R.id.btnViewMaps);
         mBtnViewMaps.setEnabled(false);
-
         mBtnViewCharts = (Button) findViewById(R.id.btnViewCharts);
         mBtnViewCharts.setEnabled(false);
-
         mBtnViewDemographics = (Button) findViewById(R.id.btnViewDemographics);
-        mBtnViewCharts.setEnabled(false);
+        mBtnViewDemographics.setEnabled(false);
 
         downloadDataSetOrEnableButtons();
     }
@@ -69,13 +67,20 @@ public class MainActivity extends DBActivity implements DataSet.OnDataSetUpdated
     }
 
     private void downloadDataSetOrEnableButtons() {
+        mDataSetAdapter.notifyDataSetChanged();
         if (mCurrentDataSet++ < mDataSets.length) {
             DataSet data = mDataSets[mCurrentDataSet - 1];
-            if (data.isRequireUpdate()) {
-                data.updateDataAsync(this);
-            } else {
-                downloadDataSetOrEnableButtons();
-            }
+            data.isRequireUpdateAsync(new DataSet.OnDataSetRequireUpdate() {
+                @Override
+                public void onDataSetRequireUpdate(boolean isRequireUpdate) {
+                    if (isRequireUpdate) {
+                        data.updateDataAsync(MainActivity.this);
+                    } else {
+                        mDataSetAdapter.notifyDataSetChanged();
+                        downloadDataSetOrEnableButtons();
+                    }
+                }
+            });
         } else {
             mBtnViewMaps.setEnabled(true);
             mBtnViewCharts.setEnabled(true);

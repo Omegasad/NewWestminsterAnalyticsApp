@@ -58,6 +58,7 @@ public abstract class MapLayer {
 //        LayerClasses.put(MapLayerType.HIGH_RISES,         HighRisesLayer.class);
         LayerClasses.put(MapLayerType.BUSINESS_DENSITY,   BusinessDensityLayer.class);
         LayerClasses.put(MapLayerType.PUBLIC_TRANSIT,     PublicTransitLayer.class);
+        LayerClasses.put(MapLayerType.SCHOOL_BUILDINGS,   SchoolBuildingsLayer.class);
     }
 
     /**

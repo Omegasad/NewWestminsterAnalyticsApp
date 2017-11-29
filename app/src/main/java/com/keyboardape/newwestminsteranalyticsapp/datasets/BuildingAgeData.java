@@ -52,7 +52,7 @@ public class BuildingAgeData extends DataSet {
     }
 
     public BuildingAgeData() {
-        super(DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
+        super(DATA_SOURCE_URL, DATA_SET_TYPE ,TABLE_NAME ,TABLE_COLUMNS, R_STRING_ID_NAME);
     }
 
     @Override
