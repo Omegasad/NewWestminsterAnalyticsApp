@@ -10,6 +10,12 @@
     android:gravity="center_vertical"
     tools:context="com.keyboardape.newwestminsteranalyticsapp.MainActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/logo" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,10 +27,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:gravity="center_horizontal"
         android:text="@string/progress_description"
-        android:textSize="12sp"
-        android:layout_marginBottom="20dp"/>
+        android:textSize="12sp" />
 
     <ListView
         android:id="@+id/downloadList"
