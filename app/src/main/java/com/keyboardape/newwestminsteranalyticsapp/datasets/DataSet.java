@@ -260,8 +260,8 @@ public abstract class DataSet {
         ContentValues c = DataSetTracker.GetStatsOrNull(mDataSetType);
         mIsUpToDate = !((c == null) || c.getAsBoolean("isRequireUpdate"));
         if (!mIsUpToDate) {
-            callback.onDataSetRequireUpdate(true);
             mIsUpdating = false;
+            callback.onDataSetRequireUpdate(true);
             return;
         }
 
@@ -269,10 +269,10 @@ public abstract class DataSet {
         new GetURLLastUpdateAsync(new GetURLLastUpdateAsync.Callbacks() {
             @Override
             public void onURLLastUpdateRead(Long dataLastUpdatedOrNull) {
+                mIsUpdating = false;
                 boolean isRequireUpdate = (dataLastUpdatedOrNull == null) ||
                         (dataLastUpdatedOrNull > c.getAsLong("lastUpdated"));
                 callback.onDataSetRequireUpdate(isRequireUpdate);
-                mIsUpdating = false;
             }
         }, mDataSourceURL).execute();
     }
