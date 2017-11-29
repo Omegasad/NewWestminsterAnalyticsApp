@@ -106,8 +106,7 @@ public class ChartActivity extends DBActivity {
         for (int i = 0; i < labels.length; i++) {
             labels[i] = Integer.toString(i);
         }
-
-
+        
         // Declarations
         barChart = (BarChart) findViewById(R.id.bargraph);
         barWidth = 0.9f;
