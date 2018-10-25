@@ -30,7 +30,7 @@ public class SkytrainStationsData extends DataSet {
 
     static {
         TABLE_NAME       = "skytrain_stations";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/skytrain-stations/SKYTRAIN_STATIONS.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/SKYTRAIN_STATIONS.json";
         DATA_SET_TYPE    = DataSetType.SKYTRAIN_STATIONS;
         R_STRING_ID_NAME = R.string.dataset_skytrain_stations;
 
@@ -59,12 +59,13 @@ public class SkytrainStationsData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
-                    c.put("NAME",  ParseToStringOrNull(o.getString("NAME")));
-                    c.put("PHASE", ParseToStringOrNull(o.getString("PHASE")));
-
                     JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
                     c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
                     c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+
+                    o = o.getJSONObject("properties");
+                    c.put("NAME",  ParseToStringOrNull(o.getString("NAME")));
+                    c.put("PHASE", ParseToStringOrNull(o.getString("PHASE")));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

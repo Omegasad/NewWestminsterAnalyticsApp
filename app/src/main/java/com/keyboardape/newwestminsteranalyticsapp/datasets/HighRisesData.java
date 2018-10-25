@@ -30,7 +30,7 @@ public class HighRisesData extends DataSet {
 
     static {
         TABLE_NAME       = "highrises";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/highrise-buildings/HIGHRISES.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/HIGHRISES.json";
         DATA_SET_TYPE    = DataSetType.HIGH_RISES;
         R_STRING_ID_NAME = R.string.dataset_high_rises;
 
@@ -68,6 +68,11 @@ public class HighRisesData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
+                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+
+                    o = o.getJSONObject("properties");
                     Integer buildingAge = ParseToIntOrNull(o.getString("BLDGAGE"));
                     if (buildingAge != null && buildingAge == 0) {
                         buildingAge = null;
@@ -90,10 +95,6 @@ public class HighRisesData extends DataSet {
                     c.put("NUM_RES",     ParseToIntOrNull(o.getString("NUM_RES")));
                     c.put("BLDGAGE",     buildingAge);
                     c.put("M_BLDGHGT",   buildingHeight);
-
-                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
-                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

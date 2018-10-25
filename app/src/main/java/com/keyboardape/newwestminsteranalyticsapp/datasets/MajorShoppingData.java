@@ -30,7 +30,7 @@ public class MajorShoppingData extends DataSet {
 
     static {
         TABLE_NAME       = "major_shoppings";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/major-shopping/MAJOR_SHOPPING.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/MAJOR_SHOPPING.json";
         DATA_SET_TYPE    = DataSetType.MAJOR_SHOPPING;
         R_STRING_ID_NAME = R.string.dataset_major_shoppings;
 

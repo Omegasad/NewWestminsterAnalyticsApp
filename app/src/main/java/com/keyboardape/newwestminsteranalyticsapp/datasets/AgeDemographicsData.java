@@ -17,13 +17,13 @@ import java.util.Map;
  * Downloaded from Stats Canada Census:
  * http://www12.statcan.gc.ca/census-recensement/index-eng.cfm
  *
- * 2016 csv - http://keyboardape.com/2016newwestanalytics/datasets/2016_age_demographics.CSV
+ * 2016 csv - https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2016_age_demographics.CSV
  *
- * 2011 csv - http://keyboardape.com/2016newwestanalytics/datasets/2011_age_demographics.CSV
+ * 2011 csv - https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2011_age_demographics.CSV
  *
- * 2006 csv - http://keyboardape.com/2016newwestanalytics/datasets/2006_community_profile.CSV
+ * 2006 csv - https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2006_community_profile.CSV
  *
- * 2001 csv - http://keyboardape.com/2016newwestanalytics/datasets/2001_age_demographics.CSV
+ * 2001 csv - https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2001_age_demographics.CSV
  */
 public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callbacks {
 
@@ -46,10 +46,10 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
 
         // Order declared here must match switch in function onNewCSVRowFromStream()
         DATA_SOURCE_URLS = new String[] {
-                "http://keyboardape.com/2016newwestanalytics/datasets/2001_age_demographics.CSV"    // 2001
-                ,"http://keyboardape.com/2016newwestanalytics/datasets/2006_community_profile.CSV"  // 2006
-                ,"http://keyboardape.com/2016newwestanalytics/datasets/2011_age_demographics.CSV"   // 2011
-                ,"http://keyboardape.com/2016newwestanalytics/datasets/2016_age_demographics.CSV"}; // 2016
+                "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2001_age_demographics.CSV"    // 2001
+                ,"https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2006_community_profile.CSV"  // 2006
+                ,"https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2011_age_demographics.CSV"   // 2011
+                ,"https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/2016_age_demographics.CSV"}; // 2016
 
         TABLE_COLUMNS = new HashMap<>();
         TABLE_COLUMNS.put("ID",                "INTEGER PRIMARY KEY AUTOINCREMENT");
@@ -126,7 +126,7 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
 
     private void saveDataFrom2011Or2016(String[] row, int year) {
         if (row.length != 4
-            || !row[0].contains("years")) {
+                || !row[0].contains("years")) {
             return;
         }
 
@@ -138,8 +138,8 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
             minAge = ParseToIntOrNull(ageRange[0]);
             maxAge = ParseToIntOrNull(ageRange[1]);
             if (minAge == null
-                || maxAge == null
-                || maxAge - minAge > 5) {
+                    || maxAge == null
+                    || maxAge - minAge > 5) {
                 return;
             }
         } else if (ageRange.length == 3) {
@@ -163,8 +163,8 @@ public class AgeDemographicsData extends DataSet implements CSVParserAsync.Callb
 
     private void saveDataFrom2006(String[] row) {
         if (row.length != 8
-            || !row[0].equals("Age characteristics")
-            || !row[1].contains("years")) {
+                || !row[0].equals("Age characteristics")
+                || !row[1].contains("years")) {
             return;
         }
 
