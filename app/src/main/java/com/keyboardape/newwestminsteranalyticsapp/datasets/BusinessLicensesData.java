@@ -35,7 +35,7 @@ public class BusinessLicensesData extends DataSet {
 
     static {
         TABLE_NAME       = "business_licenses";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/business-licenses-approved-2016/BL_APPROVED.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/BL_APPROVED.json";
         DATA_SET_TYPE    = DataSetType.BUSINESS_LICENSES;
         R_STRING_ID_NAME = R.string.dataset_business_licenses;
 
@@ -80,6 +80,7 @@ public class BusinessLicensesData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
+                    o = o.getJSONObject("properties");
                     String type         = ParseToStringOrNull(o.getString("TYPE"));
                     String civicAddress = ParseToStringOrNull(o.getString("CIVIC_ADDRESS"));
                     c.put("TYPE",                type);

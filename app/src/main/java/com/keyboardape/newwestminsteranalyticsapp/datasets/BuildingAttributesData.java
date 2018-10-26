@@ -30,7 +30,7 @@ public class BuildingAttributesData extends DataSet {
 
     static {
         TABLE_NAME       = "building_attributes";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/building-attributes/BUILDING_ATTRIBUTES.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/BUILDING_ATTRIBUTES.json";
         DATA_SET_TYPE    = DataSetType.BUILDING_ATTRIBUTES;
         R_STRING_ID_NAME = R.string.dataset_building_attributes;
 
@@ -73,7 +73,12 @@ public class BuildingAttributesData extends DataSet {
                 try {
                     ContentValues c = new ContentValues();
 
+                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+
                     // Original Data
+                    o = o.getJSONObject("properties");
                     Integer numResidents = ParseToIntOrNull(o.getString("NUM_RES"));
                     c.put("STRNAM",     ParseToStringOrNull(o.getString("STRNAM")));
                     c.put("STRNUM",     ParseToStringOrNull(o.getString("STRNUM")));
@@ -87,10 +92,6 @@ public class BuildingAttributesData extends DataSet {
                     c.put("SQM_FTPRNT", ParseToDoubleOrNull(o.getString("SQM_FTPRNT")));
                     c.put("SQM_B_GRND", ParseToDoubleOrNull(o.getString("SQM_B_GRND")));
                     c.put("SQM_A_GRND", ParseToDoubleOrNull(o.getString("SQM_A_GRND")));
-
-                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
-                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

@@ -30,7 +30,7 @@ public class SchoolBuildingsData extends DataSet {
 
     static {
         TABLE_NAME       = "school_buildings";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/significant-buildings-schools/SIGNIFICANT_BLDG_SCHOOLS.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/SIGNIFICANT_BLDG_SCHOOLS.json";
         DATA_SET_TYPE    = DataSetType.SCHOOL_BUILDINGS;
         R_STRING_ID_NAME = R.string.dataset_school_buildings;
 
@@ -61,16 +61,17 @@ public class SchoolBuildingsData extends DataSet {
                     ContentValues c = new ContentValues();
 
                     // Original Data
+                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+
+                    o = o.getJSONObject("properties");
                     c.put("CATEGORY",  ParseToStringOrNull(o.getString("CATEGORY")));
                     c.put("STRNUM",    ParseToStringOrNull(o.getString("STRNUM")));
                     c.put("STRNAM",    ParseToStringOrNull(o.getString("STRNAM")));
                     c.put("BLDGNAM",   ParseToStringOrNull(o.getString("BLDGNAM")));
                     c.put("BLDG_ID",   ParseToIntOrNull(o.getString("BLDG_ID")));
                     c.put("MAPREF",    ParseToIntOrNull(o.getString("MAPREF")));
-
-                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
-                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {

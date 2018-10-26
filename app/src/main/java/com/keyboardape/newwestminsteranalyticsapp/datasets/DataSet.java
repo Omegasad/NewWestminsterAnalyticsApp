@@ -147,7 +147,7 @@ public abstract class DataSet {
      */
     protected static JSONArray GetAverageCoordinatesFromJsonGeometryOrNull(JSONObject o) {
         try {
-            JSONObject geoJson = o.getJSONObject("json_geometry");
+            JSONObject geoJson = o.getJSONObject("geometry");
             String geoJsonType = geoJson.getString("type");
 
             // different shapes have different # of array layers

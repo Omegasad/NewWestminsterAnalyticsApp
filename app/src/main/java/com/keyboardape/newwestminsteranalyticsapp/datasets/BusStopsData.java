@@ -30,7 +30,7 @@ public class BusStopsData extends DataSet {
 
     static {
         TABLE_NAME       = "bus_stops";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/bus-stops/BUS_STOPS.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/BUS_STOPS.json";
         DATA_SET_TYPE    = DataSetType.BUS_STOPS;
         R_STRING_ID_NAME = R.string.dataset_bus_stops;
 
@@ -73,6 +73,7 @@ public class BusStopsData extends DataSet {
                         ContentValues c = new ContentValues();
 
                         // Original Data
+                        o = o.getJSONObject("properties");
                         c.put("OBJECTID_1", ParseToIntOrNull(o.getString("OBJECTID_1")));
                         c.put("OBJECTID",   ParseToIntOrNull(o.getString("OBJECTID")));
                         c.put("BUSSTOPNUM", ParseToIntOrNull(o.getString("BUSSTOPNUM")));
@@ -85,9 +86,8 @@ public class BusStopsData extends DataSet {
                         c.put("ACCESSIBLE", ParseToStringOrNull(o.getString("ACCESSIBLE")));
                         c.put("CITY_NAME",  ParseToStringOrNull(o.getString("CITY_NAME")));
 
-                        JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                        c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
-                        c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+                        c.put("LATITUDE", o.getDouble("X"));
+                        c.put("LONGITUDE", o.getDouble("Y"));
 
                         db.insert(TABLE_NAME, null, c);
                     }

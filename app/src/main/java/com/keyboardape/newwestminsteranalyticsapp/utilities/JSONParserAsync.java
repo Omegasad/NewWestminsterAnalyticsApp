@@ -132,6 +132,7 @@ public class JSONParserAsync extends AsyncTask<Void, Void, Void> {
 
     private void cleanUpInputStreamReader() {
         try {
+            Log.v("CLOSE_STREAM", "closing stream");
             if (mInputStreamReader != null) {
                 mInputStreamReader.close();
             }
@@ -140,6 +141,9 @@ public class JSONParserAsync extends AsyncTask<Void, Void, Void> {
             }
             if (mConnection != null) {
                 mConnection.disconnect();
+            }
+            if (mInputStreamReader != null || mInputStream != null || mConnection != null) {
+                Log.v("CLOSE_STREAM", "closing stream failed");
             }
         } catch (Exception e) {
             Log.e(JSONParserAsync.class.getSimpleName(), e.getMessage());

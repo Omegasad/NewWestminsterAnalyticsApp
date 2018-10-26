@@ -30,7 +30,7 @@ public class BuildingAgeData extends DataSet {
 
     static {
         TABLE_NAME       = "building_age";
-        DATA_SOURCE_URL  = "http://opendata.newwestcity.ca/downloads/building-age/BUILDING_AGE.json";
+        DATA_SOURCE_URL  = "https://raw.githubusercontent.com/MikeWeiZhou/new-westminster-analytics/master/datasets/BUILDING_AGE.json";
         DATA_SET_TYPE    = DataSetType.BUILDING_AGE;
         R_STRING_ID_NAME = R.string.dataset_building_age;
 
@@ -64,7 +64,12 @@ public class BuildingAgeData extends DataSet {
                 try {
                     ContentValues c = new ContentValues();
 
+                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
+                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
+                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
+
                     // Original Data
+                    o = o.getJSONObject("properties");
                     Integer buildingAge = ParseToIntOrNull(o.getString("BLDGAGE"));
                     if (buildingAge != null && buildingAge == 0) {
                         buildingAge = null;
@@ -80,10 +85,6 @@ public class BuildingAgeData extends DataSet {
                     c.put("UNITNUM",   ParseToIntOrNull(o.getString("UNITNUM")));
                     c.put("BLDGAGE",   buildingAge);
                     c.put("MOVED",     ParseToIntOrNull(o.getString("MOVED")));
-
-                    JSONArray coordinates = GetAverageCoordinatesFromJsonGeometryOrNull(o);
-                    c.put("LATITUDE", (coordinates == null) ? null : coordinates.getDouble(1));
-                    c.put("LONGITUDE",(coordinates == null) ? null : coordinates.getDouble(0));
 
                     db.insert(TABLE_NAME, null, c);
                 } catch (Exception e) {
